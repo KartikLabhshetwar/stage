@@ -46,7 +46,7 @@ export function LandingPage({
       />
       <MasonryGrid />
       <Features features={features} title={featuresTitle} />
-      <Pricing />
+      {/* <Pricing /> */}
       <FAQ />
       <Footer brandName={brandName}/>
     </div>
