@@ -119,9 +119,9 @@ export function DesignsGallery() {
   };
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navigation ctaLabel="Editor" ctaHref="/home" />
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div className="flex-1 container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-8">
           <h1 className={`text-3xl sm:text-4xl font-bold text-gray-900 mb-2 ${instrumentSerif.className}`}>
             My Designs
@@ -240,7 +240,7 @@ export function DesignsGallery() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }
 
