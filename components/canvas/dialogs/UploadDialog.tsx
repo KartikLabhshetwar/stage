@@ -35,9 +35,12 @@ export function UploadDialog({ open, onOpenChange, onUpload }: UploadDialogProps
       }
 
       setUploadError(null);
-      const url = URL.createObjectURL(file);
+      
+      // Use blob URL for maximum quality - persistence handled via IndexedDB
+      const blobUrl = URL.createObjectURL(file);
+      
       try {
-        await onUpload(url);
+        await onUpload(blobUrl);
         onOpenChange(false);
       } catch (err) {
         setUploadError("Failed to load image. Please try again.");

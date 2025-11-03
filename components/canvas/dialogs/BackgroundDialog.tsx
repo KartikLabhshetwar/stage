@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ImageSquare as ImageIcon, X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -12,6 +12,15 @@ import { getCldImageUrl } from "@/lib/cloudinary";
 import { cloudinaryPublicIds } from "@/lib/cloudinary-backgrounds";
 import Konva from "konva";
 
+const BACKGROUND_PREFS_KEY = "canvas-background-prefs";
+
+interface BackgroundPreferences {
+  type: "solid" | "gradient" | "image";
+  backgroundColor?: string;
+  gradientColors?: string[];
+  gradientType?: "linear" | "radial";
+  backgroundImageUrl?: string | null; // Only saved if it's a Cloudinary public ID
+}
 interface BackgroundDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -25,9 +34,114 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
   const [gradientType, setGradientType] = useState<"linear" | "radial">("linear");
   const [backgroundImageUrl, setBackgroundImageUrl] = useState<string | null>(null);
   const [bgUploadError, setBgUploadError] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Use Cloudinary public IDs only
   const staticBackgrounds: string[] = cloudinaryPublicIds;
+
+  // Save preferences to localStorage
+  const savePreferences = () => {
+    const prefs: BackgroundPreferences = {
+      type: backgroundType,
+      backgroundColor,
+      gradientColors,
+      gradientType,
+      // Only save image URL if it's a Cloudinary public ID (not a blob URL)
+      backgroundImageUrl: backgroundImageUrl && !backgroundImageUrl.startsWith("blob:") 
+        ? backgroundImageUrl 
+        : null,
+    };
+    localStorage.setItem(BACKGROUND_PREFS_KEY, JSON.stringify(prefs));
+  };
+
+  // Load preferences from localStorage
+  const loadPreferences = (): BackgroundPreferences | null => {
+    try {
+      const saved = localStorage.getItem(BACKGROUND_PREFS_KEY);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.error("Failed to load background preferences:", error);
+    }
+    return null;
+  };
+
+  // Load preferences on mount
+  useEffect(() => {
+    const prefs = loadPreferences();
+    if (prefs) {
+      if (prefs.backgroundColor) setBackgroundColor(prefs.backgroundColor);
+      if (prefs.type) setBackgroundType(prefs.type);
+      if (prefs.gradientColors) setGradientColors(prefs.gradientColors);
+      if (prefs.gradientType) setGradientType(prefs.gradientType);
+      if (prefs.backgroundImageUrl) setBackgroundImageUrl(prefs.backgroundImageUrl);
+    }
+    setIsInitialized(true);
+  }, []);
+
+  // Restore background when canvas is ready and preferences are loaded
+  useEffect(() => {
+    if (!isInitialized || !stage || !layer) return;
+
+    const prefs = loadPreferences();
+    if (!prefs) return;
+
+    // Restore based on saved type
+    if (prefs.type === "solid" && prefs.backgroundColor) {
+      const bgRect = layer.findOne((node: any) => node.id() === "canvas-background") as Konva.Rect;
+      if (bgRect && bgRect instanceof Konva.Rect) {
+        bgRect.fillPatternImage(null);
+        bgRect.fillLinearGradientColorStops([]);
+        bgRect.fillRadialGradientColorStops([]);
+        bgRect.fill(prefs.backgroundColor);
+        layer.batchDraw();
+      }
+    } else if (prefs.type === "gradient" && prefs.gradientColors && prefs.gradientType) {
+      const bgRect = layer.findOne((node: any) => node.id() === "canvas-background") as Konva.Rect;
+      if (bgRect && bgRect instanceof Konva.Rect) {
+        bgRect.fillPatternImage(null);
+        bgRect.fill(null);
+        const colorStopsArray: (number | string)[] = [];
+        prefs.gradientColors.forEach((color, index) => {
+          const offset = prefs.gradientColors!.length === 1 ? 0 : index / Math.max(1, prefs.gradientColors!.length - 1);
+          colorStopsArray.push(offset);
+          colorStopsArray.push(color);
+        });
+        
+        if (prefs.gradientType === "linear") {
+          bgRect.fillLinearGradientColorStops(colorStopsArray);
+          bgRect.fillLinearGradientStartPoint({ x: 0, y: 0 });
+          bgRect.fillLinearGradientEndPoint({ x: stage.width(), y: stage.height() });
+          bgRect.fillRadialGradientColorStops([]);
+        } else {
+          const centerX = stage.width() / 2;
+          const centerY = stage.height() / 2;
+          const radius = Math.max(stage.width(), stage.height()) / 2;
+          bgRect.fillRadialGradientColorStops(colorStopsArray);
+          bgRect.fillRadialGradientStartPoint({ x: centerX, y: centerY });
+          bgRect.fillRadialGradientStartRadius(0);
+          bgRect.fillRadialGradientEndPoint({ x: centerX, y: centerY });
+          bgRect.fillRadialGradientEndRadius(radius);
+          bgRect.fillLinearGradientColorStops([]);
+        }
+        layer.batchDraw();
+      }
+    } else if (prefs.type === "image" && prefs.backgroundImageUrl) {
+      // Only restore if it's a Cloudinary public ID
+      if (!prefs.backgroundImageUrl.startsWith("blob:")) {
+        updateCanvasBackgroundImage(prefs.backgroundImageUrl);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialized, stage, layer]);
+
+  // Save preferences whenever they change
+  useEffect(() => {
+    if (!isInitialized) return;
+    savePreferences();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [backgroundColor, backgroundType, gradientColors, gradientType, backgroundImageUrl, isInitialized]);
 
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
@@ -156,6 +270,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
     const url = URL.createObjectURL(file);
     await updateCanvasBackgroundImage(url);
     setBackgroundType("image");
+    // Note: Blob URLs are not saved to localStorage as they're temporary
   };
 
   const { getRootProps: getBgRootProps, getInputProps: getBgInputProps, isDragActive: isBgDragActive } = useDropzone({
@@ -231,6 +346,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                       const color = e.target.value;
                       setBackgroundColor(color);
                       updateCanvasBackground(color);
+                      setBackgroundType("solid");
                     }}
                     className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 border-gray-200 cursor-pointer hover:border-blue-400 transition-colors touch-manipulation"
                   />
@@ -244,6 +360,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                       setBackgroundColor(color);
                       if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
                         updateCanvasBackground(color);
+                        setBackgroundType("solid");
                       }
                     }}
                   />
@@ -266,6 +383,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                       onClick={() => {
                         setBackgroundColor(color);
                         updateCanvasBackground(color);
+                        setBackgroundType("solid");
                       }}
                       title={color}
                     />
@@ -387,6 +505,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                         setGradientColors(preset.colors);
                         setGradientType(preset.type);
                         updateCanvasGradient(preset.colors, preset.type);
+                        setBackgroundType("gradient");
                       }}
                       title={preset.colors.join(" → ")}
                     />
@@ -419,7 +538,10 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                         <button
                           key={idx}
                           className="relative aspect-video rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 hover:border-2 transition-all group"
-                          onClick={() => updateCanvasBackgroundImage(publicId)}
+                          onClick={() => {
+                            updateCanvasBackgroundImage(publicId);
+                            setBackgroundType("image");
+                          }}
                           title={`Use background ${idx + 1}`}
                         >
                           <img
@@ -503,6 +625,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                           layer?.batchDraw();
                           setBackgroundImageUrl(null);
                           setBackgroundType("solid");
+                          updateCanvasBackground(backgroundColor);
                         }
                       }}
                     >

@@ -1,10 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, useRef } from "react";
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from "react";
 import Konva from "konva";
 import type { CanvasOperations } from "@/types/editor";
 import type { AspectRatioPreset } from "@/lib/constants";
 import { DEFAULT_ASPECT_RATIO } from "@/lib/constants";
+import { saveImageBlob, getBlobUrlFromStored, deleteImageBlob } from "@/lib/image-storage";
+
+const CANVAS_OBJECTS_KEY = "canvas-objects";
 
 interface CanvasObject {
   id: string;
@@ -109,6 +112,56 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
       present: [],
       future: [],
     };
+    
+    // Restore objects from localStorage
+    try {
+      const saved = localStorage.getItem(CANVAS_OBJECTS_KEY);
+      if (saved) {
+        const savedObjects: CanvasObject[] = JSON.parse(saved);
+        // Restore image objects by recreating the images from their URLs
+        const restorePromises = savedObjects.map(async (obj) => {
+          if (obj.type === "image" && obj.imageUrl) {
+            let imageSrc = obj.imageUrl;
+            
+            // If it's a stored image ID (not starting with blob: or http: or data:), get from IndexedDB
+            if (!imageSrc.startsWith("blob:") && !imageSrc.startsWith("http") && !imageSrc.startsWith("data:")) {
+              const blobUrl = await getBlobUrlFromStored(imageSrc);
+              if (blobUrl) {
+                imageSrc = blobUrl;
+              } else {
+                console.warn(`Image blob not found for ID: ${imageSrc}`);
+                return null; // Skip this object if blob not found
+              }
+            }
+            
+            const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+              const image = new Image();
+              image.crossOrigin = "anonymous";
+              image.onload = () => resolve(image);
+              image.onerror = reject;
+              image.src = imageSrc;
+            });
+            return { ...obj, image: img, imageUrl: imageSrc };
+          }
+          return obj;
+        });
+        
+        Promise.all(restorePromises).then((restoredObjects) => {
+          // Filter out null objects (failed restorations)
+          const validObjects = restoredObjects.filter(obj => obj !== null) as CanvasObject[];
+          setObjects(validObjects);
+          historyRef.current.present = [...validObjects];
+          // Trigger a draw after a short delay to ensure layer is ready
+          setTimeout(() => {
+            if (layerInstance) {
+              layerInstance.batchDraw();
+            }
+          }, 100);
+        });
+      }
+    } catch (error) {
+      console.error("Failed to restore canvas objects:", error);
+    }
   }, []);
 
   const saveState = useCallback(() => {
@@ -118,6 +171,18 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
     historyRef.current.future = [];
   }, [objects]);
 
+  // Helper function to save objects to localStorage
+  const saveObjectsToStorage = useCallback((objectsToSave: CanvasObject[]) => {
+    try {
+      localStorage.setItem(CANVAS_OBJECTS_KEY, JSON.stringify(objectsToSave.map(obj => ({
+        ...obj,
+        image: undefined, // Don't store image element, just the URL
+      }))));
+    } catch (error) {
+      console.error("Failed to save canvas objects:", error);
+    }
+  }, []);
+
   const undo = useCallback(() => {
     if (historyRef.current.past.length === 0) return;
     const previous = historyRef.current.past.pop()!;
@@ -125,9 +190,10 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
       historyRef.current.future.unshift([...historyRef.current.present]);
       historyRef.current.present = [...previous];
       setObjects([...previous]);
+      saveObjectsToStorage(previous);
       setSelectedObject(null);
     }
-  }, []);
+  }, [saveObjectsToStorage]);
 
   const redo = useCallback(() => {
     if (historyRef.current.future.length === 0) return;
@@ -136,9 +202,10 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
       historyRef.current.past.push([...historyRef.current.present]);
       historyRef.current.present = [...next];
       setObjects([...next]);
+      saveObjectsToStorage(next);
       setSelectedObject(null);
     }
-  }, []);
+  }, [saveObjectsToStorage]);
 
   const operations: CanvasOperations = {
     addImage: async (imageUrl, options = {}) => {
@@ -165,8 +232,23 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
           scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight) * 0.5;
         }
 
+      const imageId = `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // If it's a blob URL, save the blob to IndexedDB for persistence
+      if (imageUrl.startsWith("blob:")) {
+        try {
+          // Fetch the blob from the blob URL
+          const response = await fetch(imageUrl);
+          const blob = await response.blob();
+          // Save to IndexedDB
+          await saveImageBlob(blob, imageId);
+        } catch (error) {
+          console.error("Failed to save image blob:", error);
+        }
+      }
+      
       const newObject: CanvasObject = {
-        id: `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: imageId,
         type: "image",
         x: options.x ?? (canvasWidth - imgWidth * scale) / 2,
         y: options.y ?? (canvasHeight - imgHeight * scale) / 2,
@@ -175,7 +257,7 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
         scaleX: 1,
         scaleY: 1,
         rotation: 0,
-        imageUrl,
+        imageUrl: imageUrl.startsWith("blob:") ? imageId : imageUrl, // Store ID for blob URLs, URL for others
         image: img,
       };
 
@@ -187,6 +269,7 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
         setObjects((prev) => {
           const updated = [...prev, newObject];
           saveState();
+          saveObjectsToStorage(updated);
           return updated;
         });
         setSelectedObject(newObject);
@@ -223,6 +306,7 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
       setObjects((prev) => {
         const updated = [...prev, newObject];
         saveState();
+        saveObjectsToStorage(updated);
         return updated;
       });
       setSelectedObject(newObject);
@@ -265,6 +349,7 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
           return obj;
         });
         saveState();
+        saveObjectsToStorage(updated);
         return updated;
       });
       
@@ -277,9 +362,22 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
       const idToDelete = objectId || selectedObject?.id;
       if (!idToDelete) return;
 
+      // Find the object to check if it's a stored image
+      const objectToDelete = objects.find(obj => obj.id === idToDelete);
+      if (objectToDelete && objectToDelete.type === "image" && objectToDelete.imageUrl) {
+        // If it's a stored image (not a blob URL, http, or data URL), delete from IndexedDB
+        const imageUrl = objectToDelete.imageUrl;
+        if (!imageUrl.startsWith("blob:") && !imageUrl.startsWith("http") && !imageUrl.startsWith("data:")) {
+          deleteImageBlob(imageUrl).catch(err => {
+            console.error("Failed to delete image blob:", err);
+          });
+        }
+      }
+
       setObjects((prev) => {
         const updated = prev.filter((obj) => obj.id !== idToDelete);
         saveState();
+        saveObjectsToStorage(updated);
         return updated;
       });
       
