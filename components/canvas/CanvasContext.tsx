@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useCallback, useRef } from "react";
 import Konva from "konva";
 import type { CanvasOperations } from "@/types/editor";
+import type { AspectRatioPreset } from "@/lib/constants";
+import { DEFAULT_ASPECT_RATIO } from "@/lib/constants";
 
 interface CanvasObject {
   id: string;
@@ -34,6 +36,10 @@ interface CanvasContextType {
     redo: () => void;
     save: () => void;
   };
+  canvasDimensions: { width: number; height: number };
+  aspectRatio: AspectRatioPreset;
+  setAspectRatio: (preset: AspectRatioPreset) => void;
+  setCanvasDimensions: (width: number, height: number) => void;
 }
 
 const CanvasContext = createContext<CanvasContextType | undefined>(undefined);
@@ -43,11 +49,55 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
   const [layer, setLayer] = useState<Konva.Layer | null>(null);
   const [selectedObject, setSelectedObject] = useState<CanvasObject | null>(null);
   const [objects, setObjects] = useState<CanvasObject[]>([]);
+  const [aspectRatio, setAspectRatioState] = useState<AspectRatioPreset>(DEFAULT_ASPECT_RATIO);
+  const [canvasDimensions, setCanvasDimensionsState] = useState<{ width: number; height: number }>({
+    width: DEFAULT_ASPECT_RATIO.width,
+    height: DEFAULT_ASPECT_RATIO.height,
+  });
   const historyRef = useRef<{ past: CanvasObject[][]; present: CanvasObject[]; future: CanvasObject[][] }>({
     past: [],
     present: [],
     future: [],
   });
+
+  const setAspectRatio = useCallback((preset: AspectRatioPreset) => {
+    setAspectRatioState(preset);
+    setCanvasDimensionsState({
+      width: preset.width,
+      height: preset.height,
+    });
+    
+    // Update stage dimensions if it exists
+    if (stage) {
+      stage.width(preset.width);
+      stage.height(preset.height);
+      if (layer) {
+        // Update background rectangle
+        const bgRect = layer.findOne((node: any) => node.id() === "canvas-background") as Konva.Rect;
+        if (bgRect && bgRect instanceof Konva.Rect) {
+          bgRect.width(preset.width);
+          bgRect.height(preset.height);
+          layer.batchDraw();
+        }
+      }
+    }
+  }, [stage, layer]);
+
+  const setCanvasDimensions = useCallback((width: number, height: number) => {
+    setCanvasDimensionsState({ width, height });
+    if (stage) {
+      stage.width(width);
+      stage.height(height);
+      if (layer) {
+        const bgRect = layer.findOne((node: any) => node.id() === "canvas-background") as Konva.Rect;
+        if (bgRect && bgRect instanceof Konva.Rect) {
+          bgRect.width(width);
+          bgRect.height(height);
+          layer.batchDraw();
+        }
+      }
+    }
+  }, [stage, layer]);
 
   const initializeCanvas = useCallback((stageInstance: Konva.Stage, layerInstance: Konva.Layer) => {
     setStage(stageInstance);
@@ -287,6 +337,10 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
         selectedObject,
         objects,
         history: { undo, redo, save: saveState },
+        canvasDimensions,
+        aspectRatio,
+        setAspectRatio,
+        setCanvasDimensions,
       }}
     >
       {children}

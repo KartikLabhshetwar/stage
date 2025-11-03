@@ -3,20 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image, Text, Transformer, Rect, Line, Group, Circle } from "react-konva";
 import { useCanvasContext } from "./CanvasContext";
-import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/lib/constants";
 import Konva from "konva";
 
 interface CanvasEditorProps {
-  width?: number;
-  height?: number;
   backgroundColor?: string;
   className?: string;
   onBackgroundColorChange?: (color: string) => void;
 }
 
 export function CanvasEditor({
-  width = DEFAULT_CANVAS_WIDTH,
-  height = DEFAULT_CANVAS_HEIGHT,
   backgroundColor = "#ffffff",
   className = "",
   onBackgroundColorChange,
@@ -26,7 +21,8 @@ export function CanvasEditor({
   const transformerRef = useRef<Konva.Transformer>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const { initializeCanvas, objects, selectedObject, operations, layer } = useCanvasContext();
+  const { initializeCanvas, objects, selectedObject, operations, layer, canvasDimensions } = useCanvasContext();
+  const { width, height } = canvasDimensions;
   const [scale, setScale] = useState(1);
   const [showGuides, setShowGuides] = useState(false);
   const [draggingObject, setDraggingObject] = useState<string | null>(null);
@@ -74,7 +70,15 @@ export function CanvasEditor({
     if (stageRef.current) {
       stageRef.current.width(width);
       stageRef.current.height(height);
-      // Don't scale the stage - use CSS transform instead
+      // Update background rect dimensions
+      if (layerRef.current) {
+        const bgRect = layerRef.current.findOne((node: any) => node.id() === "canvas-background") as Konva.Rect;
+        if (bgRect && bgRect instanceof Konva.Rect) {
+          bgRect.width(width);
+          bgRect.height(height);
+          layerRef.current.batchDraw();
+        }
+      }
     }
   }, [width, height]);
 

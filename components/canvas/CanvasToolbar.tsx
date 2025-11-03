@@ -1,24 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { CloudArrowUp, TextT, PaintBrush, Download, ImageSquare as ImageIcon, X, Plus } from "@phosphor-icons/react";
+import { CloudArrowUp, TextT, PaintBrush, Download, ImageSquare as ImageIcon, X, Plus, ArrowsOut } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCanvas } from "@/hooks/useCanvas";
 import { useCanvasContext } from "./CanvasContext";
 import Konva from "konva";
 import { useDropzone } from "react-dropzone";
-import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE, DEFAULT_TEXT_FONT_SIZE, DEFAULT_TEXT_COLOR } from "@/lib/constants";
+import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE, DEFAULT_TEXT_FONT_SIZE, DEFAULT_TEXT_COLOR, ASPECT_RATIO_PRESETS, type AspectRatioPreset } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export function CanvasToolbar() {
   const { operations, canvas } = useCanvas();
-  const { stage, layer, objects } = useCanvasContext();
+  const { stage, layer, objects, aspectRatio, setAspectRatio, canvasDimensions, setCanvasDimensions } = useCanvasContext();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [textDialogOpen, setTextDialogOpen] = useState(false);
   const [colorDialogOpen, setColorDialogOpen] = useState(false);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [aspectRatioDialogOpen, setAspectRatioDialogOpen] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   const [backgroundType, setBackgroundType] = useState<"solid" | "gradient" | "image">("solid");
   const [gradientColors, setGradientColors] = useState(["#ffffff", "#3b82f6"]);
@@ -303,6 +305,16 @@ export function CanvasToolbar() {
           title="Change Background Color"
         >
           <PaintBrush size={20} weight="regular" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setAspectRatioDialogOpen(true)}
+          className="h-10 w-10"
+          title="Change Canvas Size / Aspect Ratio"
+        >
+          <ArrowsOut size={20} weight="regular" />
         </Button>
 
         <div className="w-px h-6 bg-gray-300 mx-1" />
@@ -772,6 +784,357 @@ export function CanvasToolbar() {
                 )}
               </div>
             )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Aspect Ratio Dialog */}
+      <Dialog open={aspectRatioDialogOpen} onOpenChange={setAspectRatioDialogOpen}>
+        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto p-0">
+          <div className="p-6 pb-4 border-b border-gray-100">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-semibold text-gray-900">
+                Canvas Size & Aspect Ratio
+              </DialogTitle>
+              <p className="text-sm text-gray-500 mt-2">
+                Choose a preset or set custom dimensions for your canvas
+              </p>
+            </DialogHeader>
+          </div>
+          
+          <div className="p-6 pt-4">
+            <Tabs defaultValue="presets" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="presets">Presets</TabsTrigger>
+                <TabsTrigger value="custom">Custom</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="presets" className="space-y-6">
+                {/* Instagram Category */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-sm font-semibold text-gray-900 tracking-tight">Instagram</h3>
+                    <span className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded-full">
+                      {ASPECT_RATIO_PRESETS.filter(p => p.category === "Instagram").length} formats
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {ASPECT_RATIO_PRESETS.filter(p => p.category === "Instagram").map((preset) => (
+                      <button
+                        key={preset.id}
+                        onClick={() => {
+                          setAspectRatio(preset);
+                          setAspectRatioDialogOpen(false);
+                        }}
+                        className={`group relative rounded-xl overflow-hidden border transition-all duration-200 text-left ${
+                          aspectRatio.id === preset.id
+                            ? "border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg shadow-blue-100/50 ring-2 ring-blue-500/20"
+                            : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-md hover:shadow-gray-100"
+                        }`}
+                        style={{ aspectRatio: `${preset.width} / ${preset.height}`, maxHeight: '140px' }}
+                        title={preset.description}
+                      >
+                        {/* Background Pattern */}
+                        <div className={`absolute inset-0 flex items-center justify-center transition-opacity ${
+                          aspectRatio.id === preset.id 
+                            ? "opacity-20" 
+                            : "opacity-10 group-hover:opacity-15"
+                        }`}>
+                          <div className={`w-full h-full ${
+                            preset.ratio === "1:1" 
+                              ? "bg-gradient-to-br from-purple-400 to-pink-400"
+                              : preset.ratio === "4:5"
+                              ? "bg-gradient-to-br from-blue-400 to-purple-400"
+                              : preset.ratio === "1.91:1"
+                              ? "bg-gradient-to-br from-green-400 to-blue-400"
+                              : "bg-gradient-to-br from-orange-400 to-pink-400"
+                          }`} />
+                        </div>
+                        
+                        {/* Ratio Badge */}
+                        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-md text-xs font-semibold backdrop-blur-sm transition-all ${
+                          aspectRatio.id === preset.id
+                            ? "bg-blue-600/90 text-white shadow-md"
+                            : "bg-white/80 text-gray-700 group-hover:bg-white group-hover:shadow-sm"
+                        }`}>
+                          {preset.ratio}
+                        </div>
+
+                        {/* Selection Indicator */}
+                        {aspectRatio.id === preset.id && (
+                          <div className="absolute top-3 right-3 w-2 h-2 bg-blue-500 rounded-full shadow-lg" />
+                        )}
+
+                        {/* Content Overlay */}
+                        <div className={`absolute bottom-0 left-0 right-0 p-3 transition-all ${
+                          aspectRatio.id === preset.id
+                            ? "bg-gradient-to-t from-blue-600/90 to-transparent"
+                            : "bg-gradient-to-t from-gray-900/70 to-transparent group-hover:from-gray-900/80"
+                        }`}>
+                          <div className={`text-xs font-semibold mb-0.5 ${
+                            aspectRatio.id === preset.id ? "text-white" : "text-white"
+                          }`}>
+                            {preset.name.replace("Instagram ", "")}
+                          </div>
+                          <div className={`text-xs ${
+                            aspectRatio.id === preset.id ? "text-blue-100" : "text-gray-300"
+                          }`}>
+                            {preset.width} × {preset.height}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Other Social Media */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-sm font-semibold text-gray-900 tracking-tight">Social Media</h3>
+                    <span className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded-full">
+                      {ASPECT_RATIO_PRESETS.filter(p => ["Facebook", "Twitter", "YouTube"].includes(p.category)).length} formats
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {ASPECT_RATIO_PRESETS.filter(p => ["Facebook", "Twitter", "YouTube"].includes(p.category)).map((preset) => (
+                      <button
+                        key={preset.id}
+                        onClick={() => {
+                          setAspectRatio(preset);
+                          setAspectRatioDialogOpen(false);
+                        }}
+                        className={`group relative rounded-xl overflow-hidden border transition-all duration-200 text-left ${
+                          aspectRatio.id === preset.id
+                            ? "border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg shadow-blue-100/50 ring-2 ring-blue-500/20"
+                            : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-md hover:shadow-gray-100"
+                        }`}
+                        style={{ aspectRatio: `${preset.width} / ${preset.height}`, maxHeight: '140px' }}
+                        title={preset.description}
+                      >
+                        {/* Background Pattern */}
+                        <div className={`absolute inset-0 flex items-center justify-center transition-opacity ${
+                          aspectRatio.id === preset.id 
+                            ? "opacity-20" 
+                            : "opacity-10 group-hover:opacity-15"
+                        }`}>
+                          <div className={`w-full h-full ${
+                            preset.category === "Facebook"
+                              ? "bg-gradient-to-br from-blue-400 to-blue-600"
+                              : preset.category === "Twitter"
+                              ? "bg-gradient-to-br from-sky-400 to-blue-500"
+                              : "bg-gradient-to-br from-red-400 to-red-600"
+                          }`} />
+                        </div>
+                        
+                        {/* Ratio Badge */}
+                        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-md text-xs font-semibold backdrop-blur-sm transition-all ${
+                          aspectRatio.id === preset.id
+                            ? "bg-blue-600/90 text-white shadow-md"
+                            : "bg-white/80 text-gray-700 group-hover:bg-white group-hover:shadow-sm"
+                        }`}>
+                          {preset.ratio}
+                        </div>
+
+                        {/* Selection Indicator */}
+                        {aspectRatio.id === preset.id && (
+                          <div className="absolute top-3 right-3 w-2 h-2 bg-blue-500 rounded-full shadow-lg" />
+                        )}
+
+                        {/* Content Overlay */}
+                        <div className={`absolute bottom-0 left-0 right-0 p-3 transition-all ${
+                          aspectRatio.id === preset.id
+                            ? "bg-gradient-to-t from-blue-600/90 to-transparent"
+                            : "bg-gradient-to-t from-gray-900/70 to-transparent group-hover:from-gray-900/80"
+                        }`}>
+                          <div className={`text-xs font-semibold mb-0.5 ${
+                            aspectRatio.id === preset.id ? "text-white" : "text-white"
+                          }`}>
+                            {preset.name}
+                          </div>
+                          <div className={`text-xs ${
+                            aspectRatio.id === preset.id ? "text-blue-100" : "text-gray-300"
+                          }`}>
+                            {preset.width} × {preset.height}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Standard Formats */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-sm font-semibold text-gray-900 tracking-tight">Standard Formats</h3>
+                    <span className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded-full">
+                      {ASPECT_RATIO_PRESETS.filter(p => p.category === "Standard").length} formats
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {ASPECT_RATIO_PRESETS.filter(p => p.category === "Standard").map((preset) => (
+                      <button
+                        key={preset.id}
+                        onClick={() => {
+                          setAspectRatio(preset);
+                          setAspectRatioDialogOpen(false);
+                        }}
+                        className={`group relative rounded-xl overflow-hidden border transition-all duration-200 text-left ${
+                          aspectRatio.id === preset.id
+                            ? "border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg shadow-blue-100/50 ring-2 ring-blue-500/20"
+                            : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-md hover:shadow-gray-100"
+                        }`}
+                        style={{ aspectRatio: `${preset.width} / ${preset.height}`, maxHeight: '140px' }}
+                        title={preset.description}
+                      >
+                        {/* Background Pattern */}
+                        <div className={`absolute inset-0 flex items-center justify-center transition-opacity ${
+                          aspectRatio.id === preset.id 
+                            ? "opacity-20" 
+                            : "opacity-10 group-hover:opacity-15"
+                        }`}>
+                          <div className="w-full h-full bg-gradient-to-br from-indigo-400 to-purple-500" />
+                        </div>
+                        
+                        {/* Ratio Badge */}
+                        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-md text-xs font-semibold backdrop-blur-sm transition-all ${
+                          aspectRatio.id === preset.id
+                            ? "bg-blue-600/90 text-white shadow-md"
+                            : "bg-white/80 text-gray-700 group-hover:bg-white group-hover:shadow-sm"
+                        }`}>
+                          {preset.ratio}
+                        </div>
+
+                        {/* Selection Indicator */}
+                        {aspectRatio.id === preset.id && (
+                          <div className="absolute top-3 right-3 w-2 h-2 bg-blue-500 rounded-full shadow-lg" />
+                        )}
+
+                        {/* Content Overlay */}
+                        <div className={`absolute bottom-0 left-0 right-0 p-3 transition-all ${
+                          aspectRatio.id === preset.id
+                            ? "bg-gradient-to-t from-blue-600/90 to-transparent"
+                            : "bg-gradient-to-t from-gray-900/70 to-transparent group-hover:from-gray-900/80"
+                        }`}>
+                          <div className={`text-xs font-semibold mb-0.5 ${
+                            aspectRatio.id === preset.id ? "text-white" : "text-white"
+                          }`}>
+                            {preset.name}
+                          </div>
+                          <div className={`text-xs ${
+                            aspectRatio.id === preset.id ? "text-blue-100" : "text-gray-300"
+                          }`}>
+                            {preset.width} × {preset.height}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="custom" className="space-y-6">
+                <div className="space-y-6">
+                  {/* Input Fields */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-gray-700">
+                        Width
+                      </label>
+                      <div className="relative">
+                        <Input
+                          type="number"
+                          value={canvasDimensions.width}
+                          onChange={(e) => {
+                            const newWidth = parseInt(e.target.value) || 100;
+                            setCanvasDimensions(newWidth, canvasDimensions.height);
+                          }}
+                          min={100}
+                          max={5000}
+                          className="pr-12 text-base font-medium"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">px</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-gray-700">
+                        Height
+                      </label>
+                      <div className="relative">
+                        <Input
+                          type="number"
+                          value={canvasDimensions.height}
+                          onChange={(e) => {
+                            const newHeight = parseInt(e.target.value) || 100;
+                            setCanvasDimensions(canvasDimensions.width, newHeight);
+                          }}
+                          min={100}
+                          max={5000}
+                          className="pr-12 text-base font-medium"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">px</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Preview Card */}
+                  <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full blur-3xl" />
+                    <div className="relative space-y-3">
+                      <div>
+                        <div className="text-sm font-semibold text-gray-900">Current Canvas</div>
+                        <div className="text-xs text-gray-500">Dimensions & Aspect Ratio</div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 pt-2">
+                        <div className="space-y-1">
+                          <div className="text-xs text-gray-500 uppercase tracking-wider font-medium">Dimensions</div>
+                          <div className="text-lg font-bold text-gray-900">
+                            {canvasDimensions.width} × {canvasDimensions.height}
+                          </div>
+                          <div className="text-xs text-gray-400">pixels</div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-xs text-gray-500 uppercase tracking-wider font-medium">Aspect Ratio</div>
+                          <div className="text-lg font-bold text-gray-900">
+                            {(() => {
+                              const calculateAspectRatio = (w: number, h: number): string => {
+                                const gcd = (a: number, b: number): number => b === 0 ? a : gcd(b, a % b);
+                                const divisor = gcd(w, h);
+                                const ratioW = Math.round(w / divisor);
+                                const ratioH = Math.round(h / divisor);
+                                const simplifiedDivisor = gcd(ratioW, ratioH);
+                                return `${Math.round(ratioW / simplifiedDivisor)}:${Math.round(ratioH / simplifiedDivisor)}`;
+                              };
+                              return calculateAspectRatio(canvasDimensions.width, canvasDimensions.height);
+                            })()}
+                          </div>
+                          <div className="text-xs text-gray-400">ratio</div>
+                        </div>
+                      </div>
+
+                      {/* Visual Preview */}
+                      <div className="pt-4 border-t border-gray-200">
+                        <div className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3">Preview</div>
+                        <div 
+                          className="relative mx-auto rounded-lg border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden shadow-inner"
+                          style={{ 
+                            aspectRatio: `${canvasDimensions.width} / ${canvasDimensions.height}`,
+                            maxWidth: '200px',
+                            maxHeight: '120px'
+                          }}
+                        >
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-[10px] font-semibold text-gray-400">
+                              {canvasDimensions.width} × {canvasDimensions.height}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </DialogContent>
       </Dialog>
