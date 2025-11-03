@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { useCanvas } from "@/hooks/useCanvas";
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE } from "@/lib/constants";
-import { Upload, X } from "lucide-react";
+import { CloudArrowUp, X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface ImageUploadProps {
@@ -102,7 +102,7 @@ export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
             )}
           >
             <input {...getInputProps()} />
-            <Upload className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+            <CloudArrowUp className="mx-auto mb-4 text-gray-400" size={48} weight="regular" />
             {isDragActive ? (
               <p className="text-sm">Drop the image here...</p>
             ) : (
@@ -130,7 +130,7 @@ export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
                 className="absolute top-2 right-2"
                 onClick={removeImage}
               >
-                <X className="h-4 w-4" />
+                <X size={16} weight="regular" />
               </Button>
             </div>
             {uploadedFile && (

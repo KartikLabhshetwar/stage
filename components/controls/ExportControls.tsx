@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useCanvas } from "@/hooks/useCanvas";
-import { Download } from "lucide-react";
+import { Download } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface ExportControlsProps {
@@ -42,7 +42,7 @@ export function ExportControls({ className }: ExportControlsProps) {
     <Card className={cn("w-full", className)}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Download className="h-4 w-4" />
+          <Download size={16} weight="regular" />
           Export
         </CardTitle>
         <CardDescription>Download your showcase image</CardDescription>

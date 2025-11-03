@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { useCanvas } from "@/hooks/useCanvas";
 import { DEFAULT_TEXT_FONT_SIZE, DEFAULT_TEXT_COLOR } from "@/lib/constants";
-import { Type } from "lucide-react";
+import { TextT } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface TextControlsProps {
@@ -87,7 +87,7 @@ export function TextControls({ className }: TextControlsProps) {
     <Card className={cn("w-full", className)}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Type className="h-4 w-4" />
+          <TextT size={16} weight="regular" />
           Text Overlay
         </CardTitle>
         <CardDescription>

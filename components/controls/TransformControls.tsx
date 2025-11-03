@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { useCanvas } from "@/hooks/useCanvas";
-import { Trash2 } from "lucide-react";
+import { Trash } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface TransformControlsProps {
@@ -176,7 +176,7 @@ export function TransformControls({ className }: TransformControlsProps) {
           onClick={handleDelete}
           className="w-full"
         >
-          <Trash2 className="h-4 w-4 mr-2" />
+          <Trash size={16} weight="regular" className="mr-2" />
           Delete Object
         </Button>
       </CardContent>

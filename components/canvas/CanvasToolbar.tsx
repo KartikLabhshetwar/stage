@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Upload, Type, Palette, Download, Image as ImageIcon, X } from "lucide-react";
+import { CloudArrowUp, TextT, PaintBrush, Download, ImageSquare as ImageIcon, X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCanvas } from "@/hooks/useCanvas";
@@ -14,7 +14,7 @@ import { Slider } from "@/components/ui/slider";
 
 export function CanvasToolbar() {
   const { operations, canvas } = useCanvas();
-  const { stage, layer } = useCanvasContext();
+  const { stage, layer, objects } = useCanvasContext();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [textDialogOpen, setTextDialogOpen] = useState(false);
   const [colorDialogOpen, setColorDialogOpen] = useState(false);
@@ -282,7 +282,7 @@ export function CanvasToolbar() {
           className="h-10 w-10"
           title="Upload Image"
         >
-          <Upload className="h-5 w-5" />
+          <CloudArrowUp size={20} weight="regular" />
         </Button>
 
         <Button
@@ -292,7 +292,7 @@ export function CanvasToolbar() {
           className="h-10 w-10"
           title="Add Text"
         >
-          <Type className="h-5 w-5" />
+          <TextT size={20} weight="regular" />
         </Button>
 
         <Button
@@ -302,7 +302,7 @@ export function CanvasToolbar() {
           className="h-10 w-10"
           title="Change Background Color"
         >
-          <Palette className="h-5 w-5" />
+          <PaintBrush size={20} weight="regular" />
         </Button>
 
         <div className="w-px h-6 bg-gray-300 mx-1" />
@@ -314,7 +314,7 @@ export function CanvasToolbar() {
           className="h-10 w-10"
           title="Export Canvas"
         >
-          <Download className="h-5 w-5" />
+          <Download size={20} weight="regular" />
         </Button>
         </div>
       </div>
@@ -335,7 +335,7 @@ export function CanvasToolbar() {
               }`}
             >
               <input {...getInputProps()} />
-              <ImageIcon className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+              <ImageIcon className="mx-auto mb-4 text-gray-400" size={48} weight="regular" />
               {isDragActive ? (
                 <p className="text-sm">Drop the image here...</p>
               ) : (
@@ -419,6 +419,43 @@ export function CanvasToolbar() {
                 />
               </div>
             </div>
+
+            {/* Existing Text Objects */}
+            {objects.filter((obj) => obj.type === "text").length > 0 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Existing Text Objects</label>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {objects
+                    .filter((obj) => obj.type === "text")
+                    .map((textObj) => (
+                      <div
+                        key={textObj.id}
+                        className="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate" style={{ color: textObj.fill || "#000000" }}>
+                            {textObj.text || "Empty text"}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Size: {textObj.fontSize || 48}px
+                          </p>
+                        </div>
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          className="ml-2 shrink-0"
+                          onClick={() => {
+                            operations.deleteObject(textObj.id);
+                          }}
+                          title="Remove text"
+                        >
+                          <X size={16} weight="regular" />
+                        </Button>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
 
             <Button onClick={handleAddText} className="w-full" disabled={!text.trim()}>
               Add Text
@@ -593,7 +630,7 @@ export function CanvasToolbar() {
                             updateCanvasGradient(newColors, gradientType);
                           }}
                         >
-                          <X className="h-4 w-4" />
+                          <X size={16} weight="regular" />
                         </Button>
                       )}
                     </div>
@@ -682,7 +719,7 @@ export function CanvasToolbar() {
                     }`}
                   >
                     <input {...getBgInputProps()} />
-                    <ImageIcon className="mx-auto mb-3 h-10 w-10 text-gray-400" />
+                    <ImageIcon className="mx-auto mb-3 text-gray-400" size={40} weight="regular" />
                     {isBgDragActive ? (
                       <p className="text-sm">Drop the image here...</p>
                     ) : (
@@ -727,7 +764,7 @@ export function CanvasToolbar() {
                           }
                         }}
                       >
-                        <X className="h-4 w-4 mr-1" />
+                        <X size={16} weight="regular" className="mr-1" />
                         Remove
                       </Button>
                     </div>
