@@ -3,12 +3,18 @@
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Instrument_Serif } from "next/font/google";
+
+const instrumentSerif = Instrument_Serif({
+  weight: ["400"],
+  subsets: ["latin"],
+});
 
 export function Pricing() {
   return (
     <section className="w-full py-12 sm:py-16 px-4 sm:px-6 border-t border-border bg-white">
       <div className="container mx-auto max-w-4xl">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">
+        <h2 className={`text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 ${instrumentSerif.className}`}>
           Pricing
         </h2>
         <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">

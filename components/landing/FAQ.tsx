@@ -6,6 +6,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Instrument_Serif } from "next/font/google";
+
+const instrumentSerif = Instrument_Serif({
+  weight: ["400"],
+  subsets: ["latin"],
+});
 
 interface FAQItem {
   question: string;
@@ -74,7 +80,7 @@ export function FAQ({ title = "Frequently Asked Questions", faqs = defaultFAQs }
   return (
     <section className="w-full py-12 sm:py-16 px-4 sm:px-6 border-t border-border bg-muted/30">
       <div className="container mx-auto max-w-3xl">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">
+        <h2 className={`text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 ${instrumentSerif.className}`}>
           {title}
         </h2>
         <Accordion type="single" collapsible className="w-full">
