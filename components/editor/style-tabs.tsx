@@ -18,6 +18,7 @@ import { ImageSquare as ImageIcon, Crop, PaintBrush, TextT, X } from '@phosphor-
 import { aspectRatios } from '@/lib/constants/aspect-ratios';
 import { BorderControls } from '@/components/controls/BorderControls';
 import { ShadowControls } from '@/components/controls/ShadowControls';
+import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
 
 export function StyleTabs() {
   const {
@@ -127,28 +128,30 @@ export function StyleTabs() {
             return (
               <div className="mt-3">
                 <Label className="text-xs text-gray-400 mb-2 block">Selected</Label>
-                <div
-                  className="relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50 shadow-sm"
-                  style={{
-                    aspectRatio: `${selectedRatio.width} / ${selectedRatio.height}`,
-                    maxHeight: '120px',
-                  }}
-                >
-                  <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-gray-900 text-white">
-                    {selectedRatio.width}:{selectedRatio.height}
-                  </div>
-                  
-                  <div className="absolute bottom-0 left-0 right-0 p-1.5 bg-gradient-to-t from-gray-900/90 to-transparent">
-                    <div className="text-[10px] font-semibold text-white">
-                      {selectedRatio.name}
+                <GlassInputWrapper intensity="default">
+                  <div
+                    className="relative rounded-lg overflow-hidden bg-transparent"
+                    style={{
+                      aspectRatio: `${selectedRatio.width} / ${selectedRatio.height}`,
+                      maxHeight: '120px',
+                    }}
+                  >
+                    <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-gray-900 text-white">
+                      {selectedRatio.width}:{selectedRatio.height}
                     </div>
-                    {selectedRatio.useCase && (
-                      <div className="text-[9px] mt-0.5 text-gray-200">
-                        {selectedRatio.useCase}
+                    
+                    <div className="absolute bottom-0 left-0 right-0 p-1.5 bg-gradient-to-t from-gray-900/90 to-transparent">
+                      <div className="text-[10px] font-semibold text-white">
+                        {selectedRatio.name}
                       </div>
-                    )}
+                      {selectedRatio.useCase && (
+                        <div className="text-[9px] mt-0.5 text-gray-200">
+                          {selectedRatio.useCase}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                </GlassInputWrapper>
               </div>
             );
           })()}

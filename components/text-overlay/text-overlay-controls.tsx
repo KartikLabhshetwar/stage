@@ -269,57 +269,61 @@ export const TextOverlayControls = () => {
               </GlassInputWrapper>
             </div>
 
-            <Select
-              value={selectedOverlay.fontFamily}
-              onValueChange={handleUpdateFontFamily}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Font family" />
-              </SelectTrigger>
-              <SelectContent>
-                {fontFamilies.map((font) => (
-                  <SelectItem key={font.id} value={font.id}>
-                    {font.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={selectedOverlay.fontWeight}
-              onValueChange={handleUpdateFontWeight}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Font weight" />
-              </SelectTrigger>
-              <SelectContent>
-                {getAvailableFontWeights(selectedOverlay.fontFamily).map(
-                  (weight) => (
-                    <SelectItem key={weight} value={weight}>
-                      {weight === 'normal'
-                        ? 'Normal'
-                        : weight === 'bold'
-                          ? 'Bold'
-                          : weight === '100'
-                            ? 'Thin (100)'
-                            : weight === '300'
-                              ? 'Light (300)'
-                              : weight === '500'
-                                ? 'Medium (500)'
-                                : weight === '600'
-                                  ? 'Semi Bold (600)'
-                                  : weight === '700'
-                                    ? 'Bold (700)'
-                                    : weight === '800'
-                                      ? 'Extra Bold (800)'
-                                      : weight === '900'
-                                        ? 'Black (900)'
-                                        : weight}
+            <GlassInputWrapper intensity="default">
+              <Select
+                value={selectedOverlay.fontFamily}
+                onValueChange={handleUpdateFontFamily}
+              >
+                <SelectTrigger className="w-full border-0 bg-transparent">
+                  <SelectValue placeholder="Font family" />
+                </SelectTrigger>
+                <SelectContent>
+                  {fontFamilies.map((font) => (
+                    <SelectItem key={font.id} value={font.id}>
+                      {font.name}
                     </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
+                  ))}
+                </SelectContent>
+              </Select>
+            </GlassInputWrapper>
+
+            <GlassInputWrapper intensity="default">
+              <Select
+                value={selectedOverlay.fontWeight}
+                onValueChange={handleUpdateFontWeight}
+              >
+                <SelectTrigger className="w-full border-0 bg-transparent">
+                  <SelectValue placeholder="Font weight" />
+                </SelectTrigger>
+                <SelectContent>
+                  {getAvailableFontWeights(selectedOverlay.fontFamily).map(
+                    (weight) => (
+                      <SelectItem key={weight} value={weight}>
+                        {weight === 'normal'
+                          ? 'Normal'
+                          : weight === 'bold'
+                            ? 'Bold'
+                            : weight === '100'
+                              ? 'Thin (100)'
+                              : weight === '300'
+                                ? 'Light (300)'
+                                : weight === '500'
+                                  ? 'Medium (500)'
+                                  : weight === '600'
+                                    ? 'Semi Bold (600)'
+                                    : weight === '700'
+                                      ? 'Bold (700)'
+                                      : weight === '800'
+                                        ? 'Extra Bold (800)'
+                                        : weight === '900'
+                                          ? 'Black (900)'
+                                          : weight}
+                      </SelectItem>
+                    )
+                  )}
+                </SelectContent>
+              </Select>
+            </GlassInputWrapper>
 
             <p className="text-xs text-muted-foreground">
               {getAvailableFontWeights(selectedOverlay.fontFamily).length}{' '}
@@ -330,18 +334,20 @@ export const TextOverlayControls = () => {
               available
             </p>
 
-            <Select
-              value={selectedOverlay.orientation}
-              onValueChange={handleUpdateOrientation}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Text orientation" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="horizontal">Horizontal</SelectItem>
-                <SelectItem value="vertical">Vertical</SelectItem>
-              </SelectContent>
-            </Select>
+            <GlassInputWrapper intensity="default">
+              <Select
+                value={selectedOverlay.orientation}
+                onValueChange={handleUpdateOrientation}
+              >
+                <SelectTrigger className="w-full border-0 bg-transparent">
+                  <SelectValue placeholder="Text orientation" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="horizontal">Horizontal</SelectItem>
+                  <SelectItem value="vertical">Vertical</SelectItem>
+                </SelectContent>
+              </Select>
+            </GlassInputWrapper>
 
             <div className="space-y-3">
               <div className="flex justify-between">
