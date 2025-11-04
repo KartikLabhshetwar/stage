@@ -123,8 +123,14 @@ export const ImageRenderComponent = ({
     <img
       src={imageUrl}
       alt="Uploaded image"
-      className="max-w-full max-h-full object-contain"
-      style={borderStyles}
+      className="max-w-full max-h-full w-auto h-auto object-contain"
+      style={{
+        ...borderStyles,
+        maxWidth: '100%',
+        maxHeight: '100%',
+        width: 'auto',
+        height: 'auto',
+      }}
     />
   );
 };

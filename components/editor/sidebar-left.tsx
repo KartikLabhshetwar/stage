@@ -13,7 +13,6 @@ import { StyleTabs } from './style-tabs';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { getAspectRatioPreset } from '@/lib/aspect-ratio-utils';
-import { cn } from '@/lib/utils';
 
 export function SidebarLeft({
   ...props
@@ -424,14 +423,10 @@ export function SidebarLeft({
           <Button
             onClick={() => setExportDialogOpen(true)}
             disabled={!uploadedImageUrl}
-            className={cn(
-              "w-full h-11 font-medium transition-all rounded-lg",
-              uploadedImageUrl
-                ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
-                : "bg-muted text-muted-foreground cursor-not-allowed"
-            )}
+            className="w-full"
+            size="lg"
+            variant="default"
           >
-            <Download className="size-4 mr-2" />
             Export Image
           </Button>
         </SidebarHeader>

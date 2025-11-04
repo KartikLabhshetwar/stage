@@ -11,8 +11,12 @@ export const ContentContainer = ({
   children,
 }: ContentContainerProps) => {
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      {imageUrl && <ImageRenderComponent imageUrl={imageUrl} />}
+    <div className="w-full h-full flex items-center justify-center overflow-hidden">
+      {imageUrl && (
+        <div className="w-full h-full flex items-center justify-center p-4">
+          <ImageRenderComponent imageUrl={imageUrl} />
+        </div>
+      )}
       {children}
     </div>
   );
