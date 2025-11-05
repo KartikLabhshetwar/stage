@@ -9,8 +9,30 @@ import { useResponsiveCanvasDimensions } from '@/hooks/useAspectRatioDimensions'
 import { getBackgroundCSS } from '@/lib/constants/backgrounds'
 import { TextOverlayRenderer } from '@/components/image-render/text-overlay-renderer'
 
+// Global ref to store the Konva stage for export
+let globalKonvaStage: any = null;
+
 function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   const stageRef = useRef<any>(null)
+  
+  // Store stage globally for export
+  useEffect(() => {
+    const updateStage = () => {
+      if (stageRef.current) {
+        // react-konva Stage ref gives us the Stage instance directly
+        globalKonvaStage = stageRef.current;
+      }
+    };
+    
+    updateStage();
+    // Also check after a short delay to ensure ref is set
+    const timeout = setTimeout(updateStage, 100);
+    
+    return () => {
+      clearTimeout(timeout);
+      globalKonvaStage = null;
+    };
+  });
   const patternRectRef = useRef<any>(null)
   const noiseRectRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -215,150 +237,6 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   const framedW = imageScaledW + frameOffset * 2 + windowPadding * 2 + eclipseBorder
   const framedH = imageScaledH + frameOffset * 2 + windowPadding * 2 + windowHeader + eclipseBorder
 
-  /* ─────────────────── background + shadow helpers ─────────────────── */
-  // Use backgroundConfig from useImageStore for gradients and solid colors
-  const getKonvaBackgroundProps = () => {
-    if (backgroundConfig.type === 'gradient') {
-      // Parse gradient string to get colors and direction
-      const gradientStr = backgroundStyle.background as string
-      
-      // Check if gradientStr is valid
-      if (!gradientStr || typeof gradientStr !== 'string') {
-        // Fallback to default gradient
-        const rad = (45 * Math.PI) / 180
-        const cx = canvasW / 2
-        const cy = canvasH / 2
-        const hw = canvasW / 2
-        const hh = canvasH / 2
-        return {
-          fillLinearGradientStartPoint: {
-            x: cx - Math.cos(rad) * hw,
-            y: cy - Math.sin(rad) * hh,
-          },
-          fillLinearGradientEndPoint: {
-            x: cx + Math.cos(rad) * hw,
-            y: cy + Math.sin(rad) * hh,
-          },
-          fillLinearGradientColorStops: [0, '#4168d0', 1, '#c850c0'],
-        }
-      }
-      
-      // Check if it's a radial gradient
-      if (gradientStr.includes('radial-gradient')) {
-        // For radial gradients, extract colors and use a radial-like linear gradient
-        const rgbMatches = gradientStr.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g)
-        let colorA = '#4168d0'
-        let colorB = '#c850c0'
-        
-        if (rgbMatches && rgbMatches.length >= 2) {
-          colorA = rgbMatches[0]
-          colorB = rgbMatches[rgbMatches.length - 1]
-        } else {
-          const hexMatches = gradientStr.match(/#[0-9A-Fa-f]{6}/g)
-          if (hexMatches && hexMatches.length >= 2) {
-            colorA = hexMatches[0]
-            colorB = hexMatches[hexMatches.length - 1]
-          }
-        }
-        
-        // Use a 45-degree angle for radial gradients approximated as linear
-        const rad = (45 * Math.PI) / 180
-        const cx = canvasW / 2
-        const cy = canvasH / 2
-        const hw = canvasW / 2
-        const hh = canvasH / 2
-        
-        return {
-          fillLinearGradientStartPoint: {
-            x: cx - Math.cos(rad) * hw,
-            y: cy - Math.sin(rad) * hh,
-          },
-          fillLinearGradientEndPoint: {
-            x: cx + Math.cos(rad) * hw,
-            y: cy + Math.sin(rad) * hh,
-          },
-          fillLinearGradientColorStops: [0, colorA, 1, colorB],
-        }
-      }
-      
-      // Parse linear gradient
-      const angleMatch = gradientStr.match(/linear-gradient\((\d+)deg/)
-      const angle = angleMatch ? parseInt(angleMatch[1], 10) : 45
-      
-      // Extract colors from gradient string
-      const rgbMatches = gradientStr.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g)
-      let colorA = '#4168d0'
-      let colorB = '#c850c0'
-      
-      if (rgbMatches && rgbMatches.length >= 2) {
-        colorA = rgbMatches[0]
-        colorB = rgbMatches[rgbMatches.length - 1]
-      } else {
-        const hexMatches = gradientStr.match(/#[0-9A-Fa-f]{6}/g)
-        if (hexMatches && hexMatches.length >= 2) {
-          colorA = hexMatches[0]
-          colorB = hexMatches[hexMatches.length - 1]
-        }
-      }
-      
-      const rad = (angle * Math.PI) / 180
-      const cx = canvasW / 2
-      const cy = canvasH / 2
-      const hw = canvasW / 2
-      const hh = canvasH / 2
-
-      return {
-        fillLinearGradientStartPoint: {
-          x: cx - Math.cos(rad) * hw,
-          y: cy - Math.sin(rad) * hh,
-        },
-        fillLinearGradientEndPoint: {
-          x: cx + Math.cos(rad) * hw,
-          y: cy + Math.sin(rad) * hh,
-        },
-        fillLinearGradientColorStops: [0, colorA, 1, colorB],
-      }
-    } else if (backgroundConfig.type === 'solid') {
-      return {
-        fill: backgroundStyle.backgroundColor || '#ffffff',
-      }
-    } else if (backgroundConfig.type === 'image' && bgImage) {
-      return {
-        fillPatternImage: bgImage,
-        fillPatternRepeat: 'no-repeat',
-        fillPatternScaleX: canvasW / bgImage.width,
-        fillPatternScaleY: canvasH / bgImage.height,
-      }
-    }
-    
-    // Fallback to editorStore background
-    if (background.mode === 'gradient') {
-      const rad = (background.gradientDirection * Math.PI) / 180
-      const cx = canvasW / 2
-      const cy = canvasH / 2
-      const hw = canvasW / 2
-      const hh = canvasH / 2
-
-      return {
-        fillLinearGradientStartPoint: {
-          x: cx - Math.cos(rad) * hw,
-          y: cy - Math.sin(rad) * hh,
-        },
-        fillLinearGradientEndPoint: {
-          x: cx + Math.cos(rad) * hw,
-          y: cy + Math.sin(rad) * hh,
-        },
-        fillLinearGradientColorStops: [0, background.colorA, 1, background.colorB],
-      }
-    }
-    
-    return {
-      fill: background.mode === 'solid' ? background.colorA : '#ffffff',
-    }
-  }
-
-  const backgroundProps = getKonvaBackgroundProps()
-
   const shadowProps = shadow.enabled
     ? (() => {
         const { elevation, side, softness, color, intensity } = shadow
@@ -407,6 +285,22 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
           overflow: 'hidden',
         }}
       >
+        {/* Background layer - DOM element for html2canvas compatibility */}
+        <div
+          id="canvas-background"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: `${canvasW}px`,
+            height: `${canvasH}px`,
+            zIndex: 0,
+            borderRadius: `${backgroundBorderRadius}px`,
+            ...backgroundStyle,
+          }}
+        />
+        
+        {/* Text overlays */}
         <div
           style={{
             position: 'absolute',
@@ -418,63 +312,22 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
         >
           <TextOverlayRenderer />
         </div>
-            <Stage
-              width={canvasW}
-              height={canvasH}
-              ref={stageRef}
-              className="hires-stage"
-              style={{
-                display: 'block',
-                backgroundColor: 'transparent',
-                overflow: 'hidden',
-              }}
-            >
-          {/* Background Layer - Render gradient/solid backgrounds in Konva for proper rendering */}
-          <Layer>
-            {(backgroundConfig.type === 'gradient' || backgroundConfig.type === 'solid') && (
-              <Rect
-                x={0}
-                y={0}
-                width={canvasW}
-                height={canvasH}
-                cornerRadius={backgroundBorderRadius}
-                shadowColor="rgba(0, 0, 0, 0.15)"
-                shadowBlur={20}
-                shadowOffsetX={0}
-                shadowOffsetY={4}
-                shadowOpacity={1}
-                stroke="#e5e7eb"
-                strokeWidth={1}
-                {...backgroundProps}
-              />
-            )}
-            
-            {/* Image background */}
-            {backgroundConfig.type === 'image' && bgImage && (
-              <Group clipX={0} clipY={0} clipWidth={canvasW} clipHeight={canvasH}>
-                <Rect
-                  x={0}
-                  y={0}
-                  width={canvasW}
-                  height={canvasH}
-                  fillPatternImage={bgImage}
-                  fillPatternRepeat="no-repeat"
-                  fillPatternScaleX={Math.max(canvasW / bgImage.width, canvasH / bgImage.height)}
-                  fillPatternScaleY={Math.max(canvasW / bgImage.width, canvasH / bgImage.height)}
-                  fillPatternOffsetX={(bgImage.width * Math.max(canvasW / bgImage.width, canvasH / bgImage.height) - canvasW) / 2}
-                  fillPatternOffsetY={(bgImage.height * Math.max(canvasW / bgImage.width, canvasH / bgImage.height) - canvasH) / 2}
-                  cornerRadius={backgroundBorderRadius}
-                  shadowColor="rgba(0, 0, 0, 0.15)"
-                  shadowBlur={20}
-                  shadowOffsetX={0}
-                  shadowOffsetY={4}
-                  shadowOpacity={1}
-                  stroke="#e5e7eb"
-                  strokeWidth={1}
-                />
-              </Group>
-            )}
-          </Layer>
+        
+        {/* Konva Stage - only for user images, frames, patterns, noise */}
+        <Stage
+          width={canvasW}
+          height={canvasH}
+          ref={stageRef}
+          className="hires-stage"
+          style={{
+            display: 'block',
+            backgroundColor: 'transparent',
+            overflow: 'hidden',
+            position: 'relative',
+            zIndex: 10,
+          }}
+        >
+          {/* Remove background layer - now handled by DOM element above */}
 
           <Layer>
             {patternImage && (
@@ -807,6 +660,11 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
       </div>
     </div>
   )
+}
+
+// Export function to get the Konva stage
+export function getKonvaStage(): any {
+  return globalKonvaStage;
 }
 
 export default function ClientCanvas() {

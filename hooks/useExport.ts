@@ -3,9 +3,12 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import Konva from 'konva';
 import { getAspectRatioPreset } from '@/lib/aspect-ratio-utils';
 import { exportElement, type ExportOptions } from '@/lib/export/export-service';
 import { saveExportPreferences, getExportPreferences, saveExportedImage } from '@/lib/export-storage';
+import { useImageStore } from '@/lib/store';
+import { getKonvaStage } from '@/components/canvas/ClientCanvas';
 
 export interface ExportSettings {
   format: 'png' | 'jpg';
@@ -22,6 +25,7 @@ const DEFAULT_SETTINGS: ExportSettings = {
 export function useExport(selectedAspectRatio: string) {
   const [settings, setSettings] = useState<ExportSettings>(DEFAULT_SETTINGS);
   const [isExporting, setIsExporting] = useState(false);
+  const { backgroundConfig, backgroundBorderRadius, textOverlays } = useImageStore();
 
   // Load preferences on mount
   useEffect(() => {
@@ -78,6 +82,9 @@ export function useExport(selectedAspectRatio: string) {
     setIsExporting(true);
     
     try {
+      // Get Konva stage
+      const konvaStage = getKonvaStage();
+      
       // Get actual pixel dimensions from aspect ratio preset
       const preset = getAspectRatioPreset(selectedAspectRatio);
       if (!preset) {
@@ -92,7 +99,14 @@ export function useExport(selectedAspectRatio: string) {
         exportHeight: preset.height,
       };
 
-      const result = await exportElement('image-render-card', exportOptions);
+      const result = await exportElement(
+        'image-render-card',
+        exportOptions,
+        konvaStage,
+        backgroundConfig,
+        backgroundBorderRadius,
+        textOverlays
+      );
 
       if (!result.dataURL || result.dataURL === 'data:,') {
         throw new Error('Invalid image data generated');
@@ -134,7 +148,7 @@ export function useExport(selectedAspectRatio: string) {
     } finally {
       setIsExporting(false);
     }
-  }, [selectedAspectRatio, settings]);
+  }, [selectedAspectRatio, settings, backgroundConfig, backgroundBorderRadius, textOverlays]);
 
   return {
     settings,
