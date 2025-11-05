@@ -7,9 +7,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { FaCoffee, FaDollarSign, FaMobileAlt, FaCopy, FaCheck } from 'react-icons/fa';
+import { FaCoffee, FaDollarSign, FaMobileAlt, FaCopy, FaCheck, FaHeart } from 'react-icons/fa';
 import { cn } from '@/lib/utils';
 import { Heart } from 'lucide-react';
+import { Button as MovingBorderButton } from '@/components/ui/moving-border';
 
 interface SponsorButtonProps {
   className?: string;
@@ -59,16 +60,17 @@ export function SponsorButton({ className, variant = 'bar' }: SponsorButtonProps
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            'h-9 px-4 rounded-xl border-gray-300 hover:bg-gray-50 text-gray-700 gap-2',
-            className
-          )}
+        <MovingBorderButton
+          as="button"
+          borderRadius="0.5rem"
+          containerClassName={cn("h-10", className)}
+          borderClassName=""
+          gradientColor="var(--primary)"
+          className="gap-2 bg-background hover:bg-accent text-foreground border border-border"
         >
-          <FaCoffee className="size-4" />
+          <FaHeart className="h-6 w-6 text-red-400" />
           <span>Sponsor</span>
-        </Button>
+        </MovingBorderButton>
       </PopoverTrigger>
       <PopoverContent 
         className="w-80 p-0" 

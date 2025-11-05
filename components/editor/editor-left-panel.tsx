@@ -80,7 +80,7 @@ export function EditorLeftPanel() {
             <Button
               onClick={() => setExportDialogOpen(true)}
               disabled={!uploadedImageUrl}
-              className="flex-1 h-11 justify-center gap-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-white shadow-sm hover:shadow-md transition-all font-medium"
+              className="flex-1 h-11 justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow-md transition-all font-medium"
             >
               <Download className="size-4" />
               <span>Download</span>
