@@ -21,6 +21,16 @@ export interface TemplateBackground {
     color: string;
     opacity?: number;
   }>;
+  // For mockup
+  mockup?: {
+    imageUrl: string; // URL to the mockup image
+    safeZone: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
+  };
 }
 
 export interface Template {

@@ -8,6 +8,7 @@ import { AspectRatioKey } from '@/lib/constants/aspect-ratios'
 import { BackgroundConfig, BackgroundType } from '@/lib/constants/backgrounds'
 import { gradientColors } from '@/lib/constants/gradient-colors'
 import { solidColors } from '@/lib/constants/solid-colors'
+import type { Template } from '@/types/canvas'
 
 interface TextShadow {
   enabled: boolean
@@ -410,6 +411,7 @@ interface ImageState {
     translateY: number
     scale: number
   }
+  currentTemplate: Template | null
   setImage: (file: File) => void
   clearImage: () => void
   setGradient: (gradient: GradientKey) => void
@@ -429,6 +431,7 @@ interface ImageState {
   setImageBorder: (border: ImageBorder | Partial<ImageBorder>) => void
   setImageShadow: (shadow: ImageShadow | Partial<ImageShadow>) => void
   setPerspective3D: (perspective: Partial<ImageState['perspective3D']>) => void
+  setCurrentTemplate: (template: Template | null) => void
   exportImage: () => Promise<void>
 }
 
@@ -473,6 +476,7 @@ export const useImageStore = create<ImageState>((set, get) => ({
     translateY: 0,
     scale: 1,
   },
+  currentTemplate: null,
 
   setImage: (file: File) => {
     const imageUrl = URL.createObjectURL(file)
@@ -648,6 +652,10 @@ export const useImageStore = create<ImageState>((set, get) => ({
         ...perspective,
       },
     })
+  },
+
+  setCurrentTemplate: (template: Template | null) => {
+    set({ currentTemplate: template })
   },
 
   exportImage: async () => {

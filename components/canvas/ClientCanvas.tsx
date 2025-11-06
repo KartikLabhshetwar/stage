@@ -49,7 +49,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     noise,
   } = useEditorStore()
 
-  const { backgroundConfig, backgroundBorderRadius, perspective3D, imageOpacity } = useImageStore()
+  const { backgroundConfig, backgroundBorderRadius, perspective3D, imageOpacity, currentTemplate } = useImageStore()
   const responsiveDimensions = useResponsiveCanvasDimensions()
   const backgroundStyle = getBackgroundCSS(backgroundConfig)
   
@@ -58,6 +58,9 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   
   // Load background image if type is 'image'
   const [bgImage, setBgImage] = useState<HTMLImageElement | null>(null)
+  
+  // Load mockup image if a mockup template is selected
+  const [mockupImage, setMockupImage] = useState<HTMLImageElement | null>(null)
   
   // Get container dimensions early for use in useEffect
   const containerWidth = responsiveDimensions.width
@@ -118,6 +121,22 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
       setBgImage(null)
     }
   }, [backgroundConfig, containerWidth, containerHeight])
+  
+  // Load mockup image when template is selected
+  useEffect(() => {
+    if (currentTemplate?.background.type === 'mockup' && currentTemplate.background.mockup) {
+      const img = new window.Image()
+      img.crossOrigin = 'anonymous'
+      img.onload = () => setMockupImage(img)
+      img.onerror = () => {
+        console.error('Failed to load mockup image:', currentTemplate.background.mockup?.imageUrl)
+        setMockupImage(null)
+      }
+      img.src = currentTemplate.background.mockup.imageUrl
+    } else {
+      setMockupImage(null)
+    }
+  }, [currentTemplate])
   
   useEffect(() => {
     const updateViewportSize = () => {
@@ -182,15 +201,29 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   const availableHeight = Math.min(viewportSize.height * 0.7, containerHeight)
   
   // Calculate canvas dimensions that maintain the selected aspect ratio
+  // If a mockup template is selected, use its dimensions
   let canvasW, canvasH
-  if (availableWidth / availableHeight > canvasAspect) {
-    // Height is the limiting factor
-    canvasH = availableHeight - canvas.padding * 2
-    canvasW = canvasH * canvasAspect
+  if (currentTemplate?.background.type === 'mockup' && currentTemplate.dimensions) {
+    // Use mockup template dimensions, scaled to fit viewport
+    const mockupAspect = currentTemplate.dimensions.width / currentTemplate.dimensions.height
+    if (availableWidth / availableHeight > mockupAspect) {
+      canvasH = availableHeight - canvas.padding * 2
+      canvasW = canvasH * mockupAspect
+    } else {
+      canvasW = availableWidth - canvas.padding * 2
+      canvasH = canvasW / mockupAspect
+    }
   } else {
-    // Width is the limiting factor
-    canvasW = availableWidth - canvas.padding * 2
-    canvasH = canvasW / canvasAspect
+    // Use aspect ratio calculation
+    if (availableWidth / availableHeight > canvasAspect) {
+      // Height is the limiting factor
+      canvasH = availableHeight - canvas.padding * 2
+      canvasW = canvasH * canvasAspect
+    } else {
+      // Width is the limiting factor
+      canvasW = availableWidth - canvas.padding * 2
+      canvasH = canvasW / canvasAspect
+    }
   }
 
   // Ensure reasonable dimensions
@@ -214,13 +247,51 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     patternStyle.blur,
   ])
 
-  let imageScaledW, imageScaledH
-  if (contentW / contentH > imageAspect) {
-    imageScaledH = contentH * screenshot.scale
-    imageScaledW = imageScaledH * imageAspect
+  // Calculate image dimensions and position
+  let imageScaledW, imageScaledH, imageX, imageY
+  
+  // If mockup is active, position image within safe zone
+  if (currentTemplate?.background.type === 'mockup' && currentTemplate.safeZone && mockupImage) {
+    const safeZone = currentTemplate.safeZone
+    const templateW = currentTemplate.dimensions.width
+    const templateH = currentTemplate.dimensions.height
+    
+    // Scale safe zone to current canvas size
+    const scaleX = canvasW / templateW
+    const scaleY = canvasH / templateH
+    const scaledSafeZone = {
+      x: safeZone.x * scaleX,
+      y: safeZone.y * scaleY,
+      width: safeZone.width * scaleX,
+      height: safeZone.height * scaleY,
+    }
+    
+    // Fit image within safe zone
+    const safeAspect = scaledSafeZone.width / scaledSafeZone.height
+    if (safeAspect > imageAspect) {
+      imageScaledH = scaledSafeZone.height * screenshot.scale
+      imageScaledW = imageScaledH * imageAspect
+    } else {
+      imageScaledW = scaledSafeZone.width * screenshot.scale
+      imageScaledH = imageScaledW / imageAspect
+    }
+    
+    // Center image in safe zone
+    imageX = scaledSafeZone.x + (scaledSafeZone.width - imageScaledW) / 2
+    imageY = scaledSafeZone.y + (scaledSafeZone.height - imageScaledH) / 2
   } else {
-    imageScaledW = contentW * screenshot.scale
-    imageScaledH = imageScaledW / imageAspect
+    // Normal positioning (centered in content area)
+    if (contentW / contentH > imageAspect) {
+      imageScaledH = contentH * screenshot.scale
+      imageScaledW = imageScaledH * imageAspect
+    } else {
+      imageScaledW = contentW * screenshot.scale
+      imageScaledH = imageScaledW / imageAspect
+    }
+    
+    // Will be calculated below in the original logic
+    imageX = undefined
+    imageY = undefined
   }
 
   /* ─────────────────── frame helpers ─────────────────── */
@@ -280,11 +351,21 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     perspective3D.scale !== 1
 
   // Calculate image position relative to canvas
-  // Account for Group position and offset
-  const groupCenterX = canvasW / 2 + screenshot.offsetX
-  const groupCenterY = canvasH / 2 + screenshot.offsetY
-  const imageX = groupCenterX + frameOffset + windowPadding - imageScaledW / 2
-  const imageY = groupCenterY + frameOffset + windowPadding + windowHeader - imageScaledH / 2
+  // If not set by mockup logic above, use normal centering
+  let finalImageX = imageX
+  let finalImageY = imageY
+  
+  if (finalImageX === undefined || finalImageY === undefined) {
+    // Account for Group position and offset
+    const groupCenterX = canvasW / 2 + screenshot.offsetX
+    const groupCenterY = canvasH / 2 + screenshot.offsetY
+    finalImageX = groupCenterX + frameOffset + windowPadding - imageScaledW / 2
+    finalImageY = groupCenterY + frameOffset + windowPadding + windowHeader - imageScaledH / 2
+  } else {
+    // For mockup, add frame offsets if any
+    finalImageX += frameOffset + windowPadding
+    finalImageY += frameOffset + windowPadding + windowHeader
+  }
 
   /* ─────────────────── render ─────────────────── */
   return (
@@ -311,20 +392,48 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
           overflow: 'hidden',
         }}
       >
+        {/* Mockup background layer - rendered first if mockup is active */}
+        {mockupImage && currentTemplate?.background.type === 'mockup' && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: `${canvasW}px`,
+              height: `${canvasH}px`,
+              zIndex: 1,
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src={mockupImage.src}
+              alt="Mockup"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                objectPosition: 'center',
+              }}
+            />
+          </div>
+        )}
+        
         {/* Background layer - DOM element for html2canvas compatibility */}
-        <div
-          id="canvas-background"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: `${canvasW}px`,
-            height: `${canvasH}px`,
-            zIndex: 0,
-            borderRadius: `${backgroundBorderRadius}px`,
-            ...backgroundStyle,
-          }}
-        />
+        {!mockupImage && (
+          <div
+            id="canvas-background"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: `${canvasW}px`,
+              height: `${canvasH}px`,
+              zIndex: 0,
+              borderRadius: `${backgroundBorderRadius}px`,
+              ...backgroundStyle,
+            }}
+          />
+        )}
         
         {/* Text overlays */}
         <div
@@ -345,8 +454,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
             data-3d-overlay="true"
             style={{
               position: 'absolute',
-              left: `${imageX}px`,
-              top: `${imageY}px`,
+              left: `${finalImageX}px`,
+              top: `${finalImageY}px`,
               width: `${imageScaledW}px`,
               height: `${imageScaledH}px`,
               perspective: `${perspective3D.perspective}px`,
@@ -372,6 +481,9 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                 transformOrigin: 'center center',
                 willChange: 'transform',
                 transition: 'transform 0.125s linear',
+                left: `${finalImageX}px`,
+                top: `${finalImageY}px`,
+                position: 'absolute',
               }}
             />
           </div>

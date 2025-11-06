@@ -178,6 +178,98 @@ export async function applyTemplateBackground(
       }
       break;
 
+    case "mockup":
+      if (background.mockup) {
+        // Remove existing background
+        const bgRect4 = layer.findOne("#background-rect");
+        if (bgRect4) {
+          bgRect4.destroy();
+        }
+
+        // Remove existing mockup image if any
+        const existingMockup = layer.findOne("#mockup-image");
+        if (existingMockup) {
+          existingMockup.destroy();
+        }
+
+        // Load and display mockup image
+        const mockupImage = new Image();
+        mockupImage.crossOrigin = "anonymous";
+        
+        await new Promise<void>((resolve, reject) => {
+          mockupImage.onload = () => {
+            // Create a white background first
+            const baseRect = new Konva.Rect({
+              id: "background-rect",
+              x: 0,
+              y: 0,
+              width: stage.width(),
+              height: stage.height(),
+              fill: "#ffffff",
+              listening: false,
+            });
+            layer.add(baseRect);
+            baseRect.moveToBottom();
+
+            // Calculate scale to fit mockup image within canvas while maintaining aspect ratio
+            const imgWidth = mockupImage.width || stage.width();
+            const imgHeight = mockupImage.height || stage.height();
+            
+            const scaleX = stage.width() / imgWidth;
+            const scaleY = stage.height() / imgHeight;
+            const scale = Math.min(scaleX, scaleY);
+
+            const scaledWidth = imgWidth * scale;
+            const scaledHeight = imgHeight * scale;
+            
+            // Center the mockup image
+            const x = (stage.width() - scaledWidth) / 2;
+            const y = (stage.height() - scaledHeight) / 2;
+
+            // Add mockup image
+            const konvaImage = new Konva.Image({
+              id: "mockup-image",
+              x,
+              y,
+              image: mockupImage,
+              width: scaledWidth,
+              height: scaledHeight,
+              listening: false,
+            });
+            
+            layer.add(konvaImage);
+            konvaImage.moveToBottom();
+            layer.batchDraw();
+            resolve();
+          };
+          
+          mockupImage.onerror = () => {
+            console.error("Failed to load mockup image:", background.mockup?.imageUrl);
+            // Fallback to white background
+            const fallbackRect = new Konva.Rect({
+              id: "background-rect",
+              x: 0,
+              y: 0,
+              width: stage.width(),
+              height: stage.height(),
+              fill: "#ffffff",
+              listening: false,
+            });
+            layer.add(fallbackRect);
+            fallbackRect.moveToBottom();
+            layer.batchDraw();
+            resolve();
+          };
+          
+          if (background.mockup?.imageUrl) {
+            mockupImage.src = background.mockup.imageUrl;
+          } else {
+            resolve();
+          }
+        });
+      }
+      break;
+
     default:
       const defaultRect = layer.findOne("#background-rect");
       if (defaultRect) {

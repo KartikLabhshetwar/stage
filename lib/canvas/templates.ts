@@ -161,6 +161,91 @@ export const templates: Template[] = [
       height: DEFAULT_CANVAS_HEIGHT,
     },
   },
+  // Mockup templates
+  {
+    id: "mockup-tweet",
+    name: "Tweet Card",
+    description: "Twitter/X post mockup",
+    background: {
+      type: "mockup",
+      mockup: {
+        imageUrl: "/mockups/tweet-card.png", // We'll create this or use a placeholder
+        safeZone: {
+          x: 50,
+          y: 100,
+          width: 500,
+          height: 300,
+        },
+      },
+    },
+    dimensions: {
+      width: 600,
+      height: 400,
+    },
+    safeZone: {
+      x: 50,
+      y: 100,
+      width: 500,
+      height: 300,
+    },
+    preview: "/mockups/tweet-card-preview.png",
+  },
+  {
+    id: "mockup-macbook",
+    name: "MacBook",
+    description: "MacBook Pro mockup",
+    background: {
+      type: "mockup",
+      mockup: {
+        imageUrl: "/mac/mac-asset-1.jpeg", // Using existing MacBook image
+        safeZone: {
+          x: 200,
+          y: 150,
+          width: 1200,
+          height: 750,
+        },
+      },
+    },
+    dimensions: {
+      width: 1600,
+      height: 1000,
+    },
+    safeZone: {
+      x: 200,
+      y: 150,
+      width: 1200,
+      height: 750,
+    },
+    preview: "/mac/mac-asset-1.jpeg",
+  },
+  {
+    id: "mockup-iphone",
+    name: "iPhone",
+    description: "iPhone mockup",
+    background: {
+      type: "mockup",
+      mockup: {
+        imageUrl: "/mockups/iphone-mockup.png", // We'll create this or use a placeholder
+        safeZone: {
+          x: 100,
+          y: 150,
+          width: 300,
+          height: 600,
+        },
+      },
+    },
+    dimensions: {
+      width: 500,
+      height: 900,
+    },
+    safeZone: {
+      x: 100,
+      y: 150,
+      width: 300,
+      height: 600,
+    },
+    preview: "/mockups/iphone-mockup-preview.png",
+  },
 ];
 
 export function getTemplateById(id: string): Template | undefined {

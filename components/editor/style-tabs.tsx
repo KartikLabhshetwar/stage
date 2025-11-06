@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { BorderControls } from '@/components/controls/BorderControls';
 import { ShadowControls } from '@/components/controls/ShadowControls';
 import { Perspective3DControls } from '@/components/controls/Perspective3DControls';
+import { MockupSelector } from '@/components/mockups/MockupSelector';
 
 export function StyleTabs() {
   const {
@@ -24,6 +25,8 @@ export function StyleTabs() {
 
   return (
     <div className="space-y-6">
+      <MockupSelector />
+      
       <h4 className="text-md font-semibold text-foreground">IMAGE</h4>
       
       <Tabs defaultValue="style" className="w-full">
