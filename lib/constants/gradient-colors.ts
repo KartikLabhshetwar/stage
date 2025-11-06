@@ -1,40 +1,59 @@
 export const gradientColors = {
-  primary_gradient:
-    'linear-gradient(43deg, rgb(65, 88, 208) 0%, rgb(200, 80, 192) 46%, rgb(255, 204, 112) 100%)',
-  tertiary_gradient:
-    'linear-gradient(140deg, rgb(255, 100, 50) 12.8%, rgb(255, 0, 101) 43.52%, rgb(123, 46, 255) 84.34%)',
-  sunset_gradient: 'linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3)',
-  fire_gradient:
-    'linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)',
-  purple_gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  green_gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-  blue_gradient:
-    'linear-gradient(160deg, rgb(0, 147, 233) 0%, rgb(128, 208, 199) 100%)',
-  light_blue_gradient:
-    'linear-gradient(62deg, rgb(142, 197, 252) 0%, rgb(224, 195, 252) 100%)',
-  light_pink_gradient:
-    'linear-gradient(0deg, rgb(217, 175, 217) 0%, rgb(151, 217, 225) 100%)',
-  medium_pink_gradient:
-    'linear-gradient(90deg, rgb(0, 219, 222) 0%, rgb(252, 0, 255) 100%)',
-  yellow_gradient:
-    'linear-gradient(62deg, rgb(251, 171, 126) 0%, rgb(247, 206, 104) 100%)',
-  light_yellow_green_gradient:
-    'linear-gradient(45deg, rgb(133, 255, 189) 0%, rgb(255, 251, 125) 100%)',
-  blue_purple_gradient:
-    'linear-gradient(19deg, rgb(33, 212, 253) 0%, rgb(183, 33, 255) 100%)',
-  orange_gradient:
-    'linear-gradient(45deg, rgb(251, 218, 97) 0%, rgb(255, 90, 205) 100%)',
-  // Radial gradients
-  radial_warm_gradient:
-    'radial-gradient(circle at center, rgba(255, 204, 112, 0.8) 0%, rgba(200, 80, 192, 0.6) 50%, rgba(65, 88, 208, 0.4) 100%)',
-  radial_bold_gradient:
-    'radial-gradient(circle at center, rgba(255, 100, 50, 0.9) 0%, rgba(255, 0, 101, 0.7) 50%, rgba(123, 46, 255, 0.5) 100%)',
-  radial_soft_gradient:
-    'radial-gradient(circle at center, rgba(255, 204, 112, 0.6) 0%, rgba(200, 80, 192, 0.4) 30%, rgba(255, 255, 255, 0.2) 100%)',
-  radial_purple_gradient:
-    'radial-gradient(circle at center, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.6) 100%)',
-  radial_orange_pink_gradient:
-    'radial-gradient(circle at center, rgba(251, 218, 97, 0.9) 0%, rgba(255, 90, 205, 0.7) 100%)',
+  // Row 1 - Vibrant & Bold
+  sunset_vibes: 'linear-gradient(to right, #FF6B6B, #FFE66D, #FF6B6B)',
+  purple_dream: 'linear-gradient(to right, #667EEA, #764BA2)',
+  ocean_breeze: 'linear-gradient(to right, #4FACFE, #00F2FE)',
+  coral_reef: 'linear-gradient(to right, #FF9A9E, #FECFEF)',
+  tropical_sunset: 'linear-gradient(to right, #FF6B9D, #C44569, #F8B500)',
+  
+  // Row 2 - Soft & Pastel
+  lavender_mist: 'linear-gradient(to right, #E0C3FC, #8EC5FC)',
+  peach_cream: 'linear-gradient(to right, #FFE5B4, #FFCCCB)',
+  mint_fresh: 'linear-gradient(to right, #A8E6CF, #D4F1F4)',
+  rose_quartz: 'linear-gradient(to right, #FFE5F1, #FFC0D9)',
+  sky_soft: 'linear-gradient(to right, #E0F2FE, #BAE6FD)',
+  
+  // Row 3 - Warm & Cozy
+  golden_hour: 'linear-gradient(to right, #FFD89B, #19547B)',
+  autumn_leaves: 'linear-gradient(to right, #FF6B35, #F7931E)',
+  warm_ember: 'linear-gradient(to right, #FF8A80, #FF6B6B)',
+  honey_glow: 'linear-gradient(to right, #FFD700, #FFA500)',
+  terracotta: 'linear-gradient(to right, #E07A5F, #F2CC8F)',
+  
+  // Row 4 - Cool & Calm
+  arctic_blue: 'linear-gradient(to right, #74B9FF, #0984E3)',
+  forest_dew: 'linear-gradient(to right, #00B894, #00CEC9)',
+  midnight_sky: 'linear-gradient(to right, #2D3436, #636E72)',
+  ocean_depth: 'linear-gradient(to right, #0984E3, #00B894)',
+  glacier_blue: 'linear-gradient(to right, #81ECEC, #74B9FF)',
+  
+  // Row 5 - Modern & Trendy
+  neon_purple: 'linear-gradient(to right, #A29BFE, #6C5CE7)',
+  electric_pink: 'linear-gradient(to right, #FD79A8, #E84393)',
+  cyber_blue: 'linear-gradient(to right, #00CEC9, #0984E3)',
+  vibrant_orange: 'linear-gradient(to right, #FDCB6E, #E17055)',
+  magenta_dusk: 'linear-gradient(to right, #FD79A8, #A29BFE)',
+  
+  // Row 6 - Elegant & Sophisticated
+  royal_purple: 'linear-gradient(to right, #6C5CE7, #A29BFE)',
+  deep_rose: 'linear-gradient(to right, #E84393, #FD79A8)',
+  emerald_green: 'linear-gradient(to right, #00B894, #55EFC4)',
+  navy_blue: 'linear-gradient(to right, #2D3436, #0984E3)',
+  burgundy_wine: 'linear-gradient(to right, #D63031, #E17055)',
+  
+  // Row 7 - Nature Inspired
+  forest_green: 'linear-gradient(to right, #00B894, #00CEC9)',
+  spring_bloom: 'linear-gradient(to right, #55EFC4, #81ECEC)',
+  desert_sand: 'linear-gradient(to right, #FDCB6E, #E17055)',
+  ocean_wave: 'linear-gradient(to right, #74B9FF, #81ECEC)',
+  sunset_glow: 'linear-gradient(to right, #FDCB6E, #E17055, #E84393)',
+  
+  // Row 8 - Playful & Bright
+  candy_pink: 'linear-gradient(to right, #FF6B9D, #FFC0D9)',
+  lemon_yellow: 'linear-gradient(to right, #FFE66D, #FFD93D)',
+  mint_chip: 'linear-gradient(to right, #55EFC4, #A8E6CF)',
+  bubblegum: 'linear-gradient(to right, #FD79A8, #FFC0D9)',
+  citrus_burst: 'linear-gradient(to right, #FFE66D, #FDCB6E)',
 };
 
 export type GradientKey = keyof typeof gradientColors;
