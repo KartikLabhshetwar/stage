@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useImageStore } from '@/lib/store';
 import { AspectRatioDropdown } from '@/components/aspect-ratio/aspect-ratio-dropdown';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Command, Palette } from 'lucide-react';
 import { aspectRatios } from '@/lib/constants/aspect-ratios';
 import { useDropzone } from 'react-dropzone';
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE } from '@/lib/constants';
@@ -15,6 +15,8 @@ import { solidColors, type SolidColorKey } from '@/lib/constants/solid-colors';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { FaImage, FaTimes } from 'react-icons/fa';
+import { GradientCommandPalette } from '@/components/gradient/gradient-command-palette';
+import { GradientEditorDialog } from '@/components/gradient/gradient-editor';
 
 export function EditorRightPanel() {
   const { 
@@ -29,6 +31,8 @@ export function EditorRightPanel() {
   
   const [expanded, setExpanded] = React.useState(true);
   const [bgUploadError, setBgUploadError] = React.useState<string | null>(null);
+  const [commandPaletteOpen, setCommandPaletteOpen] = React.useState(false);
+  const [gradientEditorOpen, setGradientEditorOpen] = React.useState(false);
   const selectedRatio = aspectRatios.find((ar) => ar.id === selectedAspectRatio);
 
   const validateFile = (file: File): string | null => {
@@ -68,6 +72,50 @@ export function EditorRightPanel() {
     maxSize: MAX_IMAGE_SIZE,
     multiple: false,
   });
+
+  // Handle keyboard shortcut for command palette (Cmd/Ctrl+K)
+  React.useEffect(() => {
+    if (backgroundConfig.type !== 'gradient') return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [backgroundConfig.type]);
+
+  const handleSelectGradient = (gradientKey: GradientKey) => {
+    setBackgroundValue(gradientKey);
+  };
+
+  const handleSelectRandomGradient = (gradientValue: string) => {
+    setBackgroundValue(gradientValue);
+  };
+
+  const handleCustomGradientChange = (gradientValue: string) => {
+    setBackgroundValue(gradientValue);
+  };
+
+  // Check if current gradient is a custom one (not a predefined key)
+  const isCustomGradient = React.useMemo(() => {
+    if (!backgroundConfig.value || typeof backgroundConfig.value !== 'string') return false;
+    return !gradientColors[backgroundConfig.value as GradientKey] && 
+           (backgroundConfig.value.startsWith('linear-gradient') || 
+            backgroundConfig.value.startsWith('radial-gradient'));
+  }, [backgroundConfig.value]);
+
+  // Get current gradient string for editor
+  const getCurrentGradientString = () => {
+    if (isCustomGradient) {
+      return backgroundConfig.value as string;
+    }
+    const gradientKey = backgroundConfig.value as GradientKey;
+    return gradientColors[gradientKey] || gradientColors.primary_gradient;
+  };
 
   return (
     <div className="w-full h-full bg-muted flex flex-col overflow-hidden md:w-80 border-l border-border">
@@ -164,25 +212,70 @@ export function EditorRightPanel() {
               
               {/* Gradient Selector */}
               {backgroundConfig.type === 'gradient' && (
-                <div className="space-y-3">
-                  <Label className="text-xs font-medium text-muted-foreground">Gradient</Label>
-                  <div className="grid grid-cols-2 gap-2.5 max-h-64 overflow-y-auto pr-2">
-                    {(Object.keys(gradientColors) as GradientKey[]).map((key) => (
-                      <button
-                        key={key}
-                        onClick={() => setBackgroundValue(key)}
-                        className={`h-16 rounded-lg border-2 transition-all ${
-                          backgroundConfig.value === key
-                            ? 'border-primary ring-2 ring-ring shadow-sm'
-                            : 'border-border hover:border-border/80'
-                        }`}
-                    style={{
-                          background: gradientColors[key],
-                        }}
-                        title={key.replace(/_/g, ' ')}
-                      />
-                    ))}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <Label className="text-xs font-medium text-muted-foreground">Gradient</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setGradientEditorOpen(true)}
+                        className="h-7 px-2 text-xs font-medium rounded-lg border-border/50 hover:bg-accent text-foreground bg-background hover:border-border flex items-center gap-1.5"
+                      >
+                        <Palette className="h-3.5 w-3.5" />
+                        <span>Custom</span>
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCommandPaletteOpen(true)}
+                        className="h-7 px-2 text-xs font-medium rounded-lg border-border/50 hover:bg-accent text-foreground bg-background hover:border-border flex items-center gap-1.5"
+                      >
+                        <Command className="h-3.5 w-3.5" />
+                        <span>Palette</span>
+                      </Button>
+                    </div>
                   </div>
+
+                  {/* Predefined Gradients Grid */}
+                  {!isCustomGradient && (
+                    <div className="grid grid-cols-2 gap-2.5 max-h-64 overflow-y-auto pr-2">
+                      {(Object.keys(gradientColors) as GradientKey[]).map((key) => (
+                        <button
+                          key={key}
+                          onClick={() => setBackgroundValue(key)}
+                          className={`h-16 rounded-lg border-2 transition-all ${
+                            backgroundConfig.value === key
+                              ? 'border-primary ring-2 ring-ring shadow-sm'
+                              : 'border-border hover:border-border/80'
+                          }`}
+                          style={{
+                            background: gradientColors[key],
+                          }}
+                          title={key.replace(/_/g, ' ')}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Custom Gradient Editor Dialog */}
+                  <GradientEditorDialog
+                    gradient={getCurrentGradientString()}
+                    onChange={handleCustomGradientChange}
+                    open={gradientEditorOpen}
+                    onOpenChange={setGradientEditorOpen}
+                  />
+
+                  {/* Command Palette */}
+                  <GradientCommandPalette
+                    open={commandPaletteOpen}
+                    onOpenChange={setCommandPaletteOpen}
+                    onSelectGradient={handleSelectGradient}
+                    onSelectRandomGradient={handleSelectRandomGradient}
+                    currentGradient={backgroundConfig.value as GradientKey}
+                  />
                 </div>
               )}
 

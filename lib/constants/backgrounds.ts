@@ -16,7 +16,12 @@ export const getBackgroundStyle = (config: BackgroundConfig): string => {
 
   switch (type) {
     case 'gradient':
-      return gradientColors[value as GradientKey];
+      // Check if it's a predefined gradient key
+      if (gradientColors[value as GradientKey]) {
+        return gradientColors[value as GradientKey];
+      }
+      // Otherwise, treat it as a custom gradient string
+      return value as string;
 
     case 'solid':
       const color = solidColors[value as SolidColorKey];
@@ -37,7 +42,16 @@ export const getBackgroundCSS = (
 
   switch (type) {
     case 'gradient':
-      const gradient = gradientColors[value as GradientKey] || gradientColors.primary_gradient;
+      // Check if it's a predefined gradient key
+      let gradient: string;
+      if (gradientColors[value as GradientKey]) {
+        gradient = gradientColors[value as GradientKey];
+      } else if (typeof value === 'string' && (value.startsWith('linear-gradient') || value.startsWith('radial-gradient'))) {
+        // Custom gradient string
+        gradient = value;
+      } else {
+        gradient = gradientColors.primary_gradient;
+      }
       return {
         background: gradient,
         opacity,
