@@ -18,6 +18,8 @@ export function PresetSelector() {
     selectedAspectRatio,
     backgroundConfig,
     backgroundBorderRadius,
+    backgroundBlur,
+    backgroundNoise,
     borderRadius,
     imageOpacity,
     imageScale,
@@ -30,6 +32,8 @@ export function PresetSelector() {
     setBackgroundOpacity,
     setBorderRadius,
     setBackgroundBorderRadius,
+    setBackgroundBlur,
+    setBackgroundNoise,
     setImageOpacity,
     setImageScale,
     setImageBorder,
@@ -49,12 +53,16 @@ export function PresetSelector() {
       preset.imageOpacity === imageOpacity &&
       preset.imageScale === imageScale &&
       preset.imageBorder.enabled === imageBorder.enabled &&
-      preset.imageShadow.enabled === imageShadow.enabled
+      preset.imageShadow.enabled === imageShadow.enabled &&
+      (preset.backgroundBlur ?? 0) === backgroundBlur &&
+      (preset.backgroundNoise ?? 0) === backgroundNoise
     );
   }, [
     selectedAspectRatio,
     backgroundConfig,
     backgroundBorderRadius,
+    backgroundBlur,
+    backgroundNoise,
     borderRadius,
     imageOpacity,
     imageScale,
@@ -75,6 +83,13 @@ export function PresetSelector() {
     setImageScale(preset.imageScale);
     setImageBorder(preset.imageBorder);
     setImageShadow(preset.imageShadow);
+    // Apply blur and noise if specified in preset
+    if (preset.backgroundBlur !== undefined) {
+      setBackgroundBlur(preset.backgroundBlur);
+    }
+    if (preset.backgroundNoise !== undefined) {
+      setBackgroundNoise(preset.backgroundNoise);
+    }
     
     // Close the popover after applying
     setOpen(false);
@@ -86,6 +101,8 @@ export function PresetSelector() {
     setBackgroundOpacity,
     setBorderRadius,
     setBackgroundBorderRadius,
+    setBackgroundBlur,
+    setBackgroundNoise,
     setImageOpacity,
     setImageScale,
     setImageBorder,
@@ -158,6 +175,16 @@ export function PresetSelector() {
                       {preset.imageShadow.enabled && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-medium">
                           Shadow
+                        </span>
+                      )}
+                      {preset.backgroundBlur && preset.backgroundBlur > 0 && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-medium">
+                          Blur
+                        </span>
+                      )}
+                      {preset.backgroundNoise && preset.backgroundNoise > 0 && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-medium">
+                          Grain
                         </span>
                       )}
                     </div>
