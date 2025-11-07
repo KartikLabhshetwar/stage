@@ -1,0 +1,1 @@
+export { SliderControl } from './SliderControl'
