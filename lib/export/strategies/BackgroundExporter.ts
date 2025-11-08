@@ -204,8 +204,23 @@ export class BackgroundExporter {
     scaleX: number,
     scaleY: number
   ): Promise<void> {
+    console.log('[BackgroundExporter] Adding image overlays:', {
+      total: imageOverlays.length,
+      visible: imageOverlays.filter(o => o.isVisible).length,
+    })
+
     for (const overlay of imageOverlays) {
-      if (!overlay.isVisible) continue
+      if (!overlay.isVisible) {
+        console.log('[BackgroundExporter] Skipping invisible overlay:', overlay.id)
+        continue
+      }
+
+      console.log('[BackgroundExporter] Adding overlay:', {
+        id: overlay.id,
+        src: overlay.src?.substring(0, 50) + '...',
+        position: overlay.position,
+        size: overlay.size,
+      })
 
       const overlayElement = document.createElement('div')
       overlayElement.style.position = 'absolute'
@@ -234,16 +249,30 @@ export class BackgroundExporter {
       img.style.display = 'block'
 
       // Wait for image to load
-      await new Promise<void>((resolve, reject) => {
-        img.onload = () => {
-          overlayElement.appendChild(img)
-          resolve()
-        }
-        img.onerror = () => reject(new Error(`Failed to load overlay image: ${overlay.src}`))
-        img.src = overlay.src
-      })
+      try {
+        await new Promise<void>((resolve, reject) => {
+          img.onload = () => {
+            console.log('[BackgroundExporter] Overlay image loaded successfully:', overlay.id)
+            overlayElement.appendChild(img)
+            resolve()
+          }
+          img.onerror = (error) => {
+            console.error('[BackgroundExporter] Failed to load overlay image:', {
+              id: overlay.id,
+              src: overlay.src,
+              error,
+            })
+            reject(new Error(`Failed to load overlay image: ${overlay.src}`))
+          }
+          img.src = overlay.src
+        })
 
-      container.appendChild(overlayElement)
+        container.appendChild(overlayElement)
+        console.log('[BackgroundExporter] Overlay added to container:', overlay.id)
+      } catch (error) {
+        console.error('[BackgroundExporter] Error adding overlay:', error)
+        // Continue with other overlays even if one fails
+      }
     }
   }
 

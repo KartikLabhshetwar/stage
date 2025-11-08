@@ -31,16 +31,35 @@ export class KonvaExporter {
 
     // Get all layers
     const layers = stage.getLayers()
+    console.log('[KonvaExporter] Total layers:', layers.length)
 
-    // Find background layer (first layer typically contains backgrounds)
-    const backgroundLayer = layers[0]
-    const wasBackgroundVisible = backgroundLayer ? backgroundLayer.visible() : true
+    // Store visibility state of all layers we'll hide (pattern and noise layers)
+    const layerVisibilityState = new Map<Konva.Layer, boolean>()
+
+    // Intelligently identify pattern and noise layers by their content
+    // Pattern/Noise layers have a single Rect with fillPatternImage
+    // ImageLayer has a Group with complex children (frames, images, etc.)
+    layers.forEach((layer, index) => {
+      const children = layer.getChildren()
+      console.log(`[KonvaExporter] Layer ${index}: ${children.length} children, visible: ${layer.visible()}`)
+
+      // Check if this is a pattern or noise layer
+      const isPatternOrNoiseLayer =
+        children.length === 1 &&
+        children[0].className === 'Rect' &&
+        children[0].attrs.fillPatternImage !== undefined
+
+      if (isPatternOrNoiseLayer) {
+        // Hide pattern/noise layers - they're rendered via html2canvas in BackgroundExporter
+        layerVisibilityState.set(layer, layer.visible())
+        layer.visible(false)
+        console.log(`[KonvaExporter] Hiding layer ${index} (pattern/noise layer with fillPatternImage)`)
+      } else {
+        console.log(`[KonvaExporter] Keeping layer ${index} visible (image layer)`)
+      }
+    })
 
     try {
-      // Temporarily hide background layer
-      if (backgroundLayer) {
-        backgroundLayer.visible(false)
-      }
 
       // Calculate scale factor to match export dimensions
       const scaleX = targetWidth / originalWidth
@@ -103,10 +122,10 @@ export class KonvaExporter {
 
       return finalCanvas
     } finally {
-      // Restore visibility
-      if (backgroundLayer) {
-        backgroundLayer.visible(wasBackgroundVisible)
-      }
+      // Restore visibility of all hidden layers
+      layerVisibilityState.forEach((wasVisible, layer) => {
+        layer.visible(wasVisible)
+      })
       stage.getLayers().forEach((layer) => layer.draw())
     }
   }

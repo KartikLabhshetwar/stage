@@ -51,7 +51,17 @@ export async function exportElement(
   }
 
   try {
+    console.log('[Export] Starting export process...', {
+      width: options.exportWidth,
+      height: options.exportHeight,
+      scale: options.scale,
+      has3D: !!(perspective3D && imageSrc),
+      textOverlays: textOverlays.length,
+      imageOverlays: imageOverlays.filter(o => o.isVisible).length,
+    })
+
     // Step 1: Export background and text overlays using BackgroundExporter
+    console.log('[Export] Step 1: Exporting background and overlays...')
     const backgroundExporter = new BackgroundExporter()
     const backgroundCanvas = await backgroundExporter.export({
       width: options.exportWidth,
@@ -64,8 +74,13 @@ export async function exportElement(
       blur: backgroundBlur,
       noise: backgroundNoise,
     })
+    console.log('[Export] Step 1 complete: Background canvas', {
+      width: backgroundCanvas.width,
+      height: backgroundCanvas.height,
+    })
 
     // Step 2: Export Konva stage using KonvaExporter
+    console.log('[Export] Step 2: Exporting Konva stage...')
     const konvaExporter = new KonvaExporter()
     let konvaCanvas = await konvaExporter.export(konvaStage, {
       width: options.exportWidth,
@@ -74,9 +89,14 @@ export async function exportElement(
       format: options.format,
       quality: options.quality,
     })
+    console.log('[Export] Step 2 complete: Konva canvas', {
+      width: konvaCanvas.width,
+      height: konvaCanvas.height,
+    })
 
     // Step 2.5: If 3D transforms are active, capture using Transform3DExporter
     if (perspective3D && imageSrc) {
+      console.log('[Export] Step 2.5: Applying 3D transforms...', perspective3D)
       const transform3DExporter = new Transform3DExporter()
       konvaCanvas = await transform3DExporter.applyToKonvaCanvas(
         konvaCanvas,
@@ -87,6 +107,7 @@ export async function exportElement(
         options.exportWidth,
         options.exportHeight
       )
+      console.log('[Export] Step 2.5 complete: 3D transforms applied')
     }
 
     // Step 3: Composite both canvases using CanvasCompositor
