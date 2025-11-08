@@ -1,5 +1,6 @@
 import html2canvas from 'html2canvas'
 import { getBackgroundCSS } from '@/lib/constants/backgrounds'
+import { getFontCSS } from '@/lib/constants/fonts'
 import { BlurProcessor, NoiseProcessor } from '../processors'
 import { convertStylesToRGB, injectRGBOverrides } from '../export-utils'
 
@@ -113,6 +114,134 @@ export class BackgroundExporter {
     bgElement.style.setProperty('filter', 'none', 'important')
 
     return bgElement
+  }
+
+  private getScalingFactors(width: number, height: number): { scaleX: number; scaleY: number } {
+    const canvasContainer = document.getElementById('image-render-card')
+    if (!canvasContainer) {
+      throw new Error('Canvas container not found.')
+    }
+
+    const canvasRect = canvasContainer.getBoundingClientRect()
+    let scaleX = 1
+    let scaleY = 1
+    if (canvasRect.width > 0 && canvasRect.height > 0) {
+      scaleX = width / canvasRect.width
+      scaleY = height / canvasRect.height
+    }
+
+    return { scaleX, scaleY }
+  }
+
+  private async addTextOverlays(
+    container: HTMLDivElement,
+    textOverlays: any[],
+    width: number,
+    height: number,
+    scaleX: number,
+    scaleY: number
+  ): Promise<void> {
+    for (const overlay of textOverlays) {
+      if (!overlay.isVisible) continue
+
+      const textElement = document.createElement('div')
+      textElement.style.position = 'absolute'
+      textElement.style.left = `${(overlay.position.x / 100) * width}px`
+      textElement.style.top = `${(overlay.position.y / 100) * height}px`
+      textElement.style.transform = 'translate(-50%, -50%)'
+      textElement.style.fontSize = `${overlay.fontSize * scaleX}px`
+      textElement.style.fontWeight = overlay.fontWeight
+      textElement.style.fontFamily = getFontCSS(overlay.fontFamily)
+
+      // Convert oklch color
+      let textColor = overlay.color
+      if (textColor && textColor.includes('oklch')) {
+        textColor = this.convertOklchColor(textColor)
+      }
+      textElement.style.color = textColor
+
+      textElement.style.opacity = overlay.opacity.toString()
+      textElement.style.whiteSpace = 'nowrap'
+      textElement.style.pointerEvents = 'none'
+      textElement.style.zIndex = '1000'
+      textElement.style.visibility = 'visible'
+      textElement.style.display = 'block'
+      textElement.textContent = overlay.text
+
+      if (overlay.orientation === 'vertical') {
+        textElement.style.writingMode = 'vertical-rl'
+      }
+
+      if (overlay.textShadow?.enabled) {
+        let shadowColor = overlay.textShadow.color
+        if (shadowColor && shadowColor.includes('oklch')) {
+          shadowColor = this.convertOklchColor(shadowColor)
+        }
+        textElement.style.textShadow = `${overlay.textShadow.offsetX * scaleX}px ${
+          overlay.textShadow.offsetY * scaleY
+        }px ${overlay.textShadow.blur * scaleX}px ${shadowColor}`
+      }
+
+      container.appendChild(textElement)
+    }
+  }
+
+  private async addImageOverlays(
+    container: HTMLDivElement,
+    imageOverlays: any[],
+    scaleX: number,
+    scaleY: number
+  ): Promise<void> {
+    for (const overlay of imageOverlays) {
+      if (!overlay.isVisible) {
+        continue
+      }
+
+      const overlayElement = document.createElement('div')
+      overlayElement.style.position = 'absolute'
+      overlayElement.style.left = `${overlay.position.x * scaleX}px`
+      overlayElement.style.top = `${overlay.position.y * scaleY}px`
+      overlayElement.style.width = `${overlay.size * scaleX}px`
+      overlayElement.style.height = `${overlay.size * scaleY}px`
+      overlayElement.style.opacity = overlay.opacity.toString()
+      overlayElement.style.transform = `
+        rotate(${overlay.rotation}deg)
+        scaleX(${overlay.flipX ? -1 : 1})
+        scaleY(${overlay.flipY ? -1 : 1})
+      `
+      overlayElement.style.transformOrigin = 'center center'
+      overlayElement.style.pointerEvents = 'none'
+      overlayElement.style.overflow = 'hidden'
+      overlayElement.style.zIndex = '1001'
+      overlayElement.style.visibility = 'visible'
+      overlayElement.style.display = 'block'
+
+      const img = document.createElement('img')
+      img.crossOrigin = 'anonymous'
+      img.style.width = '100%'
+      img.style.height = '100%'
+      img.style.objectFit = 'contain'
+      img.style.display = 'block'
+
+      // Wait for image to load
+      try {
+        await new Promise<void>((resolve, reject) => {
+          img.onload = () => {
+            overlayElement.appendChild(img)
+            resolve()
+          }
+          img.onerror = () => {
+            reject(new Error(`Failed to load overlay image: ${overlay.src}`))
+          }
+          img.src = overlay.src
+        })
+
+        container.appendChild(overlayElement)
+      } catch (error) {
+        // Continue with other overlays even if one fails
+        console.error('Error loading overlay image:', error)
+      }
+    }
   }
 
   private async waitForBackgroundImage(backgroundConfig: any): Promise<void> {

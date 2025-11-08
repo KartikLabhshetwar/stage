@@ -6,7 +6,13 @@
 
 import Konva from 'konva'
 import { addWatermarkToCanvas } from './watermark'
-import { BackgroundExporter, KonvaExporter, Transform3DExporter, CanvasCompositor } from './strategies'
+import {
+  BackgroundExporter,
+  KonvaExporter,
+  Transform3DExporter,
+  CanvasCompositor,
+  OverlaysExporter,
+} from './strategies'
 
 export interface ExportOptions {
   format: 'png'
@@ -51,7 +57,7 @@ export async function exportElement(
   }
 
   try {
-    // Step 1: Export background and text overlays using BackgroundExporter
+    // Step 1: Export background (no overlays) using BackgroundExporter
     const backgroundExporter = new BackgroundExporter()
     const backgroundCanvas = await backgroundExporter.export({
       width: options.exportWidth,
@@ -59,13 +65,11 @@ export async function exportElement(
       scale: options.scale,
       backgroundConfig,
       borderRadius: backgroundBorderRadius,
-      textOverlays,
-      imageOverlays,
       blur: backgroundBlur,
       noise: backgroundNoise,
     })
 
-    // Step 2: Export Konva stage using KonvaExporter
+    // Step 2: Export Konva stage (user uploaded image) using KonvaExporter
     const konvaExporter = new KonvaExporter()
     let konvaCanvas = await konvaExporter.export(konvaStage, {
       width: options.exportWidth,
@@ -89,15 +93,25 @@ export async function exportElement(
       )
     }
 
-    // Step 3: Composite both canvases using CanvasCompositor
+    // Step 3: Export text and image overlays separately using OverlaysExporter
+    const overlaysExporter = new OverlaysExporter()
+    const overlaysCanvas = await overlaysExporter.export({
+      width: options.exportWidth,
+      height: options.exportHeight,
+      scale: options.scale,
+      textOverlays,
+      imageOverlays,
+    })
+
+    // Step 4: Composite all 3 canvases: background -> konva -> overlays
     const compositor = new CanvasCompositor()
-    const finalCanvas = compositor.composite(backgroundCanvas, konvaCanvas, {
+    const finalCanvas = compositor.composite(backgroundCanvas, konvaCanvas, overlaysCanvas, {
       width: options.exportWidth,
       height: options.exportHeight,
       scale: options.scale,
     })
 
-    // Step 4: Add watermark
+    // Step 5: Add watermark
     addWatermarkToCanvas(finalCanvas, {
       text: 'stage',
       position: 'bottom-right',
@@ -105,7 +119,7 @@ export async function exportElement(
       textColor: 'rgba(255, 255, 255, 0.7)',
     })
 
-    // Step 5: Convert to blob and data URL
+    // Step 6: Convert to blob and data URL
     const mimeType = 'image/png'
 
     const blob = await new Promise<Blob>((resolve, reject) => {

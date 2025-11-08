@@ -9,11 +9,13 @@ export interface CompositorOptions {
  */
 export class CanvasCompositor {
   /**
-   * Composite background and Konva stage into final canvas
+   * Composite background, Konva stage, and overlays into final canvas
+   * Layer order: background (lowest) -> konva (user image) -> overlays (highest)
    */
   composite(
     backgroundCanvas: HTMLCanvasElement,
     konvaCanvas: HTMLCanvasElement,
+    overlaysCanvas: HTMLCanvasElement | null,
     options: CompositorOptions
   ): HTMLCanvasElement {
     const { width, height, scale } = options
@@ -31,11 +33,16 @@ export class CanvasCompositor {
     ctx.imageSmoothingEnabled = true
     ctx.imageSmoothingQuality = 'high'
 
-    // Draw background first
+    // Layer 1: Draw background first (lowest layer)
     ctx.drawImage(backgroundCanvas, 0, 0, width * scale, height * scale)
 
-    // Draw Konva canvas on top
+    // Layer 2: Draw Konva canvas (user image) on top of background
     ctx.drawImage(konvaCanvas, 0, 0, width * scale, height * scale)
+
+    // Layer 3: Draw overlays on top of user image (highest layer)
+    if (overlaysCanvas) {
+      ctx.drawImage(overlaysCanvas, 0, 0, width * scale, height * scale)
+    }
 
     return finalCanvas
   }
