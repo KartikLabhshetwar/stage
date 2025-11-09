@@ -953,48 +953,56 @@ async function capture3DTransformWithModernScreenshot(
     throw new Error('3D overlay element not found');
   }
 
-  // Get the bounding box of the overlay element
-  const rect = overlayElement.getBoundingClientRect();
+  // Get the actual dimensions from inline styles (these are canvas coordinates)
+  const overlayStyle = overlayElement.style;
+  const overlayWidth = parseFloat(overlayStyle.width) || 0;
+  const overlayHeight = parseFloat(overlayStyle.height) || 0;
+  
   const overlayComputedStyle = window.getComputedStyle(overlayElement);
   
-  // Create a temporary container for capture
-  // Position it off-screen to avoid affecting the viewport
+  // Create a temporary container at the SCALED size for high-res capture
+  const scaledWidth = overlayWidth * scale;
+  const scaledHeight = overlayHeight * scale;
+  
   const tempContainer = document.createElement('div');
   tempContainer.style.position = 'absolute';
-  tempContainer.style.left = '-9999px';
-  tempContainer.style.top = '-9999px';
-  tempContainer.style.width = `${rect.width}px`;
-  tempContainer.style.height = `${rect.height}px`;
+  tempContainer.style.left = '-99999px';
+  tempContainer.style.top = '-99999px';
+  tempContainer.style.width = `${scaledWidth}px`;
+  tempContainer.style.height = `${scaledHeight}px`;
   tempContainer.style.overflow = 'visible';
   
-  // Clone the overlay element with all its styles
-  // The overlay element itself has perspective, which applies to its children
+  // Clone the overlay element
   const clonedOverlay = overlayElement.cloneNode(true) as HTMLElement;
   
-  // Preserve all computed styles from the original overlay
+  // Scale up the container to match export resolution
   clonedOverlay.style.position = 'relative';
   clonedOverlay.style.left = '0';
   clonedOverlay.style.top = '0';
-  clonedOverlay.style.width = overlayComputedStyle.width;
-  clonedOverlay.style.height = overlayComputedStyle.height;
-  clonedOverlay.style.perspective = overlayComputedStyle.perspective;
+  clonedOverlay.style.width = `${scaledWidth}px`;
+  clonedOverlay.style.height = `${scaledHeight}px`;
+  clonedOverlay.style.perspective = `${parseFloat(overlayComputedStyle.perspective) * scale}px`;
   clonedOverlay.style.transformStyle = overlayComputedStyle.transformStyle;
   
-  // Clone the image inside with all its transform styles
+  // Clone the image inside with scaled dimensions
   const originalImg = overlayElement.querySelector('img');
   if (originalImg) {
     const clonedImg = originalImg.cloneNode(true) as HTMLImageElement;
     const imgComputedStyle = window.getComputedStyle(originalImg);
     
-    // Preserve all image styles including the 3D transform
-    clonedImg.style.width = imgComputedStyle.width;
-    clonedImg.style.height = imgComputedStyle.height;
+    // Scale the image to match export resolution
+    clonedImg.style.width = '100%';
+    clonedImg.style.height = '100%';
     clonedImg.style.objectFit = imgComputedStyle.objectFit;
     clonedImg.style.opacity = imgComputedStyle.opacity;
-    clonedImg.style.borderRadius = imgComputedStyle.borderRadius;
-    clonedImg.style.transform = imgComputedStyle.transform; // This contains the 3D transform
+    
+    // Scale border radius
+    const borderRadius = parseFloat(imgComputedStyle.borderRadius) || 0;
+    clonedImg.style.borderRadius = `${borderRadius * scale}px`;
+    
+    // Keep the same transform (it's already in the right format)
+    clonedImg.style.transform = imgComputedStyle.transform;
     clonedImg.style.transformOrigin = imgComputedStyle.transformOrigin;
-    clonedImg.style.willChange = imgComputedStyle.willChange;
     
     // Clear the cloned overlay and add the cloned image
     clonedOverlay.innerHTML = '';
@@ -1005,15 +1013,12 @@ async function capture3DTransformWithModernScreenshot(
   document.body.appendChild(tempContainer);
   
   try {
-    // Wait for any images to load and styles to apply
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Wait for images to load
+    await new Promise(resolve => setTimeout(resolve, 150));
     
-    // Use modern-screenshot to capture the 3D transformed element
-    // Capture the overlay element which has perspective and contains the transformed image
-    // modern-screenshot properly handles CSS 3D transforms including perspective
+    // Capture at the exact scaled size - no additional scaling needed
     const canvas = await domToCanvas(clonedOverlay, {
-      width: rect.width * scale,
-      height: rect.height * scale,
+      scale: 1, // Don't scale again, we already scaled the element
     });
     
     return canvas;
@@ -1198,49 +1203,70 @@ export async function exportElement(
 
       if (has3DTransform) {
         try {
-          // Find the 3D transformed image overlay to get dimensions
+          // Find the 3D transformed image overlay
           const overlayContainer = element.querySelector('[data-3d-overlay="true"]') as HTMLElement;
           
           if (overlayContainer) {
-            // Get the displayed dimensions from the overlay
-            const overlayRect = overlayContainer.getBoundingClientRect();
-            const innerContainer = element.querySelector('div[style*="position: relative"]') as HTMLElement;
+            // Capture 3D transform using modern-screenshot
+            const transformedCanvas = await capture3DTransformWithModernScreenshot(
+              elementId,
+              options.scale
+            );
             
-            if (innerContainer) {
-              const innerRect = innerContainer.getBoundingClientRect();
+            // Get the overlay's position and size from its inline styles (set in ClientCanvas.tsx)
+            // These are the actual values in pixels relative to the canvas
+            const overlayStyle = overlayContainer.style;
+            const overlayLeft = parseFloat(overlayStyle.left) || 0;
+            const overlayTop = parseFloat(overlayStyle.top) || 0;
+            const overlayWidth = parseFloat(overlayStyle.width) || 0;
+            const overlayHeight = parseFloat(overlayStyle.height) || 0;
+            
+            // Get the Konva stage dimensions (the display canvas dimensions)
+            const stageWidth = konvaStage.width();
+            const stageHeight = konvaStage.height();
+            
+            // Calculate scale factors from stage dimensions to export dimensions
+            const exportScaleX = (options.exportWidth * options.scale) / stageWidth;
+            const exportScaleY = (options.exportHeight * options.scale) / stageHeight;
+            
+            // Scale the position to match export dimensions
+            const scaledX = overlayLeft * exportScaleX;
+            const scaledY = overlayTop * exportScaleY;
+            
+            // The transformedCanvas was captured at scaled size, so its dimensions should match:
+            // overlayWidth * options.scale x overlayHeight * options.scale
+            // But we need to scale it to match the export canvas scale
+            const targetWidth = overlayWidth * exportScaleX;
+            const targetHeight = overlayHeight * exportScaleY;
+            
+            console.log('3D Transform Debug:', {
+              overlayLeft, overlayTop, overlayWidth, overlayHeight,
+              stageWidth, stageHeight,
+              exportWidth: options.exportWidth,
+              exportHeight: options.exportHeight,
+              exportScale: options.scale,
+              exportScaleX, exportScaleY,
+              scaledX, scaledY,
+              transformedCanvasSize: { w: transformedCanvas.width, h: transformedCanvas.height },
+              targetSize: { w: targetWidth, h: targetHeight },
+              konvaCanvasSize: { w: konvaCanvas.width, h: konvaCanvas.height }
+            });
+            
+            // Composite the transformed canvas onto the Konva canvas
+            const compositeCtx = konvaCanvas.getContext('2d');
+            if (compositeCtx && transformedCanvas.width > 0 && transformedCanvas.height > 0) {
+              compositeCtx.imageSmoothingEnabled = true;
+              compositeCtx.imageSmoothingQuality = 'high';
+              compositeCtx.save();
               
-              // Capture 3D transform using modern-screenshot
-              const transformedCanvas = await capture3DTransformWithModernScreenshot(
-                elementId,
-                options.scale
+              // Draw the captured 3D transform at the correct position and size
+              compositeCtx.drawImage(
+                transformedCanvas,
+                0, 0, transformedCanvas.width, transformedCanvas.height,
+                scaledX, scaledY, targetWidth, targetHeight
               );
               
-              // Calculate position relative to inner container
-              const relativeX = overlayRect.left - innerRect.left;
-              const relativeY = overlayRect.top - innerRect.top;
-              
-              // Scale to export dimensions
-              const scaleX = (options.exportWidth * options.scale) / innerRect.width;
-              const scaleY = (options.exportHeight * options.scale) / innerRect.height;
-              
-              const scaledX = relativeX * scaleX;
-              const scaledY = relativeY * scaleY;
-              const scaledWidth = transformedCanvas.width;
-              const scaledHeight = transformedCanvas.height;
-              
-              // Composite the transformed canvas onto the Konva canvas
-              const compositeCtx = konvaCanvas.getContext('2d');
-              if (compositeCtx && transformedCanvas.width > 0 && transformedCanvas.height > 0) {
-                compositeCtx.imageSmoothingEnabled = true;
-                compositeCtx.imageSmoothingQuality = 'high';
-                compositeCtx.save();
-                compositeCtx.drawImage(
-                  transformedCanvas,
-                  0, 0, transformedCanvas.width, transformedCanvas.height,
-                  scaledX, scaledY, scaledWidth, scaledHeight
-                );
-                compositeCtx.restore();
-              }
+              compositeCtx.restore();
             }
           }
         } catch (error) {
