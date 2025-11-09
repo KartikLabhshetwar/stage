@@ -2,21 +2,23 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Stage, Layer, Rect, Image as KonvaImage, Group, Circle, Text, Path } from 'react-konva'
+import Konva from 'konva'
 import { useEditorStore } from '@/lib/store'
 import { useImageStore } from '@/lib/store'
 import { generatePattern } from '@/lib/patterns'
 import { useResponsiveCanvasDimensions } from '@/hooks/useAspectRatioDimensions'
 import { getBackgroundCSS } from '@/lib/constants/backgrounds'
-import { TextOverlayRenderer } from '@/components/image-render/text-overlay-renderer'
-import { OverlayRenderer } from '@/components/overlays/overlay-renderer'
+import { getFontCSS } from '@/lib/constants/fonts'
 import { generateNoiseTexture } from '@/lib/export/export-utils'
+import { getCldImageUrl } from '@/lib/cloudinary'
+import { OVERLAY_PUBLIC_IDS } from '@/lib/cloudinary-overlays'
 
 // Global ref to store the Konva stage for export
 let globalKonvaStage: any = null;
 
 function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   const stageRef = useRef<any>(null)
-  
+
   // Store stage globally for export
   useEffect(() => {
     const updateStage = () => {
@@ -25,11 +27,11 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
         globalKonvaStage = stageRef.current;
       }
     };
-    
+
     updateStage();
     // Also check after a short delay to ensure ref is set
     const timeout = setTimeout(updateStage, 100);
-    
+
     return () => {
       clearTimeout(timeout);
       globalKonvaStage = null;
@@ -51,52 +53,65 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     noise,
   } = useEditorStore()
 
-  const { backgroundConfig, backgroundBorderRadius, backgroundBlur, backgroundNoise, perspective3D, imageOpacity } = useImageStore()
+  const {
+    backgroundConfig,
+    backgroundBorderRadius,
+    backgroundBlur,
+    backgroundNoise,
+    perspective3D,
+    imageOpacity,
+    textOverlays,
+    imageOverlays,
+  } = useImageStore()
+
   const responsiveDimensions = useResponsiveCanvasDimensions()
   const backgroundStyle = getBackgroundCSS(backgroundConfig)
-  
+
   // Track viewport size for responsive canvas sizing
   const [viewportSize, setViewportSize] = useState({ width: 1920, height: 1080 })
-  
+
   // Load background image if type is 'image'
   const [bgImage, setBgImage] = useState<HTMLImageElement | null>(null)
-  
+
   // Generate noise texture for background noise effect
-  const [noiseTexture, setNoiseTexture] = useState<string | null>(null)
-  
+  const [noiseTexture, setNoiseTexture] = useState<HTMLCanvasElement | null>(null)
+
+  // Load overlay images
+  const [loadedOverlayImages, setLoadedOverlayImages] = useState<Record<string, HTMLImageElement>>({})
+
   useEffect(() => {
     if (backgroundNoise > 0) {
       // Generate noise texture using Gaussian distribution for realistic grain
       const intensity = backgroundNoise / 100 // Convert percentage to 0-1 range
       const noiseCanvas = generateNoiseTexture(200, 200, intensity)
-      setNoiseTexture(noiseCanvas.toDataURL())
+      setNoiseTexture(noiseCanvas)
     } else {
       setNoiseTexture(null)
     }
   }, [backgroundNoise])
-  
+
   // Get container dimensions early for use in useEffect
   const containerWidth = responsiveDimensions.width
   const containerHeight = responsiveDimensions.height
-  
+
   useEffect(() => {
     if (backgroundConfig.type === 'image' && backgroundConfig.value) {
       const imageValue = backgroundConfig.value as string
-      
+
       // Check if it's a valid image URL/blob/data URI or Cloudinary public ID
       // Skip if it looks like a gradient key (e.g., "primary_gradient")
-      const isValidImageValue = 
-        imageValue.startsWith('http') || 
-        imageValue.startsWith('blob:') || 
+      const isValidImageValue =
+        imageValue.startsWith('http') ||
+        imageValue.startsWith('blob:') ||
         imageValue.startsWith('data:') ||
         // Check if it might be a Cloudinary public ID (not a gradient key)
         (typeof imageValue === 'string' && !imageValue.includes('_gradient'))
-      
+
       if (!isValidImageValue) {
         setBgImage(null)
         return
       }
-      
+
       const img = new window.Image()
       img.crossOrigin = 'anonymous'
       img.onload = () => setBgImage(img)
@@ -104,12 +119,11 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
         console.error('Failed to load background image:', backgroundConfig.value)
         setBgImage(null)
       }
-      
+
       // Check if it's a Cloudinary public ID or URL
       let imageUrl = imageValue
       if (typeof imageUrl === 'string' && !imageUrl.startsWith('http') && !imageUrl.startsWith('blob:') && !imageUrl.startsWith('data:')) {
         // It might be a Cloudinary public ID, construct URL
-        const { getCldImageUrl } = require('@/lib/cloudinary')
         const { cloudinaryPublicIds } = require('@/lib/cloudinary-backgrounds')
         if (cloudinaryPublicIds.includes(imageUrl)) {
           // Use container dimensions for better quality
@@ -128,13 +142,58 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
           return
         }
       }
-      
+
       img.src = imageUrl
     } else {
       setBgImage(null)
     }
   }, [backgroundConfig, containerWidth, containerHeight])
-  
+
+  // Load overlay images
+  useEffect(() => {
+    const loadOverlays = async () => {
+      const loadedImages: Record<string, HTMLImageElement> = {}
+
+      for (const overlay of imageOverlays) {
+        if (!overlay.isVisible) continue
+
+        try {
+          const isCloudinaryId = OVERLAY_PUBLIC_IDS.includes(overlay.src as any) ||
+                                 (typeof overlay.src === 'string' && overlay.src.startsWith('overlays/'))
+
+          const imageUrl = isCloudinaryId && !overlay.isCustom
+            ? getCldImageUrl({
+                src: overlay.src,
+                width: overlay.size * 2,
+                height: overlay.size * 2,
+                quality: 'auto',
+                format: 'auto',
+                crop: 'fit',
+              })
+            : overlay.src
+
+          const img = new window.Image()
+          img.crossOrigin = 'anonymous'
+
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => {
+              loadedImages[overlay.id] = img
+              resolve()
+            }
+            img.onerror = reject
+            img.src = imageUrl
+          })
+        } catch (error) {
+          console.error(`Failed to load overlay image for ${overlay.id}:`, error)
+        }
+      }
+
+      setLoadedOverlayImages(loadedImages)
+    }
+
+    loadOverlays()
+  }, [imageOverlays])
+
   useEffect(() => {
     const updateViewportSize = () => {
       setViewportSize({
@@ -142,7 +201,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
         height: window.innerHeight,
       })
     }
-    
+
     updateViewportSize()
     window.addEventListener('resize', updateViewportSize)
     return () => window.removeEventListener('resize', updateViewportSize)
@@ -188,7 +247,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
 
   /* ─────────────────── layout helpers ─────────────────── */
   const imageAspect = image.naturalWidth / image.naturalHeight
-  
+
   // Calculate canvas aspect ratio from selected aspect ratio using responsive dimensions
   const canvasAspect = containerWidth / containerHeight
 
@@ -196,7 +255,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   // Use viewport-aware dimensions, respecting the selected aspect ratio
   const availableWidth = Math.min(viewportSize.width * 1.1, containerWidth)
   const availableHeight = Math.min(viewportSize.height * 1.1, containerHeight)
-  
+
   // Calculate canvas dimensions that maintain the selected aspect ratio
   let canvasW, canvasH
   if (availableWidth / availableHeight > canvasAspect) {
@@ -279,15 +338,15 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   // Build CSS 3D transform string for image only
   // Include screenshot.rotation to match Konva Group rotation
   const perspective3DTransform = `
-    translate(${perspective3D.translateX}%, ${perspective3D.translateY}%) 
-    scale(${perspective3D.scale}) 
-    rotateX(${perspective3D.rotateX}deg) 
-    rotateY(${perspective3D.rotateY}deg) 
+    translate(${perspective3D.translateX}%, ${perspective3D.translateY}%)
+    scale(${perspective3D.scale})
+    rotateX(${perspective3D.rotateX}deg)
+    rotateY(${perspective3D.rotateY}deg)
     rotateZ(${perspective3D.rotateZ + screenshot.rotation}deg)
   `.replace(/\s+/g, ' ').trim()
 
   // Check if 3D transforms are active (any non-default value)
-  const has3DTransform = 
+  const has3DTransform =
     perspective3D.rotateX !== 0 ||
     perspective3D.rotateY !== 0 ||
     perspective3D.rotateZ !== 0 ||
@@ -301,6 +360,15 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   const groupCenterY = canvasH / 2 + screenshot.offsetY
   const imageX = groupCenterX + frameOffset + windowPadding - imageScaledW / 2
   const imageY = groupCenterY + frameOffset + windowPadding + windowHeader - imageScaledH / 2
+
+  // Helper function to parse gradient from CSS string
+  const parseGradient = (bgStyle: React.CSSProperties) => {
+    if (backgroundConfig.type === 'gradient' && bgStyle.background) {
+      const gradientStr = bgStyle.background as string
+      return gradientStr
+    }
+    return null
+  }
 
   /* ─────────────────── render ─────────────────── */
   return (
@@ -324,76 +392,10 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
           height: `${canvasH}px`,
           minWidth: `${canvasW}px`,
           minHeight: `${canvasH}px`,
-          overflow: 'visible', // Allow overlays to extend beyond canvas bounds
-          borderRadius: `${backgroundBorderRadius}px`,
+          overflow: 'visible',
         }}
       >
-        {/* Background layer - DOM element for html2canvas compatibility */}
-        <div
-          id="canvas-background"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: `${canvasW}px`,
-            height: `${canvasH}px`,
-            zIndex: 0,
-            borderRadius: `${backgroundBorderRadius}px`,
-            filter: backgroundBlur > 0 ? `blur(${backgroundBlur}px)` : 'none',
-            ...backgroundStyle,
-          }}
-        />
-        
-        {/* Noise overlay */}
-        {noiseTexture && backgroundNoise > 0 && (
-          <div
-            id="canvas-noise-overlay"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: `${canvasW}px`,
-              height: `${canvasH}px`,
-              zIndex: 1,
-              borderRadius: `${backgroundBorderRadius}px`,
-              backgroundImage: `url(${noiseTexture})`,
-              backgroundRepeat: 'repeat',
-              opacity: backgroundNoise / 100,
-              pointerEvents: 'none',
-              mixBlendMode: 'overlay',
-            }}
-          />
-        )}
-        
-        {/* Text overlays - positioned above user image */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            zIndex: 30, // Higher than Konva Stage to ensure text appears above user image
-            overflow: 'visible', // Allow text to extend beyond canvas bounds
-            borderRadius: `${backgroundBorderRadius}px`,
-          }}
-        >
-          <TextOverlayRenderer />
-        </div>
-
-        {/* Image overlays - positioned above user image */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 35, // Highest z-index to ensure images appear above everything
-            overflow: 'visible', // Allow overlays to extend beyond canvas bounds
-            borderRadius: `${backgroundBorderRadius}px`,
-            pointerEvents: 'none', // Allow clicks to pass through to overlay elements
-          }}
-        >
-          <OverlayRenderer />
-        </div>
-
-        {/* 3D Transformed Image Overlay - Only when 3D transforms are active */}
+        {/* 3D Transformed Image Overlay - Only when 3D transforms are active (HTML fallback for 3D) */}
         {has3DTransform && (
           <div
             data-3d-overlay="true"
@@ -430,9 +432,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
             />
           </div>
         )}
-        
-        {/* Konva Stage - only for user images, frames, patterns, noise */}
-        {/* Lower z-index so overlays appear above */}
+
+        {/* Pure Canvas Rendering with Konva */}
         <Stage
           width={canvasW}
           height={canvasH}
@@ -443,11 +444,52 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
             backgroundColor: 'transparent',
             overflow: 'hidden',
             position: 'relative',
-            zIndex: 5, // Lower z-index so text and image overlays appear above user image
+            borderRadius: `${backgroundBorderRadius}px`,
           }}
         >
-          {/* Remove background layer - now handled by DOM element above */}
+          {/* Background Layer - Canvas based */}
+          <Layer>
+            {backgroundConfig.type === 'image' && bgImage ? (
+              <KonvaImage
+                image={bgImage}
+                width={canvasW}
+                height={canvasH}
+                opacity={backgroundConfig.opacity ?? 1}
+                cornerRadius={backgroundBorderRadius}
+                filters={backgroundBlur > 0 ? [Konva.Filters.Blur] : []}
+                blurRadius={backgroundBlur}
+              />
+            ) : (
+              <Rect
+                width={canvasW}
+                height={canvasH}
+                fill={
+                  backgroundConfig.type === 'solid'
+                    ? (backgroundStyle.backgroundColor as string)
+                    : backgroundConfig.type === 'gradient'
+                    ? (backgroundStyle.background as string)
+                    : '#ffffff'
+                }
+                opacity={backgroundConfig.opacity ?? 1}
+                cornerRadius={backgroundBorderRadius}
+              />
+            )}
 
+            {/* Noise overlay on background */}
+            {noiseTexture && backgroundNoise > 0 && (
+              <Rect
+                width={canvasW}
+                height={canvasH}
+                fillPatternImage={noiseTexture as any}
+                fillPatternRepeat="repeat"
+                opacity={backgroundNoise / 100}
+                globalCompositeOperation="overlay"
+                cornerRadius={backgroundBorderRadius}
+              />
+            )}
+          </Layer>
+
+          {/* Pattern Layer */}
           <Layer>
             {patternImage && (
               <Rect
@@ -462,6 +504,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
             )}
           </Layer>
 
+          {/* Noise Layer (texture noise, not background noise) */}
           <Layer>
             {noiseImage && (
               <Rect
@@ -476,6 +519,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
             )}
           </Layer>
 
+          {/* Main Image Layer */}
           <Layer>
             <Group
               x={canvasW / 2 + screenshot.offsetX}
@@ -776,6 +820,66 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
               />
             </Group>
           </Layer>
+
+          {/* Text Overlays Layer - Canvas based */}
+          <Layer>
+            {textOverlays.map((overlay) => {
+              if (!overlay.isVisible) return null
+
+              const textX = (overlay.position.x / 100) * canvasW
+              const textY = (overlay.position.y / 100) * canvasH
+
+              return (
+                <Text
+                  key={overlay.id}
+                  x={textX}
+                  y={textY}
+                  text={overlay.text}
+                  fontSize={overlay.fontSize}
+                  fontFamily={getFontCSS(overlay.fontFamily)}
+                  fill={overlay.color}
+                  opacity={overlay.opacity}
+                  offsetX={0}
+                  offsetY={0}
+                  align="center"
+                  verticalAlign="middle"
+                  shadowColor={overlay.textShadow.enabled ? overlay.textShadow.color : undefined}
+                  shadowBlur={overlay.textShadow.enabled ? overlay.textShadow.blur : 0}
+                  shadowOffsetX={overlay.textShadow.enabled ? overlay.textShadow.offsetX : 0}
+                  shadowOffsetY={overlay.textShadow.enabled ? overlay.textShadow.offsetY : 0}
+                  fontStyle={String(overlay.fontWeight).includes('italic') ? 'italic' : 'normal'}
+                  fontVariant={String(overlay.fontWeight)}
+                />
+              )
+            })}
+          </Layer>
+
+          {/* Image Overlays Layer - Canvas based */}
+          <Layer>
+            {imageOverlays.map((overlay) => {
+              if (!overlay.isVisible) return null
+
+              const overlayImg = loadedOverlayImages[overlay.id]
+              if (!overlayImg) return null
+
+              return (
+                <KonvaImage
+                  key={overlay.id}
+                  image={overlayImg}
+                  x={overlay.position.x}
+                  y={overlay.position.y}
+                  width={overlay.size}
+                  height={overlay.size}
+                  opacity={overlay.opacity}
+                  rotation={overlay.rotation}
+                  scaleX={overlay.flipX ? -1 : 1}
+                  scaleY={overlay.flipY ? -1 : 1}
+                  offsetX={overlay.size / 2}
+                  offsetY={overlay.size / 2}
+                />
+              )
+            })}
+          </Layer>
         </Stage>
       </div>
     </div>
@@ -814,4 +918,3 @@ export default function ClientCanvas() {
 
   return <CanvasRenderer image={image} />
 }
-
