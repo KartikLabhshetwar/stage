@@ -63,6 +63,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     imageOpacity,
     textOverlays,
     imageOverlays,
+    updateTextOverlay,
+    updateImageOverlay,
   } = useImageStore()
 
   const responsiveDimensions = useResponsiveCanvasDimensions()
@@ -869,6 +871,26 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   shadowOffsetY={overlay.textShadow.enabled ? overlay.textShadow.offsetY : 0}
                   fontStyle={String(overlay.fontWeight).includes('italic') ? 'italic' : 'normal'}
                   fontVariant={String(overlay.fontWeight)}
+                  draggable={true}
+                  onDragEnd={(e) => {
+                    const newX = (e.target.x() / canvasW) * 100
+                    const newY = (e.target.y() / canvasH) * 100
+                    updateTextOverlay(overlay.id, {
+                      position: { x: newX, y: newY }
+                    })
+                  }}
+                  onMouseEnter={(e) => {
+                    const container = e.target.getStage()?.container()
+                    if (container) {
+                      container.style.cursor = 'move'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    const container = e.target.getStage()?.container()
+                    if (container) {
+                      container.style.cursor = 'default'
+                    }
+                  }}
                 />
               )
             })}
@@ -896,6 +918,24 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   scaleY={overlay.flipY ? -1 : 1}
                   offsetX={overlay.size / 2}
                   offsetY={overlay.size / 2}
+                  draggable={true}
+                  onDragEnd={(e) => {
+                    updateImageOverlay(overlay.id, {
+                      position: { x: e.target.x(), y: e.target.y() }
+                    })
+                  }}
+                  onMouseEnter={(e) => {
+                    const container = e.target.getStage()?.container()
+                    if (container) {
+                      container.style.cursor = 'move'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    const container = e.target.getStage()?.container()
+                    if (container) {
+                      container.style.cursor = 'default'
+                    }
+                  }}
                 />
               )
             })}
