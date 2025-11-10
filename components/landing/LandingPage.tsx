@@ -55,9 +55,8 @@ export function LandingPage({
       {/* <Pricing /> */}
       <Sponsors sponsors={sponsors} title={sponsorsTitle} />
       <FAQ />
-      <Footer brandName={brandName}/>
+      <Footer brandName={brandName} />
       <SponsorButton variant="floating" />
     </div>
   );
 }
-

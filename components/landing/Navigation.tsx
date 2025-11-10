@@ -20,7 +20,9 @@ function useGitHubStars() {
   useEffect(() => {
     const fetchStars = async () => {
       try {
-        const response = await fetch("https://api.github.com/repos/KartikLabhshetwar/stage");
+        const response = await fetch(
+          "https://api.github.com/repos/KartikLabhshetwar/stage",
+        );
         if (response.ok) {
           const data = await response.json();
           setStars(data.stargazers_count);
@@ -49,7 +51,7 @@ function AnimatedCounter({ value }: { value: number }) {
   }, [spring, value]);
 
   const display = useTransform(spring, (current) =>
-    Math.round(current).toLocaleString()
+    Math.round(current).toLocaleString(),
   );
 
   return <motion.span>{display}</motion.span>;
@@ -57,7 +59,7 @@ function AnimatedCounter({ value }: { value: number }) {
 
 export function Navigation({
   ctaLabel = "Editor",
-  ctaHref = "/home"
+  ctaHref = "/home",
 }: NavigationProps) {
   const { stars, isLoading } = useGitHubStars();
 
@@ -108,4 +110,3 @@ export function Navigation({
     </nav>
   );
 }
-

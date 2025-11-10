@@ -3,9 +3,13 @@
  * Provides reactive dimensions based on selected aspect ratio
  */
 
-import { useMemo, useState, useEffect } from 'react';
-import { useImageStore } from '@/lib/store';
-import { getAspectRatioPreset, calculateFitDimensions, getAspectRatioCSS } from '@/lib/aspect-ratio-utils';
+import { useMemo, useState, useEffect } from "react";
+import { useImageStore } from "@/lib/store";
+import {
+  getAspectRatioPreset,
+  calculateFitDimensions,
+  getAspectRatioCSS,
+} from "@/lib/aspect-ratio-utils";
 
 /**
  * Hook to get canvas dimensions based on selected aspect ratio
@@ -16,22 +20,22 @@ export function useAspectRatioDimensions(options?: {
   maxHeight?: number;
 }) {
   const { selectedAspectRatio } = useImageStore();
-  
+
   const dimensions = useMemo(() => {
     const preset = getAspectRatioPreset(selectedAspectRatio);
     if (!preset) {
-      return { width: 1920, height: 1080, aspectRatio: '16/9' };
+      return { width: 1920, height: 1080, aspectRatio: "16/9" };
     }
-    
+
     const { maxWidth, maxHeight } = options || {};
-    
+
     // If constraints provided, calculate fit dimensions
     if (maxWidth || maxHeight) {
       const fitDimensions = calculateFitDimensions(
         preset.width,
         preset.height,
         maxWidth,
-        maxHeight
+        maxHeight,
       );
       return {
         ...fitDimensions,
@@ -40,7 +44,7 @@ export function useAspectRatioDimensions(options?: {
         originalHeight: preset.height,
       };
     }
-    
+
     // Return original dimensions
     return {
       width: preset.width,
@@ -50,7 +54,7 @@ export function useAspectRatioDimensions(options?: {
       originalHeight: preset.height,
     };
   }, [selectedAspectRatio, options?.maxWidth, options?.maxHeight]);
-  
+
   return dimensions;
 }
 
@@ -61,8 +65,11 @@ export function useAspectRatioDimensions(options?: {
  */
 export function useResponsiveCanvasDimensions() {
   const { selectedAspectRatio } = useImageStore();
-  const [viewportSize, setViewportSize] = useState({ width: 1920, height: 1080 });
-  
+  const [viewportSize, setViewportSize] = useState({
+    width: 1920,
+    height: 1080,
+  });
+
   // Track viewport size changes
   useEffect(() => {
     const updateViewportSize = () => {
@@ -71,21 +78,21 @@ export function useResponsiveCanvasDimensions() {
         height: window.innerHeight,
       });
     };
-    
+
     // Set initial size
     updateViewportSize();
-    
+
     // Listen for resize events
-    window.addEventListener('resize', updateViewportSize);
-    return () => window.removeEventListener('resize', updateViewportSize);
+    window.addEventListener("resize", updateViewportSize);
+    return () => window.removeEventListener("resize", updateViewportSize);
   }, []);
-  
+
   const dimensions = useMemo(() => {
     const preset = getAspectRatioPreset(selectedAspectRatio);
     if (!preset) {
-      return { width: 1920, height: 1080, aspectRatio: '16/9' };
+      return { width: 1920, height: 1080, aspectRatio: "16/9" };
     }
-    
+
     // Calculate viewport constraints
     // Account for side panels (left: ~320px, right: ~320px) and padding
     // More conservative values to ensure canvas always fits
@@ -93,18 +100,18 @@ export function useResponsiveCanvasDimensions() {
     const padding = 48; // Container padding (24px * 2)
     const availableWidth = viewportSize.width - sidePanelsWidth - padding;
     const availableHeight = viewportSize.height - 200; // Account for header/bottom bar
-    
+
     // Increased percentages and max dimensions for larger canvas
     const maxWidth = Math.min(availableWidth * 1.1, 3000);
     const maxHeight = Math.min(availableHeight * 1.1, 1500);
-    
+
     const fitDimensions = calculateFitDimensions(
       preset.width,
       preset.height,
       maxWidth,
-      maxHeight
+      maxHeight,
     );
-    
+
     return {
       ...fitDimensions,
       aspectRatio: getAspectRatioCSS(preset.width, preset.height),
@@ -112,7 +119,6 @@ export function useResponsiveCanvasDimensions() {
       originalHeight: preset.height,
     };
   }, [selectedAspectRatio, viewportSize.width, viewportSize.height]);
-  
+
   return dimensions;
 }
-

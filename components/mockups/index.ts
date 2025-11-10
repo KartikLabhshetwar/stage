@@ -1,3 +1,2 @@
-export { MockupGallery } from './MockupGallery'
-export { MockupControls } from './MockupControls'
-
+export { MockupGallery } from "./MockupGallery";
+export { MockupControls } from "./MockupControls";

@@ -4,7 +4,12 @@ export const DEFAULT_CANVAS_HEIGHT = 1080;
 
 // Image upload limits
 export const MAX_IMAGE_SIZE = 100 * 1024 * 1024; // 100MB
-export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+export const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 // Text defaults
 export const DEFAULT_TEXT_FONT_SIZE = 48;
@@ -72,7 +77,7 @@ export const ASPECT_RATIO_PRESETS: AspectRatioPreset[] = [
     ratio: "9:16",
     description: "Vertical video format for reels",
   },
-  
+
   // Common Social Media
   {
     id: "facebook-post",
@@ -101,7 +106,7 @@ export const ASPECT_RATIO_PRESETS: AspectRatioPreset[] = [
     ratio: "16:9",
     description: "YouTube video thumbnail size",
   },
-  
+
   // Standard Formats
   {
     id: "custom",
@@ -150,4 +155,6 @@ export const ASPECT_RATIO_PRESETS: AspectRatioPreset[] = [
   },
 ];
 
-export const DEFAULT_ASPECT_RATIO = ASPECT_RATIO_PRESETS.find(p => p.id === "custom") || ASPECT_RATIO_PRESETS[0];
+export const DEFAULT_ASPECT_RATIO =
+  ASPECT_RATIO_PRESETS.find((p) => p.id === "custom") ||
+  ASPECT_RATIO_PRESETS[0];

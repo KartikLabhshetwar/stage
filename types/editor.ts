@@ -30,7 +30,10 @@ export type EditorAction =
   | { type: "UPLOAD_IMAGE"; payload: { file: File; url: string } }
   | { type: "REMOVE_IMAGE" }
   | { type: "ADD_TEXT_OVERLAY"; payload: EditorState["textOverlays"][0] }
-  | { type: "UPDATE_TEXT_OVERLAY"; payload: { id: string; updates: Partial<EditorState["textOverlays"][0]> } }
+  | {
+      type: "UPDATE_TEXT_OVERLAY";
+      payload: { id: string; updates: Partial<EditorState["textOverlays"][0]> };
+    }
   | { type: "REMOVE_TEXT_OVERLAY"; payload: string }
   | { type: "UNDO" }
   | { type: "REDO" }
@@ -38,9 +41,27 @@ export type EditorAction =
 
 // Canvas operations
 export interface CanvasOperations {
-  addImage: (imageUrl: string, options?: { width?: number; height?: number; x?: number; y?: number }) => Promise<void>;
-  addText: (text: string, options?: { fontSize?: number; color?: string; x?: number; y?: number }) => Promise<void>;
-  transformObject: (objectId: string | undefined, properties: Partial<{ left: number; top: number; scaleX: number; scaleY: number; angle: number; elevationX?: number; elevationY?: number; text?: string }>) => void;
+  addImage: (
+    imageUrl: string,
+    options?: { width?: number; height?: number; x?: number; y?: number },
+  ) => Promise<void>;
+  addText: (
+    text: string,
+    options?: { fontSize?: number; color?: string; x?: number; y?: number },
+  ) => Promise<void>;
+  transformObject: (
+    objectId: string | undefined,
+    properties: Partial<{
+      left: number;
+      top: number;
+      scaleX: number;
+      scaleY: number;
+      angle: number;
+      elevationX?: number;
+      elevationY?: number;
+      text?: string;
+    }>,
+  ) => void;
   deleteObject: (objectId: string | undefined) => void;
   exportCanvas: (format: "png", quality?: number) => Promise<string>;
   getSelectedObject: () => any;

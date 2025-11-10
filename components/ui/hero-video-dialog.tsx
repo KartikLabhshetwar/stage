@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Play, XIcon } from "lucide-react"
-import { AnimatePresence, motion } from "motion/react"
+import { useState } from "react";
+import { Play, XIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 type AnimationStyle =
   | "from-bottom"
@@ -14,17 +14,17 @@ type AnimationStyle =
   | "from-right"
   | "fade"
   | "top-in-bottom-out"
-  | "left-in-right-out"
+  | "left-in-right-out";
 
 interface HeroVideoProps {
-  animationStyle?: AnimationStyle
-  videoSrc: string
-  thumbnailSrc: string
-  thumbnailAlt?: string
-  className?: string
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  showThumbnail?: boolean
+  animationStyle?: AnimationStyle;
+  videoSrc: string;
+  thumbnailSrc: string;
+  thumbnailAlt?: string;
+  className?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showThumbnail?: boolean;
 }
 
 const animationVariants = {
@@ -68,7 +68,7 @@ const animationVariants = {
     animate: { x: 0, opacity: 1 },
     exit: { x: "100%", opacity: 0 },
   },
-}
+};
 
 export function HeroVideoDialog({
   animationStyle = "from-center",
@@ -80,15 +80,16 @@ export function HeroVideoDialog({
   onOpenChange,
   showThumbnail = true,
 }: HeroVideoProps) {
-  const [internalOpen, setInternalOpen] = useState(false)
-  const isVideoOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isVideoOpen =
+    controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setIsVideoOpen = (open: boolean) => {
     if (controlledOpen === undefined) {
-      setInternalOpen(open)
+      setInternalOpen(open);
     }
-    onOpenChange?.(open)
-  }
-  const selectedAnimation = animationVariants[animationStyle]
+    onOpenChange?.(open);
+  };
+  const selectedAnimation = animationVariants[animationStyle];
 
   return (
     <div className={cn("relative", className)}>
@@ -132,7 +133,7 @@ export function HeroVideoDialog({
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
-                setIsVideoOpen(false)
+                setIsVideoOpen(false);
               }
             }}
             onClick={() => setIsVideoOpen(false)}
@@ -161,5 +162,5 @@ export function HeroVideoDialog({
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }

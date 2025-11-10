@@ -36,13 +36,15 @@ async function openDB(): Promise<IDBDatabase> {
 
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
-      
+
       // Create exports store
       if (!db.objectStoreNames.contains(EXPORTS_STORE)) {
-        const exportsStore = db.createObjectStore(EXPORTS_STORE, { keyPath: "id" });
+        const exportsStore = db.createObjectStore(EXPORTS_STORE, {
+          keyPath: "id",
+        });
         exportsStore.createIndex("timestamp", "timestamp", { unique: false });
       }
-      
+
       // Create preferences store
       if (!db.objectStoreNames.contains(PREFS_STORE)) {
         db.createObjectStore(PREFS_STORE, { keyPath: "id" });
@@ -54,20 +56,22 @@ async function openDB(): Promise<IDBDatabase> {
 /**
  * Save export preferences
  */
-export async function saveExportPreferences(prefs: Omit<ExportPreferences, "id">): Promise<void> {
+export async function saveExportPreferences(
+  prefs: Omit<ExportPreferences, "id">,
+): Promise<void> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([PREFS_STORE], "readwrite");
     const store = transaction.objectStore(PREFS_STORE);
-    
+
     const entry: ExportPreferences = {
       id: "export-preferences",
       ...prefs,
     };
-    
+
     const request = store.put(entry);
-    
+
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
   });
@@ -78,17 +82,17 @@ export async function saveExportPreferences(prefs: Omit<ExportPreferences, "id">
  */
 export async function getExportPreferences(): Promise<ExportPreferences | null> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([PREFS_STORE], "readonly");
     const store = transaction.objectStore(PREFS_STORE);
     const request = store.get("export-preferences");
-    
+
     request.onsuccess = () => {
       const entry = request.result as ExportPreferences | undefined;
       resolve(entry || null);
     };
-    
+
     request.onerror = () => reject(request.error);
   });
 }
@@ -101,15 +105,15 @@ export async function saveExportedImage(
   format: "png",
   quality: number,
   scale: number,
-  fileName: string
+  fileName: string,
 ): Promise<string> {
   const db = await openDB();
   const id = `export-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([EXPORTS_STORE], "readwrite");
     const store = transaction.objectStore(EXPORTS_STORE);
-    
+
     const entry: ExportEntry = {
       id,
       blob,
@@ -119,9 +123,9 @@ export async function saveExportedImage(
       timestamp: Date.now(),
       fileName,
     };
-    
+
     const request = store.put(entry);
-    
+
     request.onsuccess = () => resolve(id);
     request.onerror = () => reject(request.error);
   });
@@ -130,19 +134,21 @@ export async function saveExportedImage(
 /**
  * Get exported image blob
  */
-export async function getExportedImage(id: string): Promise<ExportEntry | null> {
+export async function getExportedImage(
+  id: string,
+): Promise<ExportEntry | null> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([EXPORTS_STORE], "readonly");
     const store = transaction.objectStore(EXPORTS_STORE);
     const request = store.get(id);
-    
+
     request.onsuccess = () => {
       const entry = request.result as ExportEntry | undefined;
       resolve(entry || null);
     };
-    
+
     request.onerror = () => reject(request.error);
   });
 }
@@ -152,19 +158,19 @@ export async function getExportedImage(id: string): Promise<ExportEntry | null> 
  */
 export async function getAllExportedImages(): Promise<ExportEntry[]> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([EXPORTS_STORE], "readonly");
     const store = transaction.objectStore(EXPORTS_STORE);
     const request = store.getAll();
-    
+
     request.onsuccess = () => {
       const entries = request.result as ExportEntry[];
       // Sort by timestamp descending
       entries.sort((a, b) => b.timestamp - a.timestamp);
       resolve(entries);
     };
-    
+
     request.onerror = () => reject(request.error);
   });
 }
@@ -174,14 +180,13 @@ export async function getAllExportedImages(): Promise<ExportEntry[]> {
  */
 export async function deleteExportedImage(id: string): Promise<void> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([EXPORTS_STORE], "readwrite");
     const store = transaction.objectStore(EXPORTS_STORE);
     const request = store.delete(id);
-    
+
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
   });
 }
-

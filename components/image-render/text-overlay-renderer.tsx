@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useImageStore } from '@/lib/store';
-import { getFontCSS } from '@/lib/constants/fonts';
+import { useImageStore } from "@/lib/store";
+import { getFontCSS } from "@/lib/constants/fonts";
 
 export const TextOverlayRenderer = () => {
   const { textOverlays } = useImageStore();
@@ -18,7 +18,7 @@ export const TextOverlayRenderer = () => {
           : {};
 
         const writingMode =
-          overlay.orientation === 'vertical' ? 'vertical-rl' : 'horizontal-tb';
+          overlay.orientation === "vertical" ? "vertical-rl" : "horizontal-tb";
 
         return (
           <div
@@ -28,14 +28,14 @@ export const TextOverlayRenderer = () => {
             style={{
               left: `${overlay.position.x}%`,
               top: `${overlay.position.y}%`,
-              transform: 'translate(-50%, -50%)',
+              transform: "translate(-50%, -50%)",
               fontSize: `${overlay.fontSize}px`,
               fontWeight: overlay.fontWeight,
               fontFamily: getFontCSS(overlay.fontFamily),
               color: overlay.color,
               opacity: overlay.opacity,
               writingMode: writingMode as any,
-              whiteSpace: 'nowrap',
+              whiteSpace: "nowrap",
               ...textShadowStyle,
             }}
           >
@@ -46,4 +46,3 @@ export const TextOverlayRenderer = () => {
     </>
   );
 };
-

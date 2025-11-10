@@ -17,18 +17,21 @@ export function EditorHeader({ className }: EditorHeaderProps) {
       className={cn(
         "sticky top-0 z-40 w-full border-b border-border/50 bg-background/95 backdrop-blur-xl",
         "supports-backdrop-filter:bg-background/90",
-        className
+        className,
       )}
     >
       <div className="container mx-auto px-4 sm:px-5 lg:px-6">
         <div className="flex h-14 sm:h-16 items-center gap-3 sm:gap-4">
           <SidebarTrigger className="transition-opacity hover:opacity-80 touch-manipulation rounded-lg" />
-          
-          <Link href="/" className="flex items-center transition-opacity hover:opacity-80 rounded-lg p-1">
-            <Image 
-              src="/logo.png" 
-              alt="Stage" 
-              width={32} 
+
+          <Link
+            href="/"
+            className="flex items-center transition-opacity hover:opacity-80 rounded-lg p-1"
+          >
+            <Image
+              src="/logo.png"
+              alt="Stage"
+              width={32}
               height={32}
               className="h-7 w-7 sm:h-8 sm:w-8"
             />
@@ -43,7 +46,7 @@ export function EditorHeader({ className }: EditorHeaderProps) {
               rel="noopener noreferrer"
               className={cn(
                 "p-2 rounded-lg transition-all touch-manipulation",
-                "hover:bg-accent text-muted-foreground hover:text-foreground hover:shadow-sm"
+                "hover:bg-accent text-muted-foreground hover:text-foreground hover:shadow-sm",
               )}
               aria-label="GitHub repository"
             >
@@ -55,4 +58,3 @@ export function EditorHeader({ className }: EditorHeaderProps) {
     </header>
   );
 }
-

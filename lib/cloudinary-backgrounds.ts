@@ -6,7 +6,7 @@ export interface BackgroundCategory {
 }
 
 export const backgroundCategories: BackgroundCategory = {
-  "mac": [
+  mac: [
     "backgrounds/backgrounds/mac/mac-asset-1",
     "backgrounds/backgrounds/mac/mac-asset-10",
     "backgrounds/backgrounds/mac/mac-asset-2",
@@ -16,16 +16,16 @@ export const backgroundCategories: BackgroundCategory = {
     "backgrounds/backgrounds/mac/mac-asset-6",
     "backgrounds/backgrounds/mac/mac-asset-7",
     "backgrounds/backgrounds/mac/mac-asset-8",
-    "backgrounds/backgrounds/mac/mac-asset-9"
+    "backgrounds/backgrounds/mac/mac-asset-9",
   ],
-  "nature": [
+  nature: [
     "backgrounds/backgrounds/nature/nature1",
     "backgrounds/backgrounds/nature/nature2",
     "backgrounds/backgrounds/nature/nature3",
     "backgrounds/backgrounds/nature/nature4",
-    "backgrounds/backgrounds/nature/nature5"
+    "backgrounds/backgrounds/nature/nature5",
   ],
-  "radiant": [
+  radiant: [
     "backgrounds/backgrounds/radiant/radiant1",
     "backgrounds/backgrounds/radiant/radiant10",
     "backgrounds/backgrounds/radiant/radiant2",
@@ -35,9 +35,9 @@ export const backgroundCategories: BackgroundCategory = {
     "backgrounds/backgrounds/radiant/radiant6",
     "backgrounds/backgrounds/radiant/radiant7",
     "backgrounds/backgrounds/radiant/radiant8",
-    "backgrounds/backgrounds/radiant/radiant9"
+    "backgrounds/backgrounds/radiant/radiant9",
   ],
-  "mesh": [
+  mesh: [
     "backgrounds/backgrounds/mesh/mesh1",
     "backgrounds/backgrounds/mesh/mesh2",
     "backgrounds/backgrounds/mesh/mesh3",
@@ -45,9 +45,9 @@ export const backgroundCategories: BackgroundCategory = {
     "backgrounds/backgrounds/mesh/mesh5",
     "backgrounds/backgrounds/mesh/mesh6",
     "backgrounds/backgrounds/mesh/mesh7",
-    "backgrounds/backgrounds/mesh/mesh8"
+    "backgrounds/backgrounds/mesh/mesh8",
   ],
-  "demo": [
+  demo: [
     "backgrounds/backgrounds/demo/demo-1",
     "backgrounds/backgrounds/demo/demo-10",
     "backgrounds/backgrounds/demo/demo-11",
@@ -62,9 +62,9 @@ export const backgroundCategories: BackgroundCategory = {
     "backgrounds/backgrounds/demo/demo-6",
     "backgrounds/backgrounds/demo/demo-7",
     "backgrounds/backgrounds/demo/demo-8",
-    "backgrounds/backgrounds/demo/demo-9"
+    "backgrounds/backgrounds/demo/demo-9",
   ],
-  "assets": [
+  assets: [
     "backgrounds/backgrounds/assets/asset-26",
     "backgrounds/backgrounds/assets/asset-2",
     "backgrounds/backgrounds/assets/asset-11",
@@ -83,13 +83,13 @@ export const backgroundCategories: BackgroundCategory = {
     "backgrounds/backgrounds/assets/asset-24",
     "backgrounds/backgrounds/assets/asset-25",
   ],
-  "silk": [
+  silk: [
     "backgrounds/backgrounds/silk/amber",
     "backgrounds/backgrounds/silk/dark",
     "backgrounds/backgrounds/silk/monochrome",
     "backgrounds/backgrounds/silk/silver",
-    "backgrounds/backgrounds/silk/sky"
-  ]
+    "backgrounds/backgrounds/silk/sky",
+  ],
 };
 
 export const cloudinaryPublicIds: string[] = [
@@ -162,14 +162,16 @@ export const cloudinaryPublicIds: string[] = [
   "backgrounds/backgrounds/assets/asset-23",
   "backgrounds/backgrounds/assets/asset-24",
   "backgrounds/backgrounds/assets/asset-25",
-  "backgrounds/backgrounds/assets/asset-26"
+  "backgrounds/backgrounds/assets/asset-26",
 ];
 
 // Public ID for sign-in page background
-export const SIGN_IN_BACKGROUND_PUBLIC_ID = 'backgrounds/backgrounds/mac/mac-asset-7';
+export const SIGN_IN_BACKGROUND_PUBLIC_ID =
+  "backgrounds/backgrounds/mac/mac-asset-7";
 
 // Public ID for sign-up page background
-export const SIGN_UP_BACKGROUND_PUBLIC_ID = 'backgrounds/backgrounds/mac/mac-asset-2';
+export const SIGN_UP_BACKGROUND_PUBLIC_ID =
+  "backgrounds/backgrounds/mac/mac-asset-2";
 
 // Helper function to get all public IDs for a category
 export function getBackgroundsByCategory(category: string): string[] {

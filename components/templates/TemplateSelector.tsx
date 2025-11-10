@@ -1,7 +1,13 @@
 "use client";
 
 import { templates } from "@/lib/canvas/templates";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { Template } from "@/types/canvas";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +46,7 @@ export function TemplateSelector({
             key={template.id}
             className={cn(
               "cursor-pointer transition-all hover:shadow-md",
-              selectedTemplateId === template.id && "ring-2 ring-primary"
+              selectedTemplateId === template.id && "ring-2 ring-primary",
             )}
             onClick={() => onSelectTemplate(template)}
           >

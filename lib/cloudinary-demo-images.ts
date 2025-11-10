@@ -16,7 +16,7 @@ export const demoImageMapping: Record<string, string> = {
   "/demo/demo-12.png": "demo-images/demo-12",
   "/demo/demo-13.png": "demo-images/demo-13",
   "/demo/demo-14.png": "demo-images/demo-14",
-  "/demo/demo-15.png": "demo-images/demo-15"
+  "/demo/demo-15.png": "demo-images/demo-15",
 };
 
 export const demoImagePublicIds: string[] = [

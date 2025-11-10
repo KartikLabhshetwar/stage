@@ -1,3 +1,2 @@
 // Export text overlay components
-export { TextOverlayControls } from './text-overlay-controls';
-
+export { TextOverlayControls } from "./text-overlay-controls";

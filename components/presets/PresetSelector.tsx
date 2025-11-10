@@ -1,16 +1,19 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Button } from '@/components/ui/button';
+import * as React from "react";
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { useImageStore } from '@/lib/store';
-import { presets, type PresetConfig } from '@/lib/constants/presets';
-import { getBackgroundStyle, getBackgroundCSS } from '@/lib/constants/backgrounds';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/popover";
+import { useImageStore } from "@/lib/store";
+import { presets, type PresetConfig } from "@/lib/constants/presets";
+import {
+  getBackgroundStyle,
+  getBackgroundCSS,
+} from "@/lib/constants/backgrounds";
+import { cn } from "@/lib/utils";
 
 export function PresetSelector() {
   const {
@@ -43,71 +46,77 @@ export function PresetSelector() {
   const [open, setOpen] = React.useState(false);
 
   // Check if a preset matches the current settings
-  const isPresetActive = React.useCallback((preset: PresetConfig) => {
-    return (
-      preset.aspectRatio === selectedAspectRatio &&
-      preset.backgroundConfig.type === backgroundConfig.type &&
-      preset.backgroundConfig.value === backgroundConfig.value &&
-      preset.backgroundBorderRadius === backgroundBorderRadius &&
-      preset.borderRadius === borderRadius &&
-      preset.imageOpacity === imageOpacity &&
-      preset.imageScale === imageScale &&
-      preset.imageBorder.enabled === imageBorder.enabled &&
-      preset.imageShadow.enabled === imageShadow.enabled &&
-      (preset.backgroundBlur ?? 0) === backgroundBlur &&
-      (preset.backgroundNoise ?? 0) === backgroundNoise
-    );
-  }, [
-    selectedAspectRatio,
-    backgroundConfig,
-    backgroundBorderRadius,
-    backgroundBlur,
-    backgroundNoise,
-    borderRadius,
-    imageOpacity,
-    imageScale,
-    imageBorder.enabled,
-    imageShadow.enabled,
-  ]);
+  const isPresetActive = React.useCallback(
+    (preset: PresetConfig) => {
+      return (
+        preset.aspectRatio === selectedAspectRatio &&
+        preset.backgroundConfig.type === backgroundConfig.type &&
+        preset.backgroundConfig.value === backgroundConfig.value &&
+        preset.backgroundBorderRadius === backgroundBorderRadius &&
+        preset.borderRadius === borderRadius &&
+        preset.imageOpacity === imageOpacity &&
+        preset.imageScale === imageScale &&
+        preset.imageBorder.enabled === imageBorder.enabled &&
+        preset.imageShadow.enabled === imageShadow.enabled &&
+        (preset.backgroundBlur ?? 0) === backgroundBlur &&
+        (preset.backgroundNoise ?? 0) === backgroundNoise
+      );
+    },
+    [
+      selectedAspectRatio,
+      backgroundConfig,
+      backgroundBorderRadius,
+      backgroundBlur,
+      backgroundNoise,
+      borderRadius,
+      imageOpacity,
+      imageScale,
+      imageBorder.enabled,
+      imageShadow.enabled,
+    ],
+  );
 
-  const applyPreset = React.useCallback((preset: PresetConfig) => {
-    // Set all parameters from the preset
-    setAspectRatio(preset.aspectRatio);
-    setBackgroundConfig(preset.backgroundConfig);
-    setBackgroundType(preset.backgroundConfig.type);
-    setBackgroundValue(preset.backgroundConfig.value);
-    setBackgroundOpacity(preset.backgroundConfig.opacity ?? 1);
-    setBorderRadius(preset.borderRadius);
-    setBackgroundBorderRadius(preset.backgroundBorderRadius);
-    setImageOpacity(preset.imageOpacity);
-    setImageScale(preset.imageScale);
-    setImageBorder(preset.imageBorder);
-    setImageShadow(preset.imageShadow);
-    // Apply blur and noise if specified in preset
-    if (preset.backgroundBlur !== undefined) {
-      setBackgroundBlur(preset.backgroundBlur);
-    }
-    if (preset.backgroundNoise !== undefined) {
-      setBackgroundNoise(preset.backgroundNoise);
-    }
-    
-    // Close the popover after applying
-    setOpen(false);
-  }, [
-    setAspectRatio,
-    setBackgroundConfig,
-    setBackgroundType,
-    setBackgroundValue,
-    setBackgroundOpacity,
-    setBorderRadius,
-    setBackgroundBorderRadius,
-    setBackgroundBlur,
-    setBackgroundNoise,
-    setImageOpacity,
-    setImageScale,
-    setImageBorder,
-    setImageShadow,
-  ]);
+  const applyPreset = React.useCallback(
+    (preset: PresetConfig) => {
+      // Set all parameters from the preset
+      setAspectRatio(preset.aspectRatio);
+      setBackgroundConfig(preset.backgroundConfig);
+      setBackgroundType(preset.backgroundConfig.type);
+      setBackgroundValue(preset.backgroundConfig.value);
+      setBackgroundOpacity(preset.backgroundConfig.opacity ?? 1);
+      setBorderRadius(preset.borderRadius);
+      setBackgroundBorderRadius(preset.backgroundBorderRadius);
+      setImageOpacity(preset.imageOpacity);
+      setImageScale(preset.imageScale);
+      setImageBorder(preset.imageBorder);
+      setImageShadow(preset.imageShadow);
+      // Apply blur and noise if specified in preset
+      if (preset.backgroundBlur !== undefined) {
+        setBackgroundBlur(preset.backgroundBlur);
+      }
+      if (preset.backgroundNoise !== undefined) {
+        setBackgroundNoise(preset.backgroundNoise);
+      }
+
+      // Close the popover after applying
+      setOpen(false);
+    },
+    [
+      setAspectRatio,
+      setBackgroundConfig,
+      setBackgroundType,
+      setBackgroundValue,
+      setBackgroundOpacity,
+      setBorderRadius,
+      setBackgroundBorderRadius,
+      setBackgroundBlur,
+      setBackgroundNoise,
+      setImageOpacity,
+      setImageScale,
+      setImageBorder,
+      setImageShadow,
+    ],
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -124,24 +133,26 @@ export function PresetSelector() {
       <PopoverContent className="w-80 p-0" align="start">
         <div className="p-4">
           <div className="mb-3">
-            <h3 className="text-sm font-semibold text-foreground">Quick Presets</h3>
+            <h3 className="text-sm font-semibold text-foreground">
+              Quick Presets
+            </h3>
             <p className="text-xs text-muted-foreground mt-1">
               Apply pre-configured styles instantly
             </p>
           </div>
-          
+
           <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 -mr-1">
             {presets.map((preset) => (
               <button
                 key={preset.id}
                 onClick={() => applyPreset(preset)}
                 className={cn(
-                  'w-full text-left p-3 rounded-lg border-2 transition-all',
+                  "w-full text-left p-3 rounded-lg border-2 transition-all",
                   isPresetActive(preset)
-                    ? 'border-primary bg-primary/5 hover:bg-primary/10'
-                    : 'border-border bg-background hover:bg-accent hover:border-border/80',
-                  'focus:outline-none',
-                  'group'
+                    ? "border-primary bg-primary/5 hover:bg-primary/10"
+                    : "border-border bg-background hover:bg-accent hover:border-border/80",
+                  "focus:outline-none",
+                  "group",
                 )}
               >
                 <div className="flex items-start gap-3">
@@ -150,7 +161,7 @@ export function PresetSelector() {
                     className="w-16 h-16 rounded-md overflow-hidden border-2 border-border shrink-0"
                     style={getBackgroundCSS(preset.backgroundConfig)}
                   />
-                  
+
                   {/* Preset info */}
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-sm text-foreground group-hover:text-foreground">
@@ -161,11 +172,15 @@ export function PresetSelector() {
                     </div>
                     <div className="mt-2 flex items-center gap-2 flex-wrap">
                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-medium">
-                        {preset.aspectRatio === '1_1' ? 'Square' :
-                         preset.aspectRatio === '9_16' ? 'Story' :
-                         preset.aspectRatio === '16_9' ? 'Landscape' :
-                         preset.aspectRatio === '4_5' ? 'Portrait' :
-                         preset.aspectRatio}
+                        {preset.aspectRatio === "1_1"
+                          ? "Square"
+                          : preset.aspectRatio === "9_16"
+                            ? "Story"
+                            : preset.aspectRatio === "16_9"
+                              ? "Landscape"
+                              : preset.aspectRatio === "4_5"
+                                ? "Portrait"
+                                : preset.aspectRatio}
                       </span>
                       {preset.borderRadius > 0 && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-medium">
@@ -193,7 +208,7 @@ export function PresetSelector() {
               </button>
             ))}
           </div>
-          
+
           {!uploadedImageUrl && (
             <div className="mt-4 p-3 rounded-lg bg-muted/50 border border-border">
               <p className="text-xs text-muted-foreground text-center">
@@ -206,4 +221,3 @@ export function PresetSelector() {
     </Popover>
   );
 }
-

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import { Shuffle, Undo2, Redo2 } from 'lucide-react';
-import { FaGithub } from 'react-icons/fa';
-import { SponsorButton } from '@/components/SponsorButton';
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Shuffle, Undo2, Redo2 } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+import { SponsorButton } from "@/components/SponsorButton";
 
 export function EditorBottomBar() {
   return (
@@ -34,4 +34,3 @@ export function EditorBottomBar() {
     </div>
   );
 }
-

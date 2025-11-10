@@ -7,9 +7,9 @@ interface FooterProps {
   additionalText?: string;
 }
 
-export function Footer({ 
-  brandName = "Stage", 
-  additionalText = "" 
+export function Footer({
+  brandName = "Stage",
+  additionalText = "",
 }: FooterProps) {
   return (
     <footer className="w-full border-t border-border py-4 sm:py-6 shrink-0 bg-background">
@@ -23,4 +23,3 @@ export function Footer({
     </footer>
   );
 }
-

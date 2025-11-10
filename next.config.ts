@@ -6,17 +6,17 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        protocol: "https",
+        hostname: "res.cloudinary.com",
       },
       {
-        protocol: 'https',
-        hostname: '**.cloudinary.com',
+        protocol: "https",
+        hostname: "**.cloudinary.com",
       },
     ],
   },
   webpack: (config) => {
-    config.externals = [...(config.externals || []), { canvas: 'canvas' }]; // required to make Konva & react-konva work
+    config.externals = [...(config.externals || []), { canvas: "canvas" }]; // required to make Konva & react-konva work
     return config;
   },
 };

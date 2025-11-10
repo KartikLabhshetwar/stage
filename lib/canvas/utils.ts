@@ -7,7 +7,7 @@ import Konva from "konva";
 export async function applyTemplateBackground(
   stage: Konva.Stage | null,
   layer: Konva.Layer | null,
-  template: Template
+  template: Template,
 ): Promise<void> {
   if (!stage || !layer) return;
 
@@ -20,7 +20,7 @@ export async function applyTemplateBackground(
       if (bgRect) {
         bgRect.destroy();
       }
-      
+
       const rect = new Konva.Rect({
         id: "background-rect",
         x: 0,
@@ -44,7 +44,7 @@ export async function applyTemplateBackground(
 
         const gradientColors = background.gradient.colors;
         let gradient;
-        
+
         if (background.gradient.type === "linear") {
           gradient = {
             start: { x: 0, y: 0 },
@@ -75,25 +75,37 @@ export async function applyTemplateBackground(
           y: 0,
           width: stage.width(),
           height: stage.height(),
-          fillLinearGradientColorStops: background.gradient.type === "linear" 
-            ? gradientColors.flatMap((color, i) => [i / (gradientColors.length - 1), color])
-            : undefined,
-          fillRadialGradientColorStops: background.gradient.type === "radial"
-            ? gradientColors.flatMap((color, i) => [i / (gradientColors.length - 1), color])
-            : undefined,
-          fillRadialGradientStartPoint: background.gradient.type === "radial" 
-            ? { x: stage.width() / 2, y: stage.height() / 2 }
-            : undefined,
-          fillRadialGradientStartRadius: background.gradient.type === "radial" ? 0 : undefined,
-          fillRadialGradientEndPoint: background.gradient.type === "radial"
-            ? { x: stage.width() / 2, y: stage.height() / 2 }
-            : undefined,
-          fillRadialGradientEndRadius: background.gradient.type === "radial"
-            ? Math.max(stage.width(), stage.height()) / 2
-            : undefined,
+          fillLinearGradientColorStops:
+            background.gradient.type === "linear"
+              ? gradientColors.flatMap((color, i) => [
+                  i / (gradientColors.length - 1),
+                  color,
+                ])
+              : undefined,
+          fillRadialGradientColorStops:
+            background.gradient.type === "radial"
+              ? gradientColors.flatMap((color, i) => [
+                  i / (gradientColors.length - 1),
+                  color,
+                ])
+              : undefined,
+          fillRadialGradientStartPoint:
+            background.gradient.type === "radial"
+              ? { x: stage.width() / 2, y: stage.height() / 2 }
+              : undefined,
+          fillRadialGradientStartRadius:
+            background.gradient.type === "radial" ? 0 : undefined,
+          fillRadialGradientEndPoint:
+            background.gradient.type === "radial"
+              ? { x: stage.width() / 2, y: stage.height() / 2 }
+              : undefined,
+          fillRadialGradientEndRadius:
+            background.gradient.type === "radial"
+              ? Math.max(stage.width(), stage.height()) / 2
+              : undefined,
           listening: false,
         });
-        
+
         // For linear gradient, use fillLinearGradientColorStops
         if (background.gradient.type === "linear") {
           const colorStops: (number | string)[] = [];
@@ -103,7 +115,10 @@ export async function applyTemplateBackground(
           });
           gradientRect.fillLinearGradientColorStops(colorStops);
           gradientRect.fillLinearGradientStartPoint({ x: 0, y: 0 });
-          gradientRect.fillLinearGradientEndPoint({ x: stage.width(), y: stage.height() });
+          gradientRect.fillLinearGradientEndPoint({
+            x: stage.width(),
+            y: stage.height(),
+          });
         } else {
           // radial
           const colorStops: (number | string)[] = [];
@@ -112,12 +127,20 @@ export async function applyTemplateBackground(
             colorStops.push(color);
           });
           gradientRect.fillRadialGradientColorStops(colorStops);
-          gradientRect.fillRadialGradientStartPoint({ x: stage.width() / 2, y: stage.height() / 2 });
+          gradientRect.fillRadialGradientStartPoint({
+            x: stage.width() / 2,
+            y: stage.height() / 2,
+          });
           gradientRect.fillRadialGradientStartRadius(0);
-          gradientRect.fillRadialGradientEndPoint({ x: stage.width() / 2, y: stage.height() / 2 });
-          gradientRect.fillRadialGradientEndRadius(Math.max(stage.width(), stage.height()) / 2);
+          gradientRect.fillRadialGradientEndPoint({
+            x: stage.width() / 2,
+            y: stage.height() / 2,
+          });
+          gradientRect.fillRadialGradientEndRadius(
+            Math.max(stage.width(), stage.height()) / 2,
+          );
         }
-        
+
         layer.add(gradientRect);
         gradientRect.moveToBottom();
         layer.batchDraw();
@@ -130,7 +153,7 @@ export async function applyTemplateBackground(
       if (bgRect3) {
         bgRect3.destroy();
       }
-      
+
       const baseRect = new Konva.Rect({
         id: "background-rect",
         x: 0,
@@ -142,12 +165,12 @@ export async function applyTemplateBackground(
       });
       layer.add(baseRect);
       baseRect.moveToBottom();
-      
+
       // Then add shapes as canvas objects
       if (background.shapes) {
         background.shapes.forEach((shape) => {
           let konvaShape: Konva.Shape | null = null;
-          
+
           if (shape.type === "circle") {
             konvaShape = new Konva.Circle({
               x: shape.x,
@@ -183,7 +206,7 @@ export async function applyTemplateBackground(
       if (defaultRect) {
         defaultRect.destroy();
       }
-      
+
       const rect2 = new Konva.Rect({
         id: "background-rect",
         x: 0,

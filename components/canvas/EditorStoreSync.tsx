@@ -1,94 +1,105 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import { useImageStore, useEditorStore } from '@/lib/store'
-import { gradientColors } from '@/lib/constants/gradient-colors'
-import { solidColors } from '@/lib/constants/solid-colors'
-import { GradientKey } from '@/lib/constants/gradient-colors'
-import { AspectRatioKey } from '@/lib/constants/aspect-ratios'
+import { useEffect } from "react";
+import { useImageStore, useEditorStore } from "@/lib/store";
+import { gradientColors } from "@/lib/constants/gradient-colors";
+import { solidColors } from "@/lib/constants/solid-colors";
+import { GradientKey } from "@/lib/constants/gradient-colors";
+import { AspectRatioKey } from "@/lib/constants/aspect-ratios";
 
 // Helper function to parse gradient string and extract colors
-function parseGradientColors(gradientStr: string): { colorA: string; colorB: string; direction: number } {
-  let colorA = '#4168d0'
-  let colorB = '#c850c0'
-  let direction = 43
+function parseGradientColors(gradientStr: string): {
+  colorA: string;
+  colorB: string;
+  direction: number;
+} {
+  let colorA = "#4168d0";
+  let colorB = "#c850c0";
+  let direction = 43;
 
   try {
-    const angleMatch = gradientStr.match(/linear-gradient\((\d+)deg/)
+    const angleMatch = gradientStr.match(/linear-gradient\((\d+)deg/);
     if (angleMatch) {
-      direction = parseInt(angleMatch[1], 10)
+      direction = parseInt(angleMatch[1], 10);
     }
 
-    const rgbMatches = gradientStr.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g)
+    const rgbMatches = gradientStr.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g);
     if (rgbMatches && rgbMatches.length >= 2) {
-      colorA = rgbMatches[0]
-      colorB = rgbMatches[rgbMatches.length - 1]
+      colorA = rgbMatches[0];
+      colorB = rgbMatches[rgbMatches.length - 1];
     } else {
-      const hexMatches = gradientStr.match(/#[0-9A-Fa-f]{6}/g)
+      const hexMatches = gradientStr.match(/#[0-9A-Fa-f]{6}/g);
       if (hexMatches && hexMatches.length >= 2) {
-        colorA = hexMatches[0]
-        colorB = hexMatches[hexMatches.length - 1]
+        colorA = hexMatches[0];
+        colorB = hexMatches[hexMatches.length - 1];
       }
     }
   } catch (e) {
     // Use defaults
   }
 
-  return { colorA, colorB, direction }
+  return { colorA, colorB, direction };
 }
 
 export function EditorStoreSync() {
-  const imageStore = useImageStore()
-  const editorStore = useEditorStore()
+  const imageStore = useImageStore();
+  const editorStore = useEditorStore();
 
   useEffect(() => {
     // Sync screenshot src
     if (imageStore.uploadedImageUrl !== editorStore.screenshot.src) {
-      editorStore.setScreenshot({ src: imageStore.uploadedImageUrl })
+      editorStore.setScreenshot({ src: imageStore.uploadedImageUrl });
     }
 
     // Sync screenshot scale
-    const scale = imageStore.imageScale / 100
+    const scale = imageStore.imageScale / 100;
     if (scale !== editorStore.screenshot.scale) {
-      editorStore.setScreenshot({ scale })
+      editorStore.setScreenshot({ scale });
     }
 
     // Sync screenshot radius
     if (imageStore.borderRadius !== editorStore.screenshot.radius) {
-      editorStore.setScreenshot({ radius: imageStore.borderRadius })
+      editorStore.setScreenshot({ radius: imageStore.borderRadius });
     }
 
     // Sync background
-    const bgConfig = imageStore.backgroundConfig
-    if (bgConfig.type === 'gradient') {
-      const gradientStr = gradientColors[bgConfig.value as GradientKey] || gradientColors.sunset_vibes
-      const { colorA, colorB, direction } = parseGradientColors(gradientStr)
+    const bgConfig = imageStore.backgroundConfig;
+    if (bgConfig.type === "gradient") {
+      const gradientStr =
+        gradientColors[bgConfig.value as GradientKey] ||
+        gradientColors.sunset_vibes;
+      const { colorA, colorB, direction } = parseGradientColors(gradientStr);
       if (
-        editorStore.background.mode !== 'gradient' ||
+        editorStore.background.mode !== "gradient" ||
         editorStore.background.colorA !== colorA ||
         editorStore.background.colorB !== colorB ||
         editorStore.background.gradientDirection !== direction
       ) {
         editorStore.setBackground({
-          mode: 'gradient',
+          mode: "gradient",
           colorA,
           colorB,
           gradientDirection: direction,
-        })
+        });
       }
-    } else if (bgConfig.type === 'solid') {
-      const color = (solidColors as Record<string, string>)[bgConfig.value as string] || '#ffffff'
-      if (editorStore.background.mode !== 'solid' || editorStore.background.colorA !== color) {
+    } else if (bgConfig.type === "solid") {
+      const color =
+        (solidColors as Record<string, string>)[bgConfig.value as string] ||
+        "#ffffff";
+      if (
+        editorStore.background.mode !== "solid" ||
+        editorStore.background.colorA !== color
+      ) {
         editorStore.setBackground({
-          mode: 'solid',
+          mode: "solid",
           colorA: color,
           colorB: color,
-        })
+        });
       }
     }
 
     // Sync frame
-    const frame = imageStore.imageBorder
+    const frame = imageStore.imageBorder;
     if (
       editorStore.frame.enabled !== frame.enabled ||
       editorStore.frame.type !== frame.type ||
@@ -106,11 +117,11 @@ export function EditorStoreSync() {
         theme: frame.theme,
         padding: frame.padding,
         title: frame.title,
-      })
+      });
     }
 
     // Sync shadow
-    const shadow = imageStore.imageShadow
+    const shadow = imageStore.imageShadow;
     if (
       editorStore.shadow.enabled !== shadow.enabled ||
       editorStore.shadow.softness !== shadow.blur ||
@@ -120,29 +131,39 @@ export function EditorStoreSync() {
         enabled: shadow.enabled,
         softness: shadow.blur,
         color: shadow.color,
-        elevation: Math.max(Math.abs(shadow.offsetX), Math.abs(shadow.offsetY)) || 10,
-        side: shadow.offsetX > 0 ? 'right' : shadow.offsetY > 0 ? 'bottom' : 'bottom',
+        elevation:
+          Math.max(Math.abs(shadow.offsetX), Math.abs(shadow.offsetY)) || 10,
+        side:
+          shadow.offsetX > 0
+            ? "right"
+            : shadow.offsetY > 0
+              ? "bottom"
+              : "bottom",
         intensity: 1,
-      })
+      });
     }
 
     // Sync canvas aspect ratio
-    const aspectRatioMap: Record<AspectRatioKey, 'square' | '4:3' | '2:1' | '3:2' | 'free'> = {
-      '1_1': 'square',
-      '4_3': '4:3',
-      '2_1': '2:1',
-      '3_2': '3:2',
-      '16_9': 'free',
-      '9_16': 'free',
-      '4_5': 'free',
-      '3_4': 'free',
-      '2_3': 'free',
-      '5_4': 'free',
-      '16_10': 'free',
-    }
-    const canvasAspectRatio = aspectRatioMap[imageStore.selectedAspectRatio] || 'free'
+    const aspectRatioMap: Record<
+      AspectRatioKey,
+      "square" | "4:3" | "2:1" | "3:2" | "free"
+    > = {
+      "1_1": "square",
+      "4_3": "4:3",
+      "2_1": "2:1",
+      "3_2": "3:2",
+      "16_9": "free",
+      "9_16": "free",
+      "4_5": "free",
+      "3_4": "free",
+      "2_3": "free",
+      "5_4": "free",
+      "16_10": "free",
+    };
+    const canvasAspectRatio =
+      aspectRatioMap[imageStore.selectedAspectRatio] || "free";
     if (editorStore.canvas.aspectRatio !== canvasAspectRatio) {
-      editorStore.setCanvas({ aspectRatio: canvasAspectRatio })
+      editorStore.setCanvas({ aspectRatio: canvasAspectRatio });
     }
   }, [
     imageStore.uploadedImageUrl,
@@ -153,8 +174,7 @@ export function EditorStoreSync() {
     imageStore.imageShadow,
     imageStore.selectedAspectRatio,
     editorStore,
-  ])
+  ]);
 
-  return null
+  return null;
 }
-

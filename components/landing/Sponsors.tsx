@@ -167,17 +167,19 @@ const defaultSponsors: Sponsor[] = [
   },
 ];
 
-export function Sponsors({ 
-  title = "Our Sponsors", 
+export function Sponsors({
+  title = "Our Sponsors",
   sponsors = defaultSponsors,
-  showDescription = false 
+  showDescription = false,
 }: SponsorsProps) {
   const hasSponsors = sponsors && sponsors.length > 0;
 
   return (
     <section className="w-full py-12 sm:py-16 px-4 sm:px-6 border-t border-border bg-muted/30">
       <div className="container mx-auto max-w-6xl">
-        <h2 className={`text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 px-2 ${instrumentSerif.className}`}>
+        <h2
+          className={`text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 px-2 ${instrumentSerif.className}`}
+        >
           {title}
         </h2>
         {hasSponsors ? (
@@ -185,7 +187,6 @@ export function Sponsors({
             {sponsors.map((sponsor, index) => {
               const content = (
                 <div className="group relative rounded-xl border border-border/50 bg-background/95 backdrop-blur-sm hover:border-border hover:shadow-lg transition-all duration-200 overflow-hidden h-full flex flex-col">
-
                   <div className="p-5 sm:p-6 rounded-[calc(0.75rem-1px)] flex-1 flex flex-col">
                     <div className="flex gap-4 items-start flex-1">
                       {/* Avatar */}
@@ -214,11 +215,12 @@ export function Sponsors({
                         <h3 className="text-lg sm:text-xl font-bold text-foreground mb-1.5 truncate">
                           {sponsor.name}
                         </h3>
-                        
+
                         {sponsor.amount && (
                           <div className="mb-2.5">
                             <p className="text-sm font-medium text-primary">
-                              {sponsor.amount} {sponsor.amountType || "one time"}
+                              {sponsor.amount}{" "}
+                              {sponsor.amountType || "one time"}
                             </p>
                             {sponsor.total && (
                               <p className="text-xs text-primary/80 mt-0.5">
@@ -235,7 +237,11 @@ export function Sponsors({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                window.open(`https://github.com/${sponsor.github}`, '_blank', 'noopener,noreferrer');
+                                window.open(
+                                  `https://github.com/${sponsor.github}`,
+                                  "_blank",
+                                  "noopener,noreferrer",
+                                );
                               }}
                               className="flex items-center gap-1.5 text-xs text-foreground/80 hover:text-foreground transition-colors bg-transparent border-0 p-0 cursor-pointer"
                             >
@@ -248,7 +254,11 @@ export function Sponsors({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                window.open(`https://twitter.com/${sponsor.twitter}`, '_blank', 'noopener,noreferrer');
+                                window.open(
+                                  `https://twitter.com/${sponsor.twitter}`,
+                                  "_blank",
+                                  "noopener,noreferrer",
+                                );
                               }}
                               className="flex items-center gap-1.5 text-xs text-foreground/80 hover:text-foreground transition-colors bg-transparent border-0 p-0 cursor-pointer"
                             >
@@ -263,13 +273,17 @@ export function Sponsors({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                window.open(sponsor.website, '_blank', 'noopener,noreferrer');
+                                window.open(
+                                  sponsor.website,
+                                  "_blank",
+                                  "noopener,noreferrer",
+                                );
                               }}
                               className="flex items-center gap-1.5 text-xs text-foreground/80 hover:text-foreground transition-colors bg-transparent border-0 p-0 cursor-pointer"
                             >
                               <Globe className="w-3.5 h-3.5" />
                               <span className="truncate max-w-[120px]">
-                                {sponsor.website.replace(/^https?:\/\//, '')}
+                                {sponsor.website.replace(/^https?:\/\//, "")}
                               </span>
                             </button>
                           )}

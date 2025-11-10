@@ -7,31 +7,37 @@ Stage is a modern web-based canvas editor built with Next.js 16 and React 19. It
 ## Tech Stack
 
 ### Core Framework
+
 - **Next.js 16** - React framework with App Router
 - **React 19** - UI library with React Compiler enabled
 - **TypeScript** - Type safety throughout the codebase
 
 ### Canvas & Rendering
+
 - **Konva/React-Konva** - 2D canvas rendering engine for user images and overlays
 - **html2canvas** - DOM-to-canvas conversion for background rendering
 - **modern-screenshot** - 3D transform capture for perspective effects
 
 ### State Management
+
 - **Zustand** - Lightweight state management with two main stores:
   - `useImageStore` - Main image and design state
   - `useEditorStore` - Canvas rendering state (synced with image store)
 
 ### Styling
+
 - **Tailwind CSS 4** - Utility-first CSS framework
 - **Radix UI** - Accessible component primitives
 - **Lucide React** - Icon library
 
 ### Image Processing & Storage
+
 - **Cloudinary** (optional) - Image optimization and CDN
 - **IndexedDB** - Client-side storage for images and exports
 - **Sharp** - Server-side image processing (dev dependency)
 
 ### Analytics
+
 - **Umami** - Privacy-focused analytics
 
 ## Project Structure
@@ -107,7 +113,9 @@ stage/
 The application uses a dual-store pattern with Zustand:
 
 #### 1. Image Store (`useImageStore`)
+
 Manages the main design state:
+
 - Uploaded image URL and metadata
 - Background configuration (gradient, solid, image)
 - Text overlays array
@@ -118,7 +126,9 @@ Manages the main design state:
 - Aspect ratio selection
 
 #### 2. Editor Store (`useEditorStore`)
+
 Manages canvas rendering state:
+
 - Screenshot/image state (for Konva)
 - Background mode (solid/gradient)
 - Shadow configuration
@@ -138,6 +148,7 @@ The canvas rendering uses a hybrid approach:
 3. **Overlay Layer** - Text and image overlays rendered separately, composited on top
 
 This separation allows:
+
 - High-quality background rendering with CSS effects
 - Precise image positioning with Konva
 - Proper layering of overlays above user content
@@ -183,6 +194,7 @@ Images are stored using a hybrid approach:
    - Export preferences
 
 When an image is uploaded:
+
 - A blob URL is created for immediate use
 - The blob is saved to IndexedDB with a unique ID
 - The ID is stored in canvas objects for persistence
@@ -190,17 +202,20 @@ When an image is uploaded:
 ### Component Architecture
 
 #### Layout Components
+
 - `EditorLayout` - Main editor container with responsive panels
 - `EditorLeftPanel` - Left sidebar with controls
 - `EditorRightPanel` - Right sidebar with style options
 - `EditorBottomBar` - Bottom bar with export/actions
 
 #### Canvas Components
+
 - `EditorCanvas` - Wrapper that shows upload UI or canvas
 - `ClientCanvas` - Main Konva canvas renderer (client-only)
 - `CanvasContext` - Context provider for canvas operations
 
 #### Control Components
+
 - `BorderControls` - Border style and configuration
 - `ShadowControls` - Shadow customization
 - `Perspective3DControls` - 3D transform controls
@@ -209,22 +224,27 @@ When an image is uploaded:
 ## Key Features Implementation
 
 ### 1. Image Upload
+
 - **File Upload**: Uses `react-dropzone` for drag-and-drop
 - **Website Screenshot**: API route calls ScreenshotAPI.net service
 - **Validation**: File type and size validation
 - **Storage**: Blob URL creation + IndexedDB persistence
 
 ### 2. Background System
+
 Supports three background types:
+
 - **Gradient**: CSS linear gradients with customizable colors and angles
 - **Solid**: Single color backgrounds
 - **Image**: Cloudinary-hosted images or uploaded images
 
 Background effects:
+
 - **Blur**: Applied via CSS filter, captured in export
 - **Noise**: Generated noise texture with overlay blend mode
 
 ### 3. Text Overlays
+
 - Multiple text overlays with independent positioning
 - Custom fonts, colors, sizes, weights
 - Text shadows with customizable properties
@@ -232,12 +252,14 @@ Background effects:
 - Position stored as percentage for responsive scaling
 
 ### 4. Image Overlays
+
 - Decorative overlays from Cloudinary gallery
 - Custom uploaded overlays
 - Position, size, rotation, flip controls
 - Opacity and visibility toggles
 
 ### 5. Image Transformations
+
 - **Scale**: Percentage-based scaling
 - **Opacity**: 0-100% opacity control
 - **Border Radius**: Rounded corners
@@ -246,6 +268,7 @@ Background effects:
 - **3D Perspective**: CSS 3D transforms with perspective
 
 ### 6. Export System
+
 - **Format**: PNG (with transparency support)
 - **Quality**: 0-1 quality slider
 - **Scale**: Up to 5x scaling for high-resolution exports
@@ -253,7 +276,9 @@ Background effects:
 - **Storage**: Exported images saved to IndexedDB
 
 ### 7. Presets
+
 Pre-configured design presets that apply:
+
 - Aspect ratio
 - Background configuration
 - Border and shadow settings
@@ -319,16 +344,19 @@ ClientCanvas re-renders with new state
 ## Performance Considerations
 
 ### Canvas Rendering
+
 - Konva stage uses `batchDraw()` to minimize redraws
 - Pattern and noise textures are cached
 - Background images are loaded once and reused
 
 ### Export Performance
+
 - Background and overlays exported separately to optimize memory
 - High-resolution exports use scaling instead of large canvas dimensions
 - Export operations are async to prevent UI blocking
 
 ### Image Loading
+
 - Cloudinary images use optimized URLs with auto-format and quality
 - Images are cached in browser cache
 - IndexedDB provides persistent storage for offline access
@@ -350,6 +378,7 @@ BETTER_AUTH_URL=https://your-domain.com
 ## API Routes
 
 ### `/api/screenshot`
+
 - **Method**: POST
 - **Purpose**: Capture website screenshots using Puppeteer
 - **Body**: `{ url: string }`
@@ -380,6 +409,7 @@ BETTER_AUTH_URL=https://your-domain.com
 ## Dependencies Overview
 
 ### Production Dependencies
+
 - **next** (16.0.1) - React framework
 - **react** (19.2.0) - UI library
 - **konva** (10.0.8) - Canvas library
@@ -392,6 +422,7 @@ BETTER_AUTH_URL=https://your-domain.com
 - **tailwindcss** (4) - Styling
 
 ### Development Dependencies
+
 - **typescript** (5) - Type checking
 - **sharp** (0.34.4) - Image processing
 - **tsx** (4.20.6) - TypeScript execution
@@ -407,6 +438,7 @@ BETTER_AUTH_URL=https://your-domain.com
 ## Future Architecture Considerations
 
 ### Potential Improvements
+
 1. **Web Workers**: Move heavy export operations to web workers
 2. **Service Worker**: Cache assets and enable offline functionality
 3. **Virtual Scrolling**: For large overlay galleries
@@ -418,16 +450,19 @@ BETTER_AUTH_URL=https://your-domain.com
 ## Testing Strategy
 
 ### Unit Tests
+
 - Store logic (Zustand stores)
 - Utility functions (export, image processing)
 - Component logic (hooks)
 
 ### Integration Tests
+
 - Export pipeline
 - Store synchronization
 - Image upload flow
 
 ### E2E Tests
+
 - Complete user workflows
 - Export functionality
 - Cross-browser compatibility
@@ -435,6 +470,7 @@ BETTER_AUTH_URL=https://your-domain.com
 ## Deployment
 
 ### Vercel Configuration
+
 - Serverless functions for API routes
 - Edge functions for static assets
 - Environment variables configured in Vercel dashboard
@@ -446,6 +482,7 @@ npm run build  # Next.js production build
 ```
 
 ### Runtime Configuration
+
 - `vercel.json` configures function timeouts and memory
 - Screenshot API route has 10s timeout and 1024MB memory
 
@@ -458,4 +495,3 @@ npm run build  # Next.js production build
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
-

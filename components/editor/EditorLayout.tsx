@@ -20,7 +20,7 @@ function EditorMain() {
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
       <EditorStoreSync />
-      
+
       {/* Mobile Header */}
       {isMobile && (
         <div className="h-14 bg-background border-b border-border flex items-center justify-between px-4 z-10">
@@ -47,36 +47,42 @@ function EditorMain() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Desktop */}
         {!isMobile && <EditorLeftPanel />}
-        
+
         {/* Left Panel - Mobile Sheet */}
         {isMobile && (
           <Sheet open={leftPanelOpen} onOpenChange={setLeftPanelOpen}>
-            <SheetContent side="left" className="w-[320px] p-0 sm:max-w-[320px]">
+            <SheetContent
+              side="left"
+              className="w-[320px] p-0 sm:max-w-[320px]"
+            >
               <EditorLeftPanel />
             </SheetContent>
           </Sheet>
         )}
-        
+
         {/* Center Canvas */}
         <div className="flex-1 flex flex-col overflow-hidden bg-background">
           <EditorContent>
             <EditorCanvas />
           </EditorContent>
         </div>
-        
+
         {/* Right Panel - Desktop */}
         {!isMobile && <EditorRightPanel />}
-        
+
         {/* Right Panel - Mobile Sheet */}
         {isMobile && (
           <Sheet open={rightPanelOpen} onOpenChange={setRightPanelOpen}>
-            <SheetContent side="right" className="w-[320px] p-0 sm:max-w-[320px]">
+            <SheetContent
+              side="right"
+              className="w-[320px] p-0 sm:max-w-[320px]"
+            >
               <EditorRightPanel />
             </SheetContent>
           </Sheet>
         )}
       </div>
-      
+
       {/* Bottom Bar */}
       <EditorBottomBar />
     </div>

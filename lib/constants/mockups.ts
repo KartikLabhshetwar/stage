@@ -1,11 +1,11 @@
-import type { MockupDefinition } from '@/types/mockup'
+import type { MockupDefinition } from "@/types/mockup";
 
 export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
   {
-    id: 'mac-1',
-    name: 'MacBook Air',
-    type: 'macbook',
-    src: '/mockups/mac/macbook-air.png',
+    id: "mac-1",
+    name: "MacBook Air",
+    type: "macbook",
+    src: "/mockups/mac/macbook-air.png",
     screenArea: {
       x: 0.095,
       y: 0.04,
@@ -14,10 +14,10 @@ export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
     },
   },
   {
-    id: 'mac-2',
-    name: 'MacBook Pro',
-    type: 'macbook',
-    src: '/mockups/mac/macbook-pro.png',
+    id: "mac-2",
+    name: "MacBook Pro",
+    type: "macbook",
+    src: "/mockups/mac/macbook-pro.png",
     screenArea: {
       x: 0.095,
       y: 0.04,
@@ -26,10 +26,10 @@ export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
     },
   },
   {
-    id: 'iphone-1',
-    name: 'iPhone',
-    type: 'iphone',
-    src: '/mockups/iphone/iphone.png',
+    id: "iphone-1",
+    name: "iPhone",
+    type: "iphone",
+    src: "/mockups/iphone/iphone.png",
     screenArea: {
       x: 0.048,
       y: 0.02,
@@ -45,13 +45,16 @@ export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
       },
     },
   },
-]
+];
 
-export const getMockupDefinition = (id: string): MockupDefinition | undefined => {
-  return MOCKUP_DEFINITIONS.find((def) => def.id === id)
-}
+export const getMockupDefinition = (
+  id: string,
+): MockupDefinition | undefined => {
+  return MOCKUP_DEFINITIONS.find((def) => def.id === id);
+};
 
-export const getMockupsByType = (type: 'iphone' | 'macbook'): MockupDefinition[] => {
-  return MOCKUP_DEFINITIONS.filter((def) => def.type === type)
-}
-
+export const getMockupsByType = (
+  type: "iphone" | "macbook",
+): MockupDefinition[] => {
+  return MOCKUP_DEFINITIONS.filter((def) => def.type === type);
+};

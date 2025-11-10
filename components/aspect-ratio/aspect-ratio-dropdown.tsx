@@ -2,13 +2,13 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from '@/components/ui/popover';
-import { aspectRatios } from '@/lib/constants/aspect-ratios';
-import { useImageStore } from '@/lib/store';
-import { AspectRatioPicker } from './aspect-ratio-picker';
-import { Button } from '@/components/ui/button';
-import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
-import * as React from 'react';
+} from "@/components/ui/popover";
+import { aspectRatios } from "@/lib/constants/aspect-ratios";
+import { useImageStore } from "@/lib/store";
+import { AspectRatioPicker } from "./aspect-ratio-picker";
+import { Button } from "@/components/ui/button";
+import { GlassInputWrapper } from "@/components/ui/glass-input-wrapper";
+import * as React from "react";
 
 export const AspectRatioDropdown = () => {
   const { selectedAspectRatio } = useImageStore();
@@ -28,14 +28,16 @@ export const AspectRatioDropdown = () => {
               <span
                 className="bg-primary rounded border shrink-0"
                 style={{
-                  width: '20px',
+                  width: "20px",
                   height: `${20 * (current?.ratio || 1)}px`,
-                  maxHeight: '20px',
-                  minHeight: '8px',
+                  maxHeight: "20px",
+                  minHeight: "8px",
                 }}
               />
               <span className="text-sm font-medium flex-1 text-left">
-                {current ? `${current.name} (${current.width}:${current.height})` : 'Aspect Ratio'}
+                {current
+                  ? `${current.name} (${current.width}:${current.height})`
+                  : "Aspect Ratio"}
               </span>
             </span>
           </Button>
@@ -47,4 +49,3 @@ export const AspectRatioDropdown = () => {
     </Popover>
   );
 };
-

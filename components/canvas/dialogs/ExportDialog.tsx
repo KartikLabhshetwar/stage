@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ScaleSlider } from "@/components/export";
 
 interface ExportDialogProps {
@@ -14,9 +19,9 @@ interface ExportDialogProps {
   onScaleChange: (scale: number) => void;
 }
 
-export function ExportDialog({ 
-  open, 
-  onOpenChange, 
+export function ExportDialog({
+  open,
+  onOpenChange,
   onExport,
   scale,
   isExporting,
@@ -30,7 +35,10 @@ export function ExportDialog({
       await onExport();
       onOpenChange(false);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to export image. Please try again.";
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to export image. Please try again.";
       setError(errorMessage);
     }
   };
@@ -39,7 +47,9 @@ export function ExportDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl font-semibold text-foreground">Export Canvas</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-foreground">
+            Export Canvas
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 sm:space-y-5">
           <ScaleSlider scale={scale} onScaleChange={onScaleChange} />
@@ -69,4 +79,3 @@ export function ExportDialog({
     </Dialog>
   );
 }
-

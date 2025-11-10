@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import * as React from "react";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarFooter,
-} from '@/components/ui/sidebar';
-import { useImageStore } from '@/lib/store';
-import { ExportDialog } from '@/components/canvas/dialogs/ExportDialog';
-import { StyleTabs } from './style-tabs';
-import { Button } from '@/components/ui/button';
-import { Download, Trash2 } from 'lucide-react';
-import { PresetSelector } from '@/components/presets/PresetSelector';
-import { useExport } from '@/hooks/useExport';
-import { FaGithub } from 'react-icons/fa';
+} from "@/components/ui/sidebar";
+import { useImageStore } from "@/lib/store";
+import { ExportDialog } from "@/components/canvas/dialogs/ExportDialog";
+import { StyleTabs } from "./style-tabs";
+import { Button } from "@/components/ui/button";
+import { Download, Trash2 } from "lucide-react";
+import { PresetSelector } from "@/components/presets/PresetSelector";
+import { useExport } from "@/hooks/useExport";
+import { FaGithub } from "react-icons/fa";
 
 export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { 
-    uploadedImageUrl, 
-    selectedAspectRatio, 
+  const {
+    uploadedImageUrl,
+    selectedAspectRatio,
     clearImage,
     selectedGradient,
     borderRadius,
@@ -44,9 +44,9 @@ export function SidebarLeft({
 
   return (
     <>
-      <Sidebar 
+      <Sidebar
         collapsible="none"
-        className="border-r border-sidebar-border bg-sidebar backdrop-blur-xl h-screen flex flex-col" 
+        className="border-r border-sidebar-border bg-sidebar backdrop-blur-xl h-screen flex flex-col"
         {...props}
       >
         <SidebarHeader className="p-4 sm:p-5 border-b border-sidebar-border min-w-0 bg-sidebar/50 shrink-0">

@@ -34,7 +34,7 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
       }
       onUpload(file);
     },
-    [validateFile, onUpload]
+    [validateFile, onUpload],
   );
 
   const onDrop = React.useCallback(
@@ -43,10 +43,14 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
         handleFile(acceptedFiles[0]);
       }
     },
-    [handleFile]
+    [handleFile],
   );
 
-  const { getRootProps, getInputProps, isDragActive: dropzoneActive } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive: dropzoneActive,
+  } = useDropzone({
     onDrop,
     accept: {
       "image/*": ALLOWED_IMAGE_TYPES.map((type) => type.split("/")[1]),
@@ -68,11 +72,11 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
 
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        
+
         // Check if the item is an image
         if (item.type.startsWith("image/")) {
           e.preventDefault();
-          
+
           const file = item.getAsFile();
           if (file) {
             handleFile(file);
@@ -93,10 +97,15 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
   const active = isDragActive || dropzoneActive;
 
   return (
-    <div ref={containerRef} className={cn("w-full max-w-2xl mx-auto", className)}>
+    <div
+      ref={containerRef}
+      className={cn("w-full max-w-2xl mx-auto", className)}
+    >
       <div className="space-y-6 sm:space-y-8">
         <div className="text-center space-y-3">
-          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">Upload Image</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
+            Upload Image
+          </h2>
           <p className="text-xs sm:text-sm text-muted-foreground px-2">
             Drag and drop, paste, or click to upload an image
           </p>
@@ -112,15 +121,15 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
             active
               ? "border-primary bg-primary/5 scale-[1.01]"
               : "border-border hover:border-primary/50 hover:bg-accent/50",
-            error && "border-destructive"
+            error && "border-destructive",
           )}
         >
           <input {...getInputProps()} />
-          
+
           <div
             className={cn(
               "mb-4 sm:mb-6 transition-colors",
-              active ? "text-primary" : "text-muted-foreground"
+              active ? "text-primary" : "text-muted-foreground",
             )}
           >
             <FaImage size={48} className="sm:hidden" />
@@ -128,14 +137,17 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
           </div>
 
           {active ? (
-            <p className="text-sm sm:text-base font-medium text-primary">Drop the image here...</p>
+            <p className="text-sm sm:text-base font-medium text-primary">
+              Drop the image here...
+            </p>
           ) : (
             <div className="space-y-2 text-center px-2">
               <p className="text-sm sm:text-base font-medium">
                 Drag & drop an image here
               </p>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                or tap to browse • PNG, JPG, WEBP up to {MAX_IMAGE_SIZE / 1024 / 1024}MB • or paste an image
+                or tap to browse • PNG, JPG, WEBP up to{" "}
+                {MAX_IMAGE_SIZE / 1024 / 1024}MB • or paste an image
               </p>
             </div>
           )}
@@ -150,4 +162,3 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
     </div>
   );
 }
-

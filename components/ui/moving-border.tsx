@@ -48,12 +48,9 @@ export function Button({
       >
         <MovingBorder duration={duration} rx="30%" ry="30%">
           <div
-            className={cn(
-              "h-20 w-20 opacity-[0.8]",
-              borderClassName,
-            )}
+            className={cn("h-20 w-20 opacity-[0.8]", borderClassName)}
             style={{
-              background: `radial-gradient(${gradientColor || 'var(--primary)'} 40%, transparent 60%)`,
+              background: `radial-gradient(${gradientColor || "var(--primary)"} 40%, transparent 60%)`,
             }}
           />
         </MovingBorder>

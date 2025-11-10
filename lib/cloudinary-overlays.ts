@@ -37,7 +37,7 @@ export const OVERLAY_PUBLIC_IDS = [
   "overlays/overlay1",
   "overlays/overlay2",
   "overlays/overlay3",
-  "overlays/tanjiro"
+  "overlays/tanjiro",
 ] as const;
 
 /**
@@ -75,7 +75,7 @@ export const OVERLAY_MAPPING: Record<string, string> = {
   "overlay1.png": "overlays/overlay1",
   "overlay2.png": "overlays/overlay2",
   "overlay3.png": "overlays/overlay3",
-  "tanjiro.webp": "overlays/tanjiro"
+  "tanjiro.webp": "overlays/tanjiro",
 };
 
 /**

@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCanvasContext } from "../CanvasContext";
@@ -14,7 +20,12 @@ interface SaveDesignDialogProps {
   designName?: string; // Existing design name if updating
 }
 
-export function SaveDesignDialog({ open, onOpenChange, designId, designName }: SaveDesignDialogProps) {
+export function SaveDesignDialog({
+  open,
+  onOpenChange,
+  designId,
+  designName,
+}: SaveDesignDialogProps) {
   const { saveDesign } = useCanvasContext();
   const [name, setName] = useState(designName || "");
   const [description, setDescription] = useState("");
@@ -81,11 +92,16 @@ export function SaveDesignDialog({ open, onOpenChange, designId, designName }: S
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{designId ? "Update Design" : "Save Design"}</DialogTitle>
+          <DialogTitle>
+            {designId ? "Update Design" : "Save Design"}
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div>
-            <label htmlFor="design-name" className="text-sm font-medium mb-2 block">
+            <label
+              htmlFor="design-name"
+              className="text-sm font-medium mb-2 block"
+            >
               Design Name *
             </label>
             <Input
@@ -97,7 +113,10 @@ export function SaveDesignDialog({ open, onOpenChange, designId, designName }: S
             />
           </div>
           <div>
-            <label htmlFor="design-description" className="text-sm font-medium mb-2 block">
+            <label
+              htmlFor="design-description"
+              className="text-sm font-medium mb-2 block"
+            >
               Description (optional)
             </label>
             <Input
@@ -122,10 +141,7 @@ export function SaveDesignDialog({ open, onOpenChange, designId, designName }: S
           >
             Cancel
           </Button>
-          <Button
-            onClick={handleSave}
-            disabled={isSaving || !name.trim()}
-          >
+          <Button onClick={handleSave} disabled={isSaving || !name.trim()}>
             {isSaving ? "Saving..." : designId ? "Update" : "Save"}
           </Button>
         </DialogFooter>
@@ -133,4 +149,3 @@ export function SaveDesignDialog({ open, onOpenChange, designId, designName }: S
     </Dialog>
   );
 }
-

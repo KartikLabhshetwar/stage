@@ -1,3 +1,1 @@
-
-export { TextOverlayRenderer } from './text-overlay-renderer';
-
+export { TextOverlayRenderer } from "./text-overlay-renderer";
