@@ -1225,8 +1225,11 @@ export async function exportElement(
               
               const scaledX = relativeX * scaleX;
               const scaledY = relativeY * scaleY;
-              const scaledWidth = transformedCanvas.width;
-              const scaledHeight = transformedCanvas.height;
+              // The transformed canvas is created at rect.width * options.scale.
+              // We still need to map DOM pixel space (innerRect) to the final export canvas space,
+              // so multiply by the export scale factors as well.
+              const scaledWidth = transformedCanvas.width * scaleX;
+              const scaledHeight = transformedCanvas.height * scaleY;
               
               // Composite the transformed canvas onto the Konva canvas
               const compositeCtx = konvaCanvas.getContext('2d');

@@ -39,9 +39,9 @@ const PRESETS: TransformPreset[] = [
       rotateX: 11,
       rotateY: -20,
       rotateZ: 7,
-      translateX: -2,
+      translateX: -4,
       translateY: -2,
-      scale: 0.9,
+      scale: 0.8,
     },
   },
   {
@@ -51,9 +51,9 @@ const PRESETS: TransformPreset[] = [
       rotateX: 15,
       rotateY: -25,
       rotateZ: 5,
-      translateX: 0,
-      translateY: 0,
-      scale: 0.85,
+      translateX: -3,
+      translateY: -1,
+      scale: 0.8,
     },
   },
   {
@@ -72,9 +72,36 @@ const PRESETS: TransformPreset[] = [
 
 export function Perspective3DControls() {
   const { perspective3D, setPerspective3D } = useImageStore();
+  const [activePreset, setActivePreset] = React.useState<string | null>(null);
+
+  const presetsEqual = React.useCallback(
+    (a: TransformPreset['values']) => {
+      return (
+        a.perspective === perspective3D.perspective &&
+        a.rotateX === perspective3D.rotateX &&
+        a.rotateY === perspective3D.rotateY &&
+        a.rotateZ === perspective3D.rotateZ &&
+        a.translateX === perspective3D.translateX &&
+        a.translateY === perspective3D.translateY &&
+        a.scale === perspective3D.scale
+      );
+    },
+    [perspective3D]
+  );
+
+  // Initialize active preset based on current values (e.g., on first render or external resets)
+  React.useEffect(() => {
+    const matched = PRESETS.find((p) => presetsEqual(p.values));
+    if (matched) {
+      setActivePreset(matched.name);
+    } else {
+      setActivePreset(null);
+    }
+  }, [perspective3D, presetsEqual]);
 
   const applyPreset = (preset: TransformPreset) => {
     setPerspective3D(preset.values);
+    setActivePreset(preset.name);
   };
 
   const reset = () => {
@@ -87,6 +114,7 @@ export function Perspective3DControls() {
       translateY: 0,
       scale: 1,
     });
+    setActivePreset('Default');
   };
 
   return (
@@ -110,9 +138,10 @@ export function Perspective3DControls() {
         {PRESETS.map((preset) => (
           <Button
             key={preset.name}
-            variant="outline"
+            variant={activePreset === preset.name || presetsEqual(preset.values) ? 'default' : 'outline'}
             size="sm"
             onClick={() => applyPreset(preset)}
+            aria-pressed={activePreset === preset.name || presetsEqual(preset.values)}
             className="h-8 text-xs font-medium border border-border/50 hover:border-border"
           >
             {preset.name}
