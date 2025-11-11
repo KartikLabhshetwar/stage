@@ -1,11 +1,11 @@
-import type { MockupDefinition } from "@/types/mockup";
+import type { MockupDefinition } from '@/types/mockup'
 
 export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
   {
-    id: "mac-1",
-    name: "MacBook Air",
-    type: "macbook",
-    src: "/mockups/mac/macbook-air.png",
+    id: 'mac-1',
+    name: 'MacBook',
+    type: 'macbook',
+    src: '/mockups/mac/macbook.png',
     screenArea: {
       x: 0.095,
       y: 0.04,
@@ -14,22 +14,36 @@ export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
     },
   },
   {
-    id: "mac-2",
-    name: "MacBook Pro",
-    type: "macbook",
-    src: "/mockups/mac/macbook-pro.png",
+    id: 'imac-1',
+    name: 'iMac',
+    type: 'imac',
+    src: '/mockups/mac/imac.png',
     screenArea: {
-      x: 0.095,
-      y: 0.04,
-      width: 0.81,
-      height: 0.665,
+      x: 0.05,
+      y: 0.08,
+      width: 0.9,
+      height: 0.75,
+      borderRadius: 8,
     },
   },
   {
-    id: "iphone-1",
-    name: "iPhone",
-    type: "iphone",
-    src: "/mockups/iphone/iphone.png",
+    id: 'iwatch-1',
+    name: 'Apple Watch',
+    type: 'iwatch',
+    src: '/mockups/mac/iwatch.png',
+    screenArea: {
+      x: 0.15,
+      y: 0.15,
+      width: 0.7,
+      height: 0.7,
+      borderRadius: 1000,
+    },
+  },
+  {
+    id: 'iphone-1',
+    name: 'iPhone',
+    type: 'iphone',
+    src: '/mockups/iphone/iphone.png',
     screenArea: {
       x: 0.048,
       y: 0.02,
@@ -45,16 +59,13 @@ export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
       },
     },
   },
-];
+]
 
-export const getMockupDefinition = (
-  id: string,
-): MockupDefinition | undefined => {
-  return MOCKUP_DEFINITIONS.find((def) => def.id === id);
-};
+export const getMockupDefinition = (id: string): MockupDefinition | undefined => {
+  return MOCKUP_DEFINITIONS.find((def) => def.id === id)
+}
 
-export const getMockupsByType = (
-  type: "iphone" | "macbook",
-): MockupDefinition[] => {
-  return MOCKUP_DEFINITIONS.filter((def) => def.type === type);
-};
+export const getMockupsByType = (type: 'iphone' | 'macbook' | 'imac' | 'iwatch'): MockupDefinition[] => {
+  return MOCKUP_DEFINITIONS.filter((def) => def.type === type)
+}
+

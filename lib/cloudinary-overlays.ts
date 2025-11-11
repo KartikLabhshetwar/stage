@@ -6,6 +6,7 @@
  * These are used to generate optimized URLs via getCldImageUrl
  */
 export const OVERLAY_PUBLIC_IDS = [
+  "overlays/overlay1",
   "overlays/anime",
   "overlays/animeboy",
   "overlays/animechar",
@@ -34,7 +35,6 @@ export const OVERLAY_PUBLIC_IDS = [
   "overlays/onepiece2",
   "overlays/onepunchman2",
   "overlays/onepunchman3",
-  "overlays/overlay1",
   "overlays/overlay2",
   "overlays/overlay3",
   "overlays/tanjiro",

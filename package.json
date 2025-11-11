@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "dev": "npx prisma generate && next dev --webpack",
+    "build": "npx prisma generate && next build --webpack",
     "start": "next start",
     "upload-backgrounds": "tsx scripts/upload-backgrounds.ts",
     "upload-demo-images": "tsx scripts/upload-demo-images.ts",
@@ -12,6 +12,7 @@
     "upload-assets": "tsx scripts/upload-assets.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -36,6 +37,7 @@
     "motion": "^12.23.24",
     "next": "16.0.1",
     "next-cloudinary": "^6.17.0",
+    "prisma": "^6.19.0",
     "puppeteer-core": "^24.29.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
