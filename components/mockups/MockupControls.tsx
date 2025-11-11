@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 import { useImageStore } from '@/lib/store'
-import { Trash2, Eye, EyeOff } from 'lucide-react'
+import { Trash2, Eye, EyeOff, Loader2, Link } from 'lucide-react'
 import { getMockupDefinition } from '@/lib/constants/mockups'
 import Image from 'next/image'
 
@@ -17,6 +18,8 @@ export function MockupControls() {
   } = useImageStore()
 
   const [selectedMockupId, setSelectedMockupId] = useState<string | null>(null)
+  const [tweetUrl, setTweetUrl] = useState('')
+  const [isLoadingTweet, setIsLoadingTweet] = useState(false)
 
   const selectedMockup = mockups.find(
     (mockup) => mockup.id === selectedMockupId
@@ -59,6 +62,37 @@ export function MockupControls() {
           [axis]: value[0],
         },
       })
+    }
+  }
+
+  const handleFetchTweet = async () => {
+    if (!selectedMockup || !tweetUrl.trim()) return
+
+    setIsLoadingTweet(true)
+    try {
+      const response = await fetch('/api/tweet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: tweetUrl.trim() }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to fetch tweet')
+      }
+
+      const data = await response.json()
+      updateMockup(selectedMockup.id, {
+        tweetData: data.tweetData,
+      })
+      setTweetUrl('')
+    } catch (error) {
+      console.error('Error fetching tweet:', error)
+      alert(error instanceof Error ? error.message : 'Failed to fetch tweet')
+    } finally {
+      setIsLoadingTweet(false)
     }
   }
 
@@ -149,6 +183,63 @@ export function MockupControls() {
             <p className="text-sm font-semibold text-foreground">
               Edit Mockup
             </p>
+
+            {selectedDefinition.type === 'tweet' && (
+              <div className="space-y-3 p-3 rounded-xl bg-muted border border-border">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">
+                    Tweet URL
+                  </label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="url"
+                      placeholder="https://twitter.com/username/status/123456"
+                      value={tweetUrl}
+                      onChange={(e) => setTweetUrl(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !isLoadingTweet) {
+                          handleFetchTweet()
+                        }
+                      }}
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handleFetchTweet}
+                      disabled={!tweetUrl.trim() || isLoadingTweet}
+                      size="sm"
+                      className="shrink-0"
+                    >
+                      {isLoadingTweet ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Link className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Paste a Twitter/X tweet URL to load the tweet data
+                  </p>
+                </div>
+                {selectedMockup.tweetData && (
+                  <div className="pt-2 border-t border-border/50">
+                    <p className="text-xs font-medium text-foreground mb-1">
+                      Current Tweet
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      @{selectedMockup.tweetData.authorHandle}: {selectedMockup.tweetData.content.substring(0, 50)}
+                      {selectedMockup.tweetData.content.length > 50 ? '...' : ''}
+                    </p>
+                  </div>
+                )}
+                {!selectedMockup.tweetData && (
+                  <div className="pt-2 border-t border-border/50">
+                    <p className="text-xs text-muted-foreground">
+                      Using placeholder data. Add a tweet URL to load real tweet content.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
               <span className="text-sm font-medium text-foreground whitespace-nowrap">Size</span>

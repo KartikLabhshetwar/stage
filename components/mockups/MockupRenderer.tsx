@@ -4,6 +4,7 @@ import { IphoneMockupRenderer } from './IphoneMockupRenderer'
 import { MacbookMockupRenderer } from './MacbookMockupRenderer'
 import { ImacMockupRenderer } from './ImacMockupRenderer'
 import { IwatchMockupRenderer } from './IwatchMockupRenderer'
+import { TweetCardMockupRenderer } from './TweetCardMockupRenderer'
 import { getMockupDefinition } from '@/lib/constants/mockups'
 import type { Mockup } from '@/types/mockup'
 
@@ -26,6 +27,8 @@ export function MockupRenderer({ mockup, canvasWidth, canvasHeight }: MockupRend
       return <ImacMockupRenderer mockup={mockup} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
     case 'iwatch':
       return <IwatchMockupRenderer mockup={mockup} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
+    case 'tweet':
+      return <TweetCardMockupRenderer mockup={mockup} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
     default:
       return null
   }

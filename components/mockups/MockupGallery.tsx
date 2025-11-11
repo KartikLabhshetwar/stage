@@ -6,11 +6,11 @@ import { MOCKUP_DEFINITIONS, getMockupsByType } from '@/lib/constants/mockups'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useResponsiveCanvasDimensions } from '@/hooks/useAspectRatioDimensions'
 import Image from 'next/image'
-import { Smartphone, Laptop, Monitor, Watch } from 'lucide-react'
+import { Smartphone, Laptop, Monitor, Watch, MessageSquare } from 'lucide-react'
 
 export function MockupGallery() {
   const { addMockup } = useImageStore()
-  const [activeType, setActiveType] = useState<'iphone' | 'macbook' | 'imac' | 'iwatch'>('macbook')
+  const [activeType, setActiveType] = useState<'iphone' | 'macbook' | 'imac' | 'iwatch' | 'tweet'>('macbook')
   const responsiveDimensions = useResponsiveCanvasDimensions()
 
   const getDefaultPosition = (mockupSize: number, mockupType: string) => {
@@ -21,6 +21,7 @@ export function MockupGallery() {
     if (mockupType === 'iphone') aspectRatio = 9 / 16
     else if (mockupType === 'iwatch') aspectRatio = 1
     else if (mockupType === 'imac') aspectRatio = 2146 / 1207
+    else if (mockupType === 'tweet') aspectRatio = 1.67
     
     const mockupHeight = mockupSize / aspectRatio
     
@@ -36,6 +37,7 @@ export function MockupGallery() {
     if (definition?.type === 'iphone') defaultSize = 220
     else if (definition?.type === 'iwatch') defaultSize = 150
     else if (definition?.type === 'imac') defaultSize = 500
+    else if (definition?.type === 'tweet') defaultSize = 500
     
     const defaultPosition = getDefaultPosition(defaultSize, definition?.type || 'macbook')
     
@@ -54,6 +56,7 @@ export function MockupGallery() {
   const iphoneMockups = getMockupsByType('iphone')
   const imacMockups = getMockupsByType('imac')
   const iwatchMockups = getMockupsByType('iwatch')
+  const tweetMockups = getMockupsByType('tweet')
 
   return (
     <div className="space-y-5">
@@ -64,8 +67,8 @@ export function MockupGallery() {
         </p>
       </div>
 
-      <Tabs value={activeType} onValueChange={(v) => setActiveType(v as 'iphone' | 'macbook' | 'imac' | 'iwatch')}>
-        <TabsList className="w-full grid grid-cols-4 gap-1 p-1 h-auto bg-muted/50 rounded-lg">
+      <Tabs value={activeType} onValueChange={(v) => setActiveType(v as 'iphone' | 'macbook' | 'imac' | 'iwatch' | 'tweet')}>
+        <TabsList className="w-full grid grid-cols-5 gap-1 p-1 h-auto bg-muted/50 rounded-lg">
           <TabsTrigger 
             value="macbook" 
             className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
@@ -93,6 +96,13 @@ export function MockupGallery() {
           >
             <Smartphone className="h-3.5 w-3.5" />
             <span>iPhone</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="tweet" 
+            className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
+          >
+            <MessageSquare className="h-3.5 w-3.5" />
+            <span>Tweet</span>
           </TabsTrigger>
         </TabsList>
 
@@ -195,6 +205,33 @@ export function MockupGallery() {
             <div className="text-center py-8 text-sm text-muted-foreground">
               <Smartphone className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <p>iPhone mockups coming soon</p>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="tweet" className="mt-5">
+          {tweetMockups.length > 0 ? (
+            <div className="space-y-3">
+              {tweetMockups.map((mockup) => (
+                <button
+                  key={mockup.id}
+                  onClick={() => handleAddMockup(mockup.id)}
+                  className="w-full p-4 rounded-lg border border-border hover:border-primary transition-colors bg-muted/50 hover:bg-muted text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <MessageSquare className="h-5 w-5 text-primary" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{mockup.name}</p>
+                      <p className="text-xs text-muted-foreground">Add a tweet card mockup</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-sm text-muted-foreground">
+              <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <p>Tweet mockups coming soon</p>
             </div>
           )}
         </TabsContent>

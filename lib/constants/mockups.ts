@@ -59,13 +59,26 @@ export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
       },
     },
   },
+  {
+    id: 'tweet-1',
+    name: 'Tweet Card',
+    type: 'tweet',
+    src: '',
+    screenArea: {
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      borderRadius: 16,
+    },
+  },
 ]
 
 export const getMockupDefinition = (id: string): MockupDefinition | undefined => {
   return MOCKUP_DEFINITIONS.find((def) => def.id === id)
 }
 
-export const getMockupsByType = (type: 'iphone' | 'macbook' | 'imac' | 'iwatch'): MockupDefinition[] => {
+export const getMockupsByType = (type: 'iphone' | 'macbook' | 'imac' | 'iwatch' | 'tweet'): MockupDefinition[] => {
   return MOCKUP_DEFINITIONS.filter((def) => def.type === type)
 }
 

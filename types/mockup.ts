@@ -1,4 +1,4 @@
-export type MockupType = 'iphone' | 'macbook' | 'imac' | 'iwatch'
+export type MockupType = 'iphone' | 'macbook' | 'imac' | 'iwatch' | 'tweet'
 
 export interface MockupScreenArea {
   x: number
@@ -24,6 +24,19 @@ export interface MockupDefinition {
   preview?: string
 }
 
+export interface TweetData {
+  url: string
+  authorName: string
+  authorHandle: string
+  authorAvatar?: string
+  content: string
+  timestamp: string
+  likes: number
+  retweets: number
+  replies: number
+  quotes?: number
+}
+
 export interface Mockup {
   id: string
   definitionId: string
@@ -33,5 +46,6 @@ export interface Mockup {
   opacity: number
   isVisible: boolean
   imageFit: 'cover' | 'contain' | 'fill'
+  tweetData?: TweetData
 }
 
