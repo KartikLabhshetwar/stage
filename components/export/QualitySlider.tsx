@@ -2,19 +2,19 @@
  * Quality slider component for JPEG export options
  */
 
-import { Slider } from '@/components/ui/slider';
-import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider'
+import { Label } from '@/components/ui/label'
 
 interface QualitySliderProps {
-  quality: number;
-  onQualityChange: (quality: number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
+  quality: number
+  onQualityChange: (quality: number) => void
+  min?: number
+  max?: number
+  step?: number
 }
 
-export function QualitySlider({ 
-  quality, 
+export function QualitySlider({
+  quality,
   onQualityChange,
   min = 0.1,
   max = 1,
@@ -31,9 +31,10 @@ export function QualitySlider({
           max={max}
           step={step}
         />
-        <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(quality * 100)}%</span>
+        <span className="text-sm text-foreground font-medium whitespace-nowrap">
+          {Math.round(quality * 100)}%
+        </span>
       </div>
     </div>
-  );
+  )
 }
-

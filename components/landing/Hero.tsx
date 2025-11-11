@@ -1,39 +1,41 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { HeroVideoDialog } from "@/components/ui/hero-video-dialog";
-import { Instrument_Serif } from "next/font/google";
+import { useState } from 'react'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { HeroVideoDialog } from '@/components/ui/hero-video-dialog'
+import { Instrument_Serif } from 'next/font/google'
 
 const instrumentSerif = Instrument_Serif({
-  weight: ["400"],
-  subsets: ["latin"],
-});
+  weight: ['400'],
+  subsets: ['latin'],
+})
 
 interface HeroProps {
-  title: string;
-  subtitle?: string;
-  description: string;
-  ctaLabel?: string;
-  ctaHref?: string;
+  title: string
+  subtitle?: string
+  description: string
+  ctaLabel?: string
+  ctaHref?: string
 }
 
 export function Hero({
   title,
   subtitle,
   description,
-  ctaLabel = "Get Started",
-  ctaHref = "/home",
+  ctaLabel = 'Get Started',
+  ctaHref = '/home',
 }: HeroProps) {
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
-  const videoEmbedUrl = "https://www.youtube.com/embed/zDux_K4SsH0";
-  const videoThumbnailUrl = "https://img.youtube.com/vi/zDux_K4SsH0/maxresdefault.jpg";
+  const [isVideoOpen, setIsVideoOpen] = useState(false)
+  const videoEmbedUrl = 'https://www.youtube.com/embed/zDux_K4SsH0'
+  const videoThumbnailUrl = 'https://img.youtube.com/vi/zDux_K4SsH0/maxresdefault.jpg'
 
   return (
     <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 md:py-20 bg-background">
       <div className="container mx-auto max-w-4xl text-center space-y-6 sm:space-y-8">
-        <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight ${instrumentSerif.className} px-2`}>
+        <h1
+          className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight ${instrumentSerif.className} px-2`}
+        >
           {title}
           {subtitle && (
             <>
@@ -51,13 +53,16 @@ export function Hero({
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 pt-2 sm:pt-4 px-4 sm:px-0 w-full sm:w-auto">
           <Link href={ctaHref} className="w-full sm:w-auto">
-            <Button size="lg" className="rounded-lg w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all touch-manipulation min-h-[44px] text-base sm:text-lg">
+            <Button
+              size="lg"
+              className="rounded-lg w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all touch-manipulation min-h-[44px] text-base sm:text-lg"
+            >
               {ctaLabel}
             </Button>
           </Link>
-          <Button 
-            size="lg" 
-            variant="outline" 
+          <Button
+            size="lg"
+            variant="outline"
             className="rounded-lg w-full sm:w-auto border-primary text-primary hover:bg-accent hover:border-primary/80 touch-manipulation min-h-[44px] text-base sm:text-lg"
             onClick={() => setIsVideoOpen(true)}
           >
@@ -75,6 +80,5 @@ export function Hero({
         animationStyle="from-center"
       />
     </main>
-  );
+  )
 }
-

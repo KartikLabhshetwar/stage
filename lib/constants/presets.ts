@@ -1,21 +1,21 @@
-import { AspectRatioKey } from './aspect-ratios';
-import { BackgroundConfig } from './backgrounds';
-import { ImageBorder, ImageShadow } from '@/lib/store';
+import { AspectRatioKey } from './aspect-ratios'
+import { BackgroundConfig } from './backgrounds'
+import { ImageBorder, ImageShadow } from '@/lib/store'
 
 export interface PresetConfig {
-  id: string;
-  name: string;
-  description: string;
-  aspectRatio: AspectRatioKey;
-  backgroundConfig: BackgroundConfig;
-  borderRadius: number;
-  backgroundBorderRadius: number;
-  imageOpacity: number;
-  imageScale: number;
-  imageBorder: ImageBorder;
-  imageShadow: ImageShadow;
-  backgroundBlur?: number;
-  backgroundNoise?: number;
+  id: string
+  name: string
+  description: string
+  aspectRatio: AspectRatioKey
+  backgroundConfig: BackgroundConfig
+  borderRadius: number
+  backgroundBorderRadius: number
+  imageOpacity: number
+  imageScale: number
+  imageBorder: ImageBorder
+  imageShadow: ImageShadow
+  backgroundBlur?: number
+  backgroundNoise?: number
 }
 
 export const presets: PresetConfig[] = [
@@ -620,9 +620,8 @@ export const presets: PresetConfig[] = [
     backgroundBlur: 14,
     backgroundNoise: 30,
   },
-];
+]
 
 export const getPresetById = (id: string): PresetConfig | undefined => {
-  return presets.find((preset) => preset.id === id);
-};
-
+  return presets.find((preset) => preset.id === id)
+}

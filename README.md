@@ -10,6 +10,7 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
 ## Features
 
 ### Image Editing
+
 - **Image Upload** - Drag & drop or file picker for image uploads
 - **Website Screenshots** - Capture screenshots of websites via URL
 - **Image Transformations** - Scale, opacity, rotation, and border radius controls
@@ -18,6 +19,7 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
 - **Shadows** - Customizable shadows with blur, offset, spread, and color controls
 
 ### Text & Overlays
+
 - **Text Overlays** - Add multiple text layers with independent positioning
 - **Custom Fonts** - Choose from a variety of font families
 - **Text Styling** - Customize font size, weight, color, and opacity
@@ -26,12 +28,14 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
 - **Overlay Controls** - Position, size, rotation, flip, and opacity controls
 
 ### Backgrounds
+
 - **Gradient Backgrounds** - Beautiful gradient presets with customizable colors and angles
 - **Solid Colors** - Choose from a palette of solid color backgrounds
 - **Image Backgrounds** - Upload your own or use Cloudinary-hosted backgrounds
 - **Background Effects** - Apply blur and noise effects to backgrounds
 
 ### Design Tools
+
 - **Aspect Ratios** - Support for Instagram, social media, and standard formats
   - Square (1:1), Portrait (4:5, 9:16), Landscape (16:9)
   - Open Graph, Twitter Banner, LinkedIn Banner, YouTube Banner
@@ -41,6 +45,7 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
 - **Copy to Clipboard** - Copy designs directly to clipboard
 
 ### User Experience
+
 - **Responsive Design** - Works seamlessly on desktop and mobile
 - **Real-time Preview** - See changes instantly as you edit
 - **Local Storage** - Designs persist in browser storage
@@ -56,12 +61,14 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/your-username/stage.git
    cd stage
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
@@ -69,6 +76,7 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
 3. **Set up environment variables**
 
    Create a `.env.local` file in the root directory:
+
    ```env
    # Database (Required for screenshot caching)
    DATABASE_URL="postgresql://user:password@host:port/dbname?schema=public"
@@ -85,15 +93,17 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
    > **Note**: Screenshot feature requires database and Cloudinary. All other core features including **export work fully in-browser**. Cloudinary is also used for optional image optimization of backgrounds and overlays.
 
 4. **Set up the database**
+
    ```bash
    # Run Prisma migrations to create the database schema
    npx prisma migrate dev --name init
-   
+
    # Or use db push for quick setup (no migration files)
    npx prisma db push
    ```
 
 5. **Start the development server**
+
    ```bash
    npm run dev
    ```
@@ -132,31 +142,37 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
 ## 🛠️ Tech Stack
 
 ### Core
+
 - **[Next.js 16](https://nextjs.org/)** - React framework with App Router
 - **[React 19](https://react.dev/)** - UI library with React Compiler
 - **[TypeScript](https://www.typescriptlang.org/)** - Type safety
 
 ### Canvas & Rendering
+
 - **[Konva](https://konvajs.org/)** - 2D canvas rendering engine
 - **[React-Konva](https://github.com/konvajs/react-konva)** - React bindings for Konva
 - **[html2canvas](https://html2canvas.hertzen.com/)** - DOM-to-canvas conversion
 - **[modern-screenshot](https://github.com/1000px/modern-screenshot)** - 3D transform capture
 
 ### State Management
+
 - **[Zustand](https://github.com/pmndrs/zustand)** - Lightweight state management
 
 ### Styling
+
 - **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Radix UI](https://www.radix-ui.com/)** - Accessible component primitives
 - **[Lucide React](https://lucide.dev/)** - Icon library
 
 ### Image Processing & Storage
+
 - **[Cloudinary](https://cloudinary.com/)** - Image optimization, CDN, and screenshot storage
 - **[Sharp](https://sharp.pixelplumbing.com/)** - Server-side image processing
 - **[Puppeteer](https://pptr.dev/)** - Website screenshot capture
 - **[@sparticuz/chromium](https://github.com/Sparticuz/chromium)** - Chromium for serverless
 
 ### Database & Caching
+
 - **[Prisma](https://www.prisma.io/)** - Type-safe ORM
 - **[PostgreSQL](https://www.postgresql.org/)** - Database for screenshot caching
 
@@ -222,6 +238,7 @@ curl -X POST https://your-domain.com/api/cleanup-cache \
 ### Rate Limiting
 
 The screenshot API includes built-in rate limiting:
+
 - **Limit**: 20 requests per minute per IP
 - **Response**: 429 status with `Retry-After` header
 - **Headers**: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
@@ -229,6 +246,7 @@ The screenshot API includes built-in rate limiting:
 ### Cache Expiration
 
 Screenshot cache expires after 2 days to stay within Cloudinary free tier limits:
+
 - **Storage**: 25 GB
 - **Bandwidth**: 25 GB/month
 - **Transformations**: 25,000/month

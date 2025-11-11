@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
-import { ImageShadow } from '@/lib/store';
+import * as React from 'react'
+import { Label } from '@/components/ui/label'
+import { Slider } from '@/components/ui/slider'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper'
+import { ImageShadow } from '@/lib/store'
 
 interface ShadowControlsProps {
-  shadow: ImageShadow;
-  onShadowChange: (shadow: ImageShadow | Partial<ImageShadow>) => void;
+  shadow: ImageShadow
+  onShadowChange: (shadow: ImageShadow | Partial<ImageShadow>) => void
 }
 
 export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) {
@@ -19,15 +19,13 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
     { blur: 10, offsetX: 0, offsetY: 4, spread: 0, label: 'Medium' },
     { blur: 20, offsetX: 0, offsetY: 8, spread: 0, label: 'Large' },
     { blur: 40, offsetX: 0, offsetY: 16, spread: 0, label: 'XL' },
-  ];
+  ]
 
   return (
     <div className="space-y-5">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label className="text-sm font-semibold text-foreground">
-            Shadow
-          </Label>
+          <Label className="text-sm font-semibold text-foreground">Shadow</Label>
           <Button
             variant={shadow.enabled ? 'default' : 'outline'}
             size="sm"
@@ -70,7 +68,9 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
 
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Blur</Label>
+                <Label className="text-sm font-medium text-foreground whitespace-nowrap">
+                  Blur
+                </Label>
                 <div className="flex-1 flex items-center gap-3">
                   <Slider
                     value={[shadow.blur]}
@@ -79,12 +79,16 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                     max={50}
                     step={1}
                   />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.blur}px</span>
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                    {shadow.blur}px
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Horizontal Offset</Label>
+                <Label className="text-sm font-medium text-foreground whitespace-nowrap">
+                  Horizontal Offset
+                </Label>
                 <div className="flex-1 flex items-center gap-3">
                   <Slider
                     value={[shadow.offsetX]}
@@ -93,12 +97,16 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                     max={20}
                     step={1}
                   />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.offsetX}px</span>
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                    {shadow.offsetX}px
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Vertical Offset</Label>
+                <Label className="text-sm font-medium text-foreground whitespace-nowrap">
+                  Vertical Offset
+                </Label>
                 <div className="flex-1 flex items-center gap-3">
                   <Slider
                     value={[shadow.offsetY]}
@@ -107,12 +115,16 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                     max={20}
                     step={1}
                   />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.offsetY}px</span>
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                    {shadow.offsetY}px
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Spread</Label>
+                <Label className="text-sm font-medium text-foreground whitespace-nowrap">
+                  Spread
+                </Label>
                 <div className="flex-1 flex items-center gap-3">
                   <Slider
                     value={[shadow.spread]}
@@ -121,7 +133,9 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                     max={20}
                     step={1}
                   />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.spread}px</span>
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                    {shadow.spread}px
+                  </span>
                 </div>
               </div>
             </div>
@@ -133,29 +147,29 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                   type="color"
                   value={(() => {
                     // Extract RGB from rgba or rgb string
-                    const rgbMatch = shadow.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                    const rgbMatch = shadow.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
                     if (rgbMatch) {
-                      const r = parseInt(rgbMatch[1]);
-                      const g = parseInt(rgbMatch[2]);
-                      const b = parseInt(rgbMatch[3]);
-                      return `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`;
+                      const r = parseInt(rgbMatch[1])
+                      const g = parseInt(rgbMatch[2])
+                      const b = parseInt(rgbMatch[3])
+                      return `#${[r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('')}`
                     }
                     // If it's already hex, return it
                     if (shadow.color.startsWith('#')) {
-                      return shadow.color;
+                      return shadow.color
                     }
-                    return '#000000';
+                    return '#000000'
                   })()}
                   onChange={(e) => {
                     // Convert hex to rgba for better control
-                    const hex = e.target.value;
-                    const r = parseInt(hex.slice(1, 3), 16);
-                    const g = parseInt(hex.slice(3, 5), 16);
-                    const b = parseInt(hex.slice(5, 7), 16);
+                    const hex = e.target.value
+                    const r = parseInt(hex.slice(1, 3), 16)
+                    const g = parseInt(hex.slice(3, 5), 16)
+                    const b = parseInt(hex.slice(5, 7), 16)
                     // Extract alpha from current color if it exists
-                    const alphaMatch = shadow.color.match(/rgba\([^)]+,\s*([\d.]+)\)/);
-                    const currentAlpha = alphaMatch ? alphaMatch[1] : '0.3';
-                    onShadowChange({ color: `rgba(${r}, ${g}, ${b}, ${currentAlpha})` });
+                    const alphaMatch = shadow.color.match(/rgba\([^)]+,\s*([\d.]+)\)/)
+                    const currentAlpha = alphaMatch ? alphaMatch[1] : '0.3'
+                    onShadowChange({ color: `rgba(${r}, ${g}, ${b}, ${currentAlpha})` })
                   }}
                   className="w-12 h-10 rounded-lg border border-border cursor-pointer"
                 />
@@ -169,7 +183,9 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                       className="border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </GlassInputWrapper>
-                  <div className="text-xs text-muted-foreground whitespace-nowrap font-medium">Opacity</div>
+                  <div className="text-xs text-muted-foreground whitespace-nowrap font-medium">
+                    Opacity
+                  </div>
                   <GlassInputWrapper className="w-16">
                     <Input
                       type="number"
@@ -177,18 +193,18 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                       max="1"
                       step="0.1"
                       value={(() => {
-                        const alphaMatch = shadow.color.match(/rgba\([^)]+,\s*([\d.]+)\)/);
-                        return alphaMatch ? alphaMatch[1] : '0.3';
+                        const alphaMatch = shadow.color.match(/rgba\([^)]+,\s*([\d.]+)\)/)
+                        return alphaMatch ? alphaMatch[1] : '0.3'
                       })()}
                       onChange={(e) => {
-                        const alpha = parseFloat(e.target.value) || 0.3;
-                        const rgbMatch = shadow.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                        const alpha = parseFloat(e.target.value) || 0.3
+                        const rgbMatch = shadow.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
                         if (rgbMatch) {
                           onShadowChange({
                             color: `rgba(${rgbMatch[1]}, ${rgbMatch[2]}, ${rgbMatch[3]}, ${alpha})`,
-                          });
+                          })
                         } else {
-                          onShadowChange({ color: `rgba(0, 0, 0, ${alpha})` });
+                          onShadowChange({ color: `rgba(0, 0, 0, ${alpha})` })
                         }
                       }}
                       className="border-0 bg-transparent text-sm px-2 py-2 focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -201,6 +217,5 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
         )}
       </div>
     </div>
-  );
+  )
 }
-

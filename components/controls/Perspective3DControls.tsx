@@ -1,22 +1,22 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { useImageStore } from '@/lib/store';
-import { Slider } from '@/components/ui/slider';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import * as React from 'react'
+import { useImageStore } from '@/lib/store'
+import { Slider } from '@/components/ui/slider'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 interface TransformPreset {
-  name: string;
+  name: string
   values: {
-    perspective: number;
-    rotateX: number;
-    rotateY: number;
-    rotateZ: number;
-    translateX: number;
-    translateY: number;
-    scale: number;
-  };
+    perspective: number
+    rotateX: number
+    rotateY: number
+    rotateZ: number
+    translateX: number
+    translateY: number
+    scale: number
+  }
 }
 
 const PRESETS: TransformPreset[] = [
@@ -68,14 +68,14 @@ const PRESETS: TransformPreset[] = [
       scale: 0.95,
     },
   },
-];
+]
 
 export function Perspective3DControls() {
-  const { perspective3D, setPerspective3D } = useImageStore();
+  const { perspective3D, setPerspective3D } = useImageStore()
 
   const applyPreset = (preset: TransformPreset) => {
-    setPerspective3D(preset.values);
-  };
+    setPerspective3D(preset.values)
+  }
 
   const reset = () => {
     setPerspective3D({
@@ -86,8 +86,8 @@ export function Perspective3DControls() {
       translateX: 0,
       translateY: 0,
       scale: 1,
-    });
-  };
+    })
+  }
 
   return (
     <div className="space-y-6">
@@ -126,7 +126,9 @@ export function Perspective3DControls() {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label className="text-xs font-medium text-foreground">Perspective</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.perspective}px</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              {perspective3D.perspective}px
+            </span>
           </div>
           <Slider
             value={[perspective3D.perspective]}
@@ -141,7 +143,9 @@ export function Perspective3DControls() {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label className="text-xs font-medium text-foreground">Rotate X</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.rotateX}°</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              {perspective3D.rotateX}°
+            </span>
           </div>
           <Slider
             value={[perspective3D.rotateX]}
@@ -156,7 +160,9 @@ export function Perspective3DControls() {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label className="text-xs font-medium text-foreground">Rotate Y</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.rotateY}°</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              {perspective3D.rotateY}°
+            </span>
           </div>
           <Slider
             value={[perspective3D.rotateY]}
@@ -171,7 +177,9 @@ export function Perspective3DControls() {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label className="text-xs font-medium text-foreground">Rotate Z</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.rotateZ}°</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              {perspective3D.rotateZ}°
+            </span>
           </div>
           <Slider
             value={[perspective3D.rotateZ]}
@@ -186,7 +194,9 @@ export function Perspective3DControls() {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label className="text-xs font-medium text-foreground">Translate X</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.translateX}%</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              {perspective3D.translateX}%
+            </span>
           </div>
           <Slider
             value={[perspective3D.translateX]}
@@ -201,7 +211,9 @@ export function Perspective3DControls() {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label className="text-xs font-medium text-foreground">Translate Y</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.translateY}%</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              {perspective3D.translateY}%
+            </span>
           </div>
           <Slider
             value={[perspective3D.translateY]}
@@ -216,7 +228,9 @@ export function Perspective3DControls() {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label className="text-xs font-medium text-foreground">Scale</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.scale.toFixed(2)}</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              {perspective3D.scale.toFixed(2)}
+            </span>
           </div>
           <Slider
             value={[perspective3D.scale]}
@@ -228,6 +242,5 @@ export function Perspective3DControls() {
         </div>
       </div>
     </div>
-  );
+  )
 }
-

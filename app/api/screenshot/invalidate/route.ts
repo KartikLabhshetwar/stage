@@ -7,10 +7,7 @@ export async function POST(request: NextRequest) {
     const { url, urls } = body
 
     if (!url && !urls) {
-      return NextResponse.json(
-        { error: 'Either "url" or "urls" is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Either "url" or "urls" is required' }, { status: 400 })
     }
 
     if (url && urls) {
@@ -22,10 +19,7 @@ export async function POST(request: NextRequest) {
 
     if (url) {
       if (typeof url !== 'string') {
-        return NextResponse.json(
-          { error: '"url" must be a string' },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: '"url" must be a string' }, { status: 400 })
       }
 
       try {
@@ -37,10 +31,7 @@ export async function POST(request: NextRequest) {
           )
         }
       } catch (error) {
-        return NextResponse.json(
-          { error: 'Invalid URL format' },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 })
       }
 
       await invalidateCache(url)
@@ -52,17 +43,11 @@ export async function POST(request: NextRequest) {
 
     if (urls) {
       if (!Array.isArray(urls)) {
-        return NextResponse.json(
-          { error: '"urls" must be an array' },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: '"urls" must be an array' }, { status: 400 })
       }
 
       if (urls.length === 0) {
-        return NextResponse.json(
-          { error: '"urls" array cannot be empty' },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: '"urls" array cannot be empty' }, { status: 400 })
       }
 
       for (const u of urls) {
@@ -82,10 +67,7 @@ export async function POST(request: NextRequest) {
             )
           }
         } catch (error) {
-          return NextResponse.json(
-            { error: `Invalid URL format: ${u}` },
-            { status: 400 }
-          )
+          return NextResponse.json({ error: `Invalid URL format: ${u}` }, { status: 400 })
         }
       }
 
@@ -97,16 +79,9 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    return NextResponse.json(
-      { error: 'Invalid request' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   } catch (error) {
     console.error('Error invalidating cache:', error)
-    return NextResponse.json(
-      { error: 'Failed to invalidate cache' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to invalidate cache' }, { status: 500 })
   }
 }
-

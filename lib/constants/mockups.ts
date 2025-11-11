@@ -65,7 +65,8 @@ export const getMockupDefinition = (id: string): MockupDefinition | undefined =>
   return MOCKUP_DEFINITIONS.find((def) => def.id === id)
 }
 
-export const getMockupsByType = (type: 'iphone' | 'macbook' | 'imac' | 'iwatch'): MockupDefinition[] => {
+export const getMockupsByType = (
+  type: 'iphone' | 'macbook' | 'imac' | 'iwatch'
+): MockupDefinition[] => {
   return MOCKUP_DEFINITIONS.filter((def) => def.type === type)
 }
-

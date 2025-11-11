@@ -9,18 +9,11 @@ import { getMockupDefinition } from '@/lib/constants/mockups'
 import Image from 'next/image'
 
 export function MockupControls() {
-  const {
-    mockups,
-    updateMockup,
-    removeMockup,
-    clearMockups,
-  } = useImageStore()
+  const { mockups, updateMockup, removeMockup, clearMockups } = useImageStore()
 
   const [selectedMockupId, setSelectedMockupId] = useState<string | null>(null)
 
-  const selectedMockup = mockups.find(
-    (mockup) => mockup.id === selectedMockupId
-  )
+  const selectedMockup = mockups.find((mockup) => mockup.id === selectedMockupId)
 
   const selectedDefinition = selectedMockup
     ? getMockupDefinition(selectedMockup.definitionId)
@@ -119,9 +112,7 @@ export function MockupControls() {
                       />
                     )}
                   </div>
-                  <span className="flex-1 text-xs truncate">
-                    {definition?.name || 'Mockup'}
-                  </span>
+                  <span className="flex-1 text-xs truncate">{definition?.name || 'Mockup'}</span>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -146,9 +137,7 @@ export function MockupControls() {
       {selectedMockup && selectedDefinition && (
         <div className="space-y-5 border-t pt-5">
           <div className="space-y-5">
-            <p className="text-sm font-semibold text-foreground">
-              Edit Mockup
-            </p>
+            <p className="text-sm font-semibold text-foreground">Edit Mockup</p>
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
               <span className="text-sm font-medium text-foreground whitespace-nowrap">Size</span>
@@ -160,12 +149,16 @@ export function MockupControls() {
                   min={200}
                   step={10}
                 />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedMockup.size}px</span>
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                  {selectedMockup.size}px
+                </span>
               </div>
             </div>
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
-              <span className="text-sm font-medium text-foreground whitespace-nowrap">Rotation</span>
+              <span className="text-sm font-medium text-foreground whitespace-nowrap">
+                Rotation
+              </span>
               <div className="flex-1 flex items-center gap-3">
                 <Slider
                   value={[selectedMockup.rotation]}
@@ -174,7 +167,9 @@ export function MockupControls() {
                   min={0}
                   step={1}
                 />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedMockup.rotation}°</span>
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                  {selectedMockup.rotation}°
+                </span>
               </div>
             </div>
 
@@ -188,14 +183,18 @@ export function MockupControls() {
                   min={0}
                   step={0.01}
                 />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedMockup.opacity * 100)}%</span>
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                  {Math.round(selectedMockup.opacity * 100)}%
+                </span>
               </div>
             </div>
 
             <div className="space-y-4">
               <p className="text-sm font-semibold text-foreground">Position</p>
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">X Position</span>
+                <span className="text-sm font-medium text-foreground whitespace-nowrap">
+                  X Position
+                </span>
                 <div className="flex-1 flex items-center gap-3">
                   <Slider
                     value={[selectedMockup.position.x]}
@@ -204,12 +203,16 @@ export function MockupControls() {
                     min={0}
                     step={1}
                   />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedMockup.position.x)}px</span>
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                    {Math.round(selectedMockup.position.x)}px
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">Y Position</span>
+                <span className="text-sm font-medium text-foreground whitespace-nowrap">
+                  Y Position
+                </span>
                 <div className="flex-1 flex items-center gap-3">
                   <Slider
                     value={[selectedMockup.position.y]}
@@ -218,7 +221,9 @@ export function MockupControls() {
                     min={0}
                     step={1}
                   />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedMockup.position.y)}px</span>
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                    {Math.round(selectedMockup.position.y)}px
+                  </span>
                 </div>
               </div>
             </div>
@@ -241,4 +246,3 @@ export function MockupControls() {
     </div>
   )
 }
-

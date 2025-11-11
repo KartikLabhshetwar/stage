@@ -1,2 +1,1 @@
-export { PresetSelector } from './PresetSelector';
-
+export { PresetSelector } from './PresetSelector'

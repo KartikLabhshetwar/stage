@@ -3,7 +3,11 @@ const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 const RATE_LIMIT_WINDOW_MS = 60 * 1000
 const RATE_LIMIT_MAX_REQUESTS = 20
 
-export function checkRateLimit(identifier: string): { allowed: boolean; remaining: number; resetAt: number } {
+export function checkRateLimit(identifier: string): {
+  allowed: boolean
+  remaining: number
+  resetAt: number
+} {
   const now = Date.now()
   const record = rateLimitMap.get(identifier)
 
@@ -18,7 +22,11 @@ export function checkRateLimit(identifier: string): { allowed: boolean; remainin
   }
 
   record.count++
-  return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - record.count, resetAt: record.resetAt }
+  return {
+    allowed: true,
+    remaining: RATE_LIMIT_MAX_REQUESTS - record.count,
+    resetAt: record.resetAt,
+  }
 }
 
 setInterval(() => {
@@ -29,4 +37,3 @@ setInterval(() => {
     }
   }
 }, RATE_LIMIT_WINDOW_MS)
-

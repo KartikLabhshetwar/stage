@@ -1,20 +1,29 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Instrument_Serif } from "next/font/google";
+import Link from 'next/link'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Instrument_Serif } from 'next/font/google'
 
 const instrumentSerif = Instrument_Serif({
-  weight: ["400"],
-  subsets: ["latin"],
-});
+  weight: ['400'],
+  subsets: ['latin'],
+})
 
 export function Pricing() {
   return (
     <section className="w-full py-12 sm:py-16 px-4 sm:px-6 border-t border-border bg-background">
       <div className="container mx-auto max-w-4xl">
-        <h2 className={`text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 px-2 ${instrumentSerif.className}`}>
+        <h2
+          className={`text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 px-2 ${instrumentSerif.className}`}
+        >
           Pricing
         </h2>
         <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto px-2 sm:px-0">
@@ -52,7 +61,10 @@ export function Pricing() {
             </CardContent>
             <CardFooter>
               <Link href="/home" className="w-full">
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-accent hover:border-primary/80 touch-manipulation min-h-[44px]">
+                <Button
+                  variant="outline"
+                  className="w-full border-primary text-primary hover:bg-accent hover:border-primary/80 touch-manipulation min-h-[44px]"
+                >
                   Get Started
                 </Button>
               </Link>
@@ -102,6 +114,5 @@ export function Pricing() {
         </div>
       </div>
     </section>
-  );
+  )
 }
-

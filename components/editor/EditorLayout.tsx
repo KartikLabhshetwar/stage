@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { EditorLeftPanel } from "./editor-left-panel";
-import { EditorRightPanel } from "./editor-right-panel";
-import { EditorContent } from "./EditorContent";
-import { EditorCanvas } from "@/components/canvas/EditorCanvas";
-import { EditorStoreSync } from "@/components/canvas/EditorStoreSync";
-import { EditorBottomBar } from "./editor-bottom-bar";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Menu, Settings } from "lucide-react";
+import * as React from 'react'
+import { EditorLeftPanel } from './editor-left-panel'
+import { EditorRightPanel } from './editor-right-panel'
+import { EditorContent } from './EditorContent'
+import { EditorCanvas } from '@/components/canvas/EditorCanvas'
+import { EditorStoreSync } from '@/components/canvas/EditorStoreSync'
+import { EditorBottomBar } from './editor-bottom-bar'
+import { useIsMobile } from '@/hooks/use-mobile'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { Menu, Settings } from 'lucide-react'
 
 function EditorMain() {
-  const isMobile = useIsMobile();
-  const [leftPanelOpen, setLeftPanelOpen] = React.useState(false);
-  const [rightPanelOpen, setRightPanelOpen] = React.useState(false);
+  const isMobile = useIsMobile()
+  const [leftPanelOpen, setLeftPanelOpen] = React.useState(false)
+  const [rightPanelOpen, setRightPanelOpen] = React.useState(false)
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
       <EditorStoreSync />
-      
+
       {/* Mobile Header */}
       {isMobile && (
         <div className="h-14 bg-background border-b border-border flex items-center justify-between px-4 z-10">
@@ -47,7 +47,7 @@ function EditorMain() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Desktop */}
         {!isMobile && <EditorLeftPanel />}
-        
+
         {/* Left Panel - Mobile Sheet */}
         {isMobile && (
           <Sheet open={leftPanelOpen} onOpenChange={setLeftPanelOpen}>
@@ -56,17 +56,17 @@ function EditorMain() {
             </SheetContent>
           </Sheet>
         )}
-        
+
         {/* Center Canvas */}
         <div className="flex-1 flex flex-col overflow-hidden bg-background">
           <EditorContent>
             <EditorCanvas />
           </EditorContent>
         </div>
-        
+
         {/* Right Panel - Desktop */}
         {!isMobile && <EditorRightPanel />}
-        
+
         {/* Right Panel - Mobile Sheet */}
         {isMobile && (
           <Sheet open={rightPanelOpen} onOpenChange={setRightPanelOpen}>
@@ -76,13 +76,13 @@ function EditorMain() {
           </Sheet>
         )}
       </div>
-      
+
       {/* Bottom Bar */}
       <EditorBottomBar />
     </div>
-  );
+  )
 }
 
 export function EditorLayout() {
-  return <EditorMain />;
+  return <EditorMain />
 }

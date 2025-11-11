@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.BETTER_AUTH_URL || 'https://stage-psi-one.vercel.app'
-  
+
   return [
     {
       url: baseUrl,
@@ -24,4 +24,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 }
-

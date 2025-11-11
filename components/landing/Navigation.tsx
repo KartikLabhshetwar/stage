@@ -1,77 +1,66 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { FaGithub } from "react-icons/fa";
-import { SiX } from "react-icons/si";
-import { motion, useSpring, useTransform } from "motion/react";
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Button } from '@/components/ui/button'
+import { FaGithub } from 'react-icons/fa'
+import { SiX } from 'react-icons/si'
+import { motion, useSpring, useTransform } from 'motion/react'
 
 interface NavigationProps {
-  ctaLabel?: string;
-  ctaHref?: string;
+  ctaLabel?: string
+  ctaHref?: string
 }
 
 function useGitHubStars() {
-  const [stars, setStars] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [stars, setStars] = useState<number | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchStars = async () => {
       try {
-        const response = await fetch("https://api.github.com/repos/KartikLabhshetwar/stage");
+        const response = await fetch('https://api.github.com/repos/KartikLabhshetwar/stage')
         if (response.ok) {
-          const data = await response.json();
-          setStars(data.stargazers_count);
+          const data = await response.json()
+          setStars(data.stargazers_count)
         }
       } catch (error) {
-        console.error("Failed to fetch GitHub stars:", error);
+        console.error('Failed to fetch GitHub stars:', error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchStars();
-  }, []);
+    fetchStars()
+  }, [])
 
-  return { stars, isLoading };
+  return { stars, isLoading }
 }
 
 function AnimatedCounter({ value }: { value: number }) {
   const spring = useSpring(0, {
     damping: 30,
     stiffness: 100,
-  });
+  })
 
   useEffect(() => {
-    spring.set(value);
-  }, [spring, value]);
+    spring.set(value)
+  }, [spring, value])
 
-  const display = useTransform(spring, (current) =>
-    Math.round(current).toLocaleString()
-  );
+  const display = useTransform(spring, (current) => Math.round(current).toLocaleString())
 
-  return <motion.span>{display}</motion.span>;
+  return <motion.span>{display}</motion.span>
 }
 
-export function Navigation({
-  ctaLabel = "Editor",
-  ctaHref = "/home"
-}: NavigationProps) {
-  const { stars, isLoading } = useGitHubStars();
+export function Navigation({ ctaLabel = 'Editor', ctaHref = '/home' }: NavigationProps) {
+  const { stars, isLoading } = useGitHubStars()
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur-xl supports-backdrop-filter:bg-background/90">
       <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         <Link href="/landing" className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="Stage"
-            width={32}
-            height={32}
-            className="h-8 w-8"
-          />
+          <Image src="/logo.png" alt="Stage" width={32} height={32} className="h-8 w-8" />
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
@@ -106,6 +95,5 @@ export function Navigation({
         </div>
       </div>
     </nav>
-  );
+  )
 }
-

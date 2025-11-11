@@ -113,7 +113,7 @@ export function OverlayRenderer() {
     <div
       ref={containerRef}
       className="absolute inset-0 pointer-events-none"
-      style={{ 
+      style={{
         zIndex: 35, // Match parent container z-index
         overflow: 'visible', // Allow overlays to extend beyond container bounds
       }}
@@ -122,20 +122,22 @@ export function OverlayRenderer() {
         if (!overlay.isVisible) return null
 
         // Check if this is a Cloudinary public ID or a custom upload
-        const isCloudinaryId = OVERLAY_PUBLIC_IDS.includes(overlay.src as any) || 
-                               (typeof overlay.src === 'string' && overlay.src.startsWith('overlays/'))
-        
+        const isCloudinaryId =
+          OVERLAY_PUBLIC_IDS.includes(overlay.src as any) ||
+          (typeof overlay.src === 'string' && overlay.src.startsWith('overlays/'))
+
         // Get the image URL - use Cloudinary if it's a Cloudinary ID, otherwise use the src directly
-        const imageUrl = isCloudinaryId && !overlay.isCustom
-          ? getCldImageUrl({
-              src: overlay.src,
-              width: overlay.size * 2, // 2x for retina
-              height: overlay.size * 2,
-              quality: 'auto',
-              format: 'auto',
-              crop: 'fit',
-            })
-          : overlay.src
+        const imageUrl =
+          isCloudinaryId && !overlay.isCustom
+            ? getCldImageUrl({
+                src: overlay.src,
+                width: overlay.size * 2, // 2x for retina
+                height: overlay.size * 2,
+                quality: 'auto',
+                format: 'auto',
+                crop: 'fit',
+              })
+            : overlay.src
 
         return (
           <div

@@ -1,11 +1,11 @@
 interface Feature {
-  title: string;
-  description: string;
+  title: string
+  description: string
 }
 
 interface FeaturesProps {
-  features: Feature[];
-  title?: string;
+  features: Feature[]
+  title?: string
 }
 
 export function Features({ features, title }: FeaturesProps) {
@@ -13,7 +13,9 @@ export function Features({ features, title }: FeaturesProps) {
     <section className="w-full py-12 sm:py-16 px-4 sm:px-6 border-t border-border bg-background">
       <div className="container mx-auto max-w-6xl">
         {title && (
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 px-2">{title}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 px-2">
+            {title}
+          </h2>
         )}
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
           {features.map((feature, index) => (
@@ -27,6 +29,5 @@ export function Features({ features, title }: FeaturesProps) {
         </div>
       </div>
     </section>
-  );
+  )
 }
-

@@ -15,7 +15,7 @@ import { OVERLAY_PUBLIC_IDS } from '@/lib/cloudinary-overlays'
 import { MockupRenderer } from '@/components/mockups/MockupRenderer'
 
 // Global ref to store the Konva stage for export
-let globalKonvaStage: any = null;
+let globalKonvaStage: any = null
 
 /**
  * Parse CSS linear gradient string to Konva gradient properties
@@ -23,43 +23,43 @@ let globalKonvaStage: any = null;
  */
 function parseLinearGradient(gradientString: string, width: number, height: number) {
   // Extract direction and colors from CSS gradient string
-  const match = gradientString.match(/linear-gradient\((.+)\)/);
-  if (!match) return null;
+  const match = gradientString.match(/linear-gradient\((.+)\)/)
+  if (!match) return null
 
-  const parts = match[1].split(',').map(p => p.trim());
-  const direction = parts[0];
-  const colors = parts.slice(1);
+  const parts = match[1].split(',').map((p) => p.trim())
+  const direction = parts[0]
+  const colors = parts.slice(1)
 
   // Determine gradient direction
-  let startPoint = { x: 0, y: 0 };
-  let endPoint = { x: width, y: 0 }; // Default to horizontal (to right)
+  let startPoint = { x: 0, y: 0 }
+  let endPoint = { x: width, y: 0 } // Default to horizontal (to right)
 
   if (direction.includes('right')) {
-    startPoint = { x: 0, y: 0 };
-    endPoint = { x: width, y: 0 };
+    startPoint = { x: 0, y: 0 }
+    endPoint = { x: width, y: 0 }
   } else if (direction.includes('left')) {
-    startPoint = { x: width, y: 0 };
-    endPoint = { x: 0, y: 0 };
+    startPoint = { x: width, y: 0 }
+    endPoint = { x: 0, y: 0 }
   } else if (direction.includes('bottom')) {
-    startPoint = { x: 0, y: 0 };
-    endPoint = { x: 0, y: height };
+    startPoint = { x: 0, y: 0 }
+    endPoint = { x: 0, y: height }
   } else if (direction.includes('top')) {
-    startPoint = { x: 0, y: height };
-    endPoint = { x: 0, y: 0 };
+    startPoint = { x: 0, y: height }
+    endPoint = { x: 0, y: 0 }
   }
 
   // Build color stops array [position, color, position, color, ...]
-  const colorStops: (number | string)[] = [];
+  const colorStops: (number | string)[] = []
   colors.forEach((color, index) => {
-    const position = index / (colors.length - 1);
-    colorStops.push(position, color.trim());
-  });
+    const position = index / (colors.length - 1)
+    colorStops.push(position, color.trim())
+  })
 
   return {
     startPoint,
     endPoint,
     colorStops,
-  };
+  }
 }
 
 function CanvasRenderer({ image }: { image: HTMLImageElement }) {
@@ -70,19 +70,19 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     const updateStage = () => {
       if (stageRef.current) {
         // react-konva Stage ref gives us the Stage instance directly
-        globalKonvaStage = stageRef.current;
+        globalKonvaStage = stageRef.current
       }
-    };
+    }
 
-    updateStage();
+    updateStage()
     // Also check after a short delay to ensure ref is set
-    const timeout = setTimeout(updateStage, 100);
+    const timeout = setTimeout(updateStage, 100)
 
     return () => {
-      clearTimeout(timeout);
-      globalKonvaStage = null;
-    };
-  });
+      clearTimeout(timeout)
+      globalKonvaStage = null
+    }
+  })
   const patternRectRef = useRef<any>(null)
   const noiseRectRef = useRef<any>(null)
   const backgroundRef = useRef<any>(null)
@@ -115,7 +115,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     updateMockup,
   } = useImageStore()
 
-  const hasMockups = mockups.length > 0 && mockups.some(m => m.isVisible)
+  const hasMockups = mockups.length > 0 && mockups.some((m) => m.isVisible)
 
   const responsiveDimensions = useResponsiveCanvasDimensions()
   const backgroundStyle = getBackgroundCSS(backgroundConfig)
@@ -130,7 +130,9 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   const [noiseTexture, setNoiseTexture] = useState<HTMLCanvasElement | null>(null)
 
   // Load overlay images
-  const [loadedOverlayImages, setLoadedOverlayImages] = useState<Record<string, HTMLImageElement>>({})
+  const [loadedOverlayImages, setLoadedOverlayImages] = useState<Record<string, HTMLImageElement>>(
+    {}
+  )
 
   useEffect(() => {
     if (backgroundNoise > 0) {
@@ -175,7 +177,12 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
 
       // Check if it's a Cloudinary public ID or URL
       let imageUrl = imageValue
-      if (typeof imageUrl === 'string' && !imageUrl.startsWith('http') && !imageUrl.startsWith('blob:') && !imageUrl.startsWith('data:')) {
+      if (
+        typeof imageUrl === 'string' &&
+        !imageUrl.startsWith('http') &&
+        !imageUrl.startsWith('blob:') &&
+        !imageUrl.startsWith('data:')
+      ) {
         // It might be a Cloudinary public ID, construct URL
         const { cloudinaryPublicIds } = require('@/lib/cloudinary-backgrounds')
         if (cloudinaryPublicIds.includes(imageUrl)) {
@@ -211,19 +218,21 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
         if (!overlay.isVisible) continue
 
         try {
-          const isCloudinaryId = OVERLAY_PUBLIC_IDS.includes(overlay.src as any) ||
-                                 (typeof overlay.src === 'string' && overlay.src.startsWith('overlays/'))
+          const isCloudinaryId =
+            OVERLAY_PUBLIC_IDS.includes(overlay.src as any) ||
+            (typeof overlay.src === 'string' && overlay.src.startsWith('overlays/'))
 
-          const imageUrl = isCloudinaryId && !overlay.isCustom
-            ? getCldImageUrl({
-                src: overlay.src,
-                width: overlay.size * 2,
-                height: overlay.size * 2,
-                quality: 'auto',
-                format: 'auto',
-                crop: 'fit',
-              })
-            : overlay.src
+          const imageUrl =
+            isCloudinaryId && !overlay.isCustom
+              ? getCldImageUrl({
+                  src: overlay.src,
+                  width: overlay.size * 2,
+                  height: overlay.size * 2,
+                  quality: 'auto',
+                  format: 'auto',
+                  crop: 'fit',
+                })
+              : overlay.src
 
           const img = new window.Image()
           img.crossOrigin = 'anonymous'
@@ -334,13 +343,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     if (patternRectRef.current) {
       patternRectRef.current.cache()
     }
-  }, [
-    patternImage,
-    canvasW,
-    canvasH,
-    patternStyle.opacity,
-    patternStyle.blur,
-  ])
+  }, [patternImage, canvasW, canvasH, patternStyle.opacity, patternStyle.blur])
 
   // Cache background when blur is active
   useEffect(() => {
@@ -348,14 +351,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
       backgroundRef.current.cache()
       backgroundRef.current.getLayer()?.batchDraw()
     }
-  }, [
-    backgroundBlur,
-    backgroundConfig,
-    backgroundBorderRadius,
-    canvasW,
-    canvasH,
-    bgImage,
-  ])
+  }, [backgroundBlur, backgroundConfig, backgroundBorderRadius, canvasW, canvasH, bgImage])
 
   let imageScaledW, imageScaledH
   if (contentW / contentH > imageAspect) {
@@ -372,9 +368,9 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     showFrame && frame.type === 'solid'
       ? frame.width
       : showFrame && frame.type === 'ruler'
-      ? frame.width + 2
-      : 0
-  const windowPadding = showFrame && frame.type === 'window' ? (frame.padding || 20) : 0
+        ? frame.width + 2
+        : 0
+  const windowPadding = showFrame && frame.type === 'window' ? frame.padding || 20 : 0
   const windowHeader = showFrame && frame.type === 'window' ? 40 : 0
   const eclipseBorder = showFrame && frame.type === 'eclipse' ? frame.width + 2 : 0
   const framedW = imageScaledW + frameOffset * 2 + windowPadding * 2 + eclipseBorder
@@ -388,10 +384,10 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
           side === 'bottom'
             ? { x: 0, y: elevation }
             : side === 'right'
-            ? { x: elevation, y: 0 }
-            : side === 'bottom-right'
-            ? { x: diag, y: diag }
-            : { x: 0, y: 0 }
+              ? { x: elevation, y: 0 }
+              : side === 'bottom-right'
+                ? { x: diag, y: diag }
+                : { x: 0, y: 0 }
 
         return {
           shadowColor: color,
@@ -411,7 +407,9 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     rotateX(${perspective3D.rotateX}deg)
     rotateY(${perspective3D.rotateY}deg)
     rotateZ(${perspective3D.rotateZ + screenshot.rotation}deg)
-  `.replace(/\s+/g, ' ').trim()
+  `
+    .replace(/\s+/g, ' ')
+    .trim()
 
   // Check if 3D transforms are active (any non-default value)
   const has3DTransform =
@@ -487,11 +485,12 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                 height: '100%',
                 objectFit: 'cover',
                 opacity: imageOpacity,
-                borderRadius: showFrame && frame.type === 'window'
-                  ? '0 0 12px 12px'
-                  : showFrame && frame.type === 'ruler'
-                  ? `${screenshot.radius * 0.8}px`
-                  : `${screenshot.radius}px`,
+                borderRadius:
+                  showFrame && frame.type === 'window'
+                    ? '0 0 12px 12px'
+                    : showFrame && frame.type === 'ruler'
+                      ? `${screenshot.radius * 0.8}px`
+                      : `${screenshot.radius}px`,
                 transform: perspective3DTransform,
                 transformOrigin: 'center center',
                 willChange: 'transform',
@@ -530,7 +529,11 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
               />
             ) : backgroundConfig.type === 'gradient' && backgroundStyle.background ? (
               (() => {
-                const gradientProps = parseLinearGradient(backgroundStyle.background as string, canvasW, canvasH);
+                const gradientProps = parseLinearGradient(
+                  backgroundStyle.background as string,
+                  canvasW,
+                  canvasH
+                )
                 return gradientProps ? (
                   <Rect
                     ref={backgroundRef}
@@ -553,7 +556,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                     opacity={backgroundConfig.opacity ?? 1}
                     cornerRadius={backgroundBorderRadius}
                   />
-                );
+                )
               })()
             ) : (
               <Rect
@@ -618,306 +621,313 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
 
           {/* Main Image Layer - Hide when mockups are active */}
           {!hasMockups && (
-          <Layer>
-            <Group
-              x={canvasW / 2 + screenshot.offsetX}
-              y={canvasH / 2 + screenshot.offsetY}
-              width={framedW}
-              height={framedH}
-              offsetX={framedW / 2}
-              offsetY={framedH / 2}
-              rotation={screenshot.rotation}
-            >
-              {/* Solid Frame */}
-              {showFrame && frame.type === 'solid' && (
-                <Rect
-                  width={framedW}
-                  height={framedH}
-                  fill={frame.color}
-                  cornerRadius={screenshot.radius}
-                  {...shadowProps}
-                />
-              )}
-
-              {/* Glassy Frame */}
-              {showFrame && frame.type === 'glassy' && (
-                <Rect
-                  x={frameOffset + windowPadding}
-                  y={frameOffset + windowPadding + windowHeader}
-                  width={imageScaledW}
-                  height={imageScaledH}
-                  fill="rgba(255, 255, 255, 0.15)"
-                  stroke="rgba(255, 255, 255, 0.3)"
-                  strokeWidth={frame.width * 4 + 6}
-                  cornerRadius={screenshot.radius}
-                  shadowForStrokeEnabled
-                  {...shadowProps}
-                />
-              )}
-
-              {/* Ruler Frame */}
-              {showFrame && frame.type === 'ruler' && (
-                <Group>
-                  <Rect
-                    width={framedW}
-                    height={framedH}
-                    cornerRadius={screenshot.radius}
-                    fill="rgba(0,0,0,0.3)"
-                    shadowForStrokeEnabled
-                    {...shadowProps}
-                  />
-
-                  <Rect
-                    width={framedW - 1}
-                    height={framedH - 1}
-                    x={1}
-                    y={1}
-                    stroke="rgba(255, 255, 255, 0.9)"
-                    strokeWidth={1}
-                    cornerRadius={Math.max(0, screenshot.radius - 2)}
-                  />
-
-                  <Group>
-                    <Rect
-                      width={framedW}
-                      height={framedH}
-                      fill="rgba(255, 255, 255, 0.2)"
-                      cornerRadius={screenshot.radius}
-                    />
-                    <Group globalCompositeOperation="source-atop">
-                      {/* Top ruler marks */}
-                      {Array.from({ length: Math.floor(framedW / 10) - 1 }).map((_, i) => (
-                        <Rect
-                          key={`t-${i}`}
-                          x={i * 10}
-                          y={1}
-                          width={2}
-                          height={(i + 1) % 5 === 0 ? 10 : 5}
-                          fill="rgba(0, 0, 0, 0.8)"
-                        />
-                      ))}
-                      {/* Left ruler marks */}
-                      {Array.from({ length: Math.floor(framedH / 10) - 1 }).map((_, i) => (
-                        <Rect
-                          key={`l-${i}`}
-                          x={1}
-                          y={i * 10}
-                          width={(i + 1) % 5 === 0 ? 10 : 5}
-                          height={2}
-                          fill="rgba(0, 0, 0, 0.8)"
-                        />
-                      ))}
-                      {/* Right ruler marks */}
-                      {Array.from({ length: Math.floor(framedH / 10) - 1 }).map((_, i) => (
-                        <Rect
-                          key={`r-${i}`}
-                          x={framedW - 1}
-                          y={i * 10}
-                          width={(i + 1) % 5 === 0 ? -10 : -5}
-                          height={2}
-                          fill="rgba(0, 0, 0, 0.8)"
-                        />
-                      ))}
-                      {/* Bottom ruler marks */}
-                      {Array.from({ length: Math.floor(framedW / 10) - 1 }).map((_, i) => (
-                        <Rect
-                          key={`b-${i}`}
-                          x={i * 10}
-                          y={framedH - 1}
-                          width={2}
-                          height={(i + 1) % 5 === 0 ? -10 : -5}
-                          fill="rgba(0, 0, 0, 0.8)"
-                        />
-                      ))}
-                    </Group>
-                  </Group>
-
-                  <Rect
-                    width={framedW}
-                    height={framedH}
-                    stroke="rgba(0, 0, 0, 0.15)"
-                    strokeWidth={1}
-                    cornerRadius={screenshot.radius}
-                  />
-                </Group>
-              )}
-
-              {/* Infinite Mirror Frame */}
-              {showFrame && frame.type === 'infinite-mirror' && (
-                <>
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <Rect
-                      key={i}
-                      width={framedW + i * 15}
-                      height={framedH + i * 15}
-                      x={-i * 7.5}
-                      y={-i * 7.5}
-                      stroke={frame.color}
-                      strokeWidth={4}
-                      cornerRadius={screenshot.radius + i * 5}
-                      opacity={0.3 - i * 0.07}
-                      {...(i === 0 ? { ...shadowProps, shadowForStrokeEnabled: true } : {})}
-                    />
-                  ))}
-                </>
-              )}
-
-              {/* Eclipse Frame */}
-              {showFrame && frame.type === 'eclipse' && (
-                <Group>
+            <Layer>
+              <Group
+                x={canvasW / 2 + screenshot.offsetX}
+                y={canvasH / 2 + screenshot.offsetY}
+                width={framedW}
+                height={framedH}
+                offsetX={framedW / 2}
+                offsetY={framedH / 2}
+                rotation={screenshot.rotation}
+              >
+                {/* Solid Frame */}
+                {showFrame && frame.type === 'solid' && (
                   <Rect
                     width={framedW}
                     height={framedH}
                     fill={frame.color}
-                    cornerRadius={screenshot.radius + eclipseBorder}
+                    cornerRadius={screenshot.radius}
                     {...shadowProps}
                   />
-                  <Rect
-                    globalCompositeOperation="destination-out"
-                    x={eclipseBorder}
-                    y={eclipseBorder}
-                    width={framedW - eclipseBorder * 2}
-                    height={framedH - eclipseBorder * 2}
-                    fill="black"
-                    cornerRadius={screenshot.radius}
-                  />
-                </Group>
-              )}
+                )}
 
-              {/* Stack Frame */}
-              {showFrame && frame.type === 'stack' && (
-                <>
-                  {/* Bottom layer - darkest */}
+                {/* Glassy Frame */}
+                {showFrame && frame.type === 'glassy' && (
                   <Rect
-                    width={framedW / 1.2}
-                    height={framedH / 5}
-                    x={(framedW - framedW / 1.2) / 2}
-                    y={-40}
-                    fill={frame.theme === 'dark' ? '#444444' : '#f5f5f5'}
+                    x={frameOffset + windowPadding}
+                    y={frameOffset + windowPadding + windowHeader}
+                    width={imageScaledW}
+                    height={imageScaledH}
+                    fill="rgba(255, 255, 255, 0.15)"
+                    stroke="rgba(255, 255, 255, 0.3)"
+                    strokeWidth={frame.width * 4 + 6}
                     cornerRadius={screenshot.radius}
-                    opacity={1}
+                    shadowForStrokeEnabled
                     {...shadowProps}
                   />
-                  {/* Middle layer */}
-                  <Rect
-                    width={framedW / 1.1}
-                    height={framedH / 5}
-                    x={(framedW - framedW / 1.1) / 2}
-                    y={-20}
-                    fill={frame.theme === 'dark' ? '#2a2a2a' : '#f0f0f0'}
-                    cornerRadius={screenshot.radius}
-                    opacity={1}
-                  />
-                  {/* Top layer - lightest, will have image on top */}
+                )}
+
+                {/* Ruler Frame */}
+                {showFrame && frame.type === 'ruler' && (
+                  <Group>
+                    <Rect
+                      width={framedW}
+                      height={framedH}
+                      cornerRadius={screenshot.radius}
+                      fill="rgba(0,0,0,0.3)"
+                      shadowForStrokeEnabled
+                      {...shadowProps}
+                    />
+
+                    <Rect
+                      width={framedW - 1}
+                      height={framedH - 1}
+                      x={1}
+                      y={1}
+                      stroke="rgba(255, 255, 255, 0.9)"
+                      strokeWidth={1}
+                      cornerRadius={Math.max(0, screenshot.radius - 2)}
+                    />
+
+                    <Group>
+                      <Rect
+                        width={framedW}
+                        height={framedH}
+                        fill="rgba(255, 255, 255, 0.2)"
+                        cornerRadius={screenshot.radius}
+                      />
+                      <Group globalCompositeOperation="source-atop">
+                        {/* Top ruler marks */}
+                        {Array.from({ length: Math.floor(framedW / 10) - 1 }).map((_, i) => (
+                          <Rect
+                            key={`t-${i}`}
+                            x={i * 10}
+                            y={1}
+                            width={2}
+                            height={(i + 1) % 5 === 0 ? 10 : 5}
+                            fill="rgba(0, 0, 0, 0.8)"
+                          />
+                        ))}
+                        {/* Left ruler marks */}
+                        {Array.from({ length: Math.floor(framedH / 10) - 1 }).map((_, i) => (
+                          <Rect
+                            key={`l-${i}`}
+                            x={1}
+                            y={i * 10}
+                            width={(i + 1) % 5 === 0 ? 10 : 5}
+                            height={2}
+                            fill="rgba(0, 0, 0, 0.8)"
+                          />
+                        ))}
+                        {/* Right ruler marks */}
+                        {Array.from({ length: Math.floor(framedH / 10) - 1 }).map((_, i) => (
+                          <Rect
+                            key={`r-${i}`}
+                            x={framedW - 1}
+                            y={i * 10}
+                            width={(i + 1) % 5 === 0 ? -10 : -5}
+                            height={2}
+                            fill="rgba(0, 0, 0, 0.8)"
+                          />
+                        ))}
+                        {/* Bottom ruler marks */}
+                        {Array.from({ length: Math.floor(framedW / 10) - 1 }).map((_, i) => (
+                          <Rect
+                            key={`b-${i}`}
+                            x={i * 10}
+                            y={framedH - 1}
+                            width={2}
+                            height={(i + 1) % 5 === 0 ? -10 : -5}
+                            fill="rgba(0, 0, 0, 0.8)"
+                          />
+                        ))}
+                      </Group>
+                    </Group>
+
+                    <Rect
+                      width={framedW}
+                      height={framedH}
+                      stroke="rgba(0, 0, 0, 0.15)"
+                      strokeWidth={1}
+                      cornerRadius={screenshot.radius}
+                    />
+                  </Group>
+                )}
+
+                {/* Infinite Mirror Frame */}
+                {showFrame && frame.type === 'infinite-mirror' && (
+                  <>
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Rect
+                        key={i}
+                        width={framedW + i * 15}
+                        height={framedH + i * 15}
+                        x={-i * 7.5}
+                        y={-i * 7.5}
+                        stroke={frame.color}
+                        strokeWidth={4}
+                        cornerRadius={screenshot.radius + i * 5}
+                        opacity={0.3 - i * 0.07}
+                        {...(i === 0 ? { ...shadowProps, shadowForStrokeEnabled: true } : {})}
+                      />
+                    ))}
+                  </>
+                )}
+
+                {/* Eclipse Frame */}
+                {showFrame && frame.type === 'eclipse' && (
+                  <Group>
+                    <Rect
+                      width={framedW}
+                      height={framedH}
+                      fill={frame.color}
+                      cornerRadius={screenshot.radius + eclipseBorder}
+                      {...shadowProps}
+                    />
+                    <Rect
+                      globalCompositeOperation="destination-out"
+                      x={eclipseBorder}
+                      y={eclipseBorder}
+                      width={framedW - eclipseBorder * 2}
+                      height={framedH - eclipseBorder * 2}
+                      fill="black"
+                      cornerRadius={screenshot.radius}
+                    />
+                  </Group>
+                )}
+
+                {/* Stack Frame */}
+                {showFrame && frame.type === 'stack' && (
+                  <>
+                    {/* Bottom layer - darkest */}
+                    <Rect
+                      width={framedW / 1.2}
+                      height={framedH / 5}
+                      x={(framedW - framedW / 1.2) / 2}
+                      y={-40}
+                      fill={frame.theme === 'dark' ? '#444444' : '#f5f5f5'}
+                      cornerRadius={screenshot.radius}
+                      opacity={1}
+                      {...shadowProps}
+                    />
+                    {/* Middle layer */}
+                    <Rect
+                      width={framedW / 1.1}
+                      height={framedH / 5}
+                      x={(framedW - framedW / 1.1) / 2}
+                      y={-20}
+                      fill={frame.theme === 'dark' ? '#2a2a2a' : '#f0f0f0'}
+                      cornerRadius={screenshot.radius}
+                      opacity={1}
+                    />
+                    {/* Top layer - lightest, will have image on top */}
+                    <Rect
+                      width={framedW}
+                      height={framedH}
+                      fill={frame.theme === 'dark' ? '#555555' : '#e8e8e8'}
+                      cornerRadius={screenshot.radius}
+                      {...shadowProps}
+                    />
+                  </>
+                )}
+
+                {/* Window Frame */}
+                {showFrame && frame.type === 'window' && (
+                  <>
+                    <Rect // main window
+                      width={framedW}
+                      height={framedH}
+                      fill={frame.theme === 'dark' ? '#2f2f2f' : '#fefefe'}
+                      cornerRadius={[
+                        screenshot.radius / 2,
+                        screenshot.radius / 2,
+                        screenshot.radius,
+                        screenshot.radius,
+                      ]}
+                      {...shadowProps}
+                    />
+                    <Rect // header
+                      width={framedW}
+                      height={windowHeader}
+                      fill={frame.theme === 'dark' ? '#4a4a4a' : '#e2e2e2'}
+                      cornerRadius={[screenshot.radius, screenshot.radius, 0, 0]}
+                    />
+                    {/* Window control buttons (red, yellow, green) */}
+                    <Circle x={25} y={20} radius={10} fill="#ff5f57" />
+                    <Circle x={50} y={20} radius={10} fill="#febc2e" />
+                    <Circle x={75} y={20} radius={10} fill="#28c840" />
+                    <Text
+                      text={frame.title || ''}
+                      x={0}
+                      y={0}
+                      width={framedW}
+                      height={windowHeader}
+                      align="center"
+                      verticalAlign="middle"
+                      fill={frame.theme === 'dark' ? '#f0f0f0' : '#4f4f4f'}
+                      fontSize={16}
+                    />
+                  </>
+                )}
+
+                {/* Dotted Frame */}
+                {showFrame && frame.type === 'dotted' && (
                   <Rect
                     width={framedW}
                     height={framedH}
-                    fill={frame.theme === 'dark' ? '#555555' : '#e8e8e8'}
+                    stroke={frame.color}
+                    strokeWidth={frame.width}
+                    dash={[frame.width * 2, frame.width * 1.2]}
                     cornerRadius={screenshot.radius}
-                    {...shadowProps}
                   />
-                </>
-              )}
+                )}
 
-              {/* Window Frame */}
-              {showFrame && frame.type === 'window' && (
-                <>
-                  <Rect // main window
-                    width={framedW}
-                    height={framedH}
-                    fill={frame.theme === 'dark' ? '#2f2f2f' : '#fefefe'}
-                    cornerRadius={[screenshot.radius / 2, screenshot.radius / 2, screenshot.radius, screenshot.radius]}
-                    {...shadowProps}
-                  />
-                  <Rect // header
-                    width={framedW}
-                    height={windowHeader}
-                    fill={frame.theme === 'dark' ? '#4a4a4a' : '#e2e2e2'}
-                    cornerRadius={[screenshot.radius, screenshot.radius, 0, 0]}
-                  />
-                  {/* Window control buttons (red, yellow, green) */}
-                  <Circle x={25} y={20} radius={10} fill="#ff5f57" />
-                  <Circle x={50} y={20} radius={10} fill="#febc2e" />
-                  <Circle x={75} y={20} radius={10} fill="#28c840" />
-                  <Text
-                    text={frame.title || ''}
-                    x={0}
-                    y={0}
-                    width={framedW}
-                    height={windowHeader}
-                    align="center"
-                    verticalAlign="middle"
-                    fill={frame.theme === 'dark' ? '#f0f0f0' : '#4f4f4f'}
-                    fontSize={16}
-                  />
-                </>
-              )}
+                {/* Focus Frame */}
+                {showFrame && frame.type === 'focus' && (
+                  <Group>
+                    <Path
+                      data={`M ${frameOffset}, ${frameOffset + frame.width * 1.5} Q ${frameOffset}, ${frameOffset} ${frameOffset + frame.width * 1.5}, ${frameOffset}`}
+                      stroke={frame.color}
+                      strokeWidth={frame.width}
+                      lineCap="round"
+                      {...shadowProps}
+                    />
+                    <Path
+                      data={`M ${frameOffset + imageScaledW}, ${frameOffset + imageScaledH - frame.width * 1.5} Q ${frameOffset + imageScaledW}, ${frameOffset + imageScaledH} ${frameOffset + imageScaledW - frame.width * 1.5}, ${frameOffset + imageScaledH}`}
+                      stroke={frame.color}
+                      strokeWidth={frame.width}
+                      lineCap="round"
+                      {...shadowProps}
+                    />
+                    <Path
+                      data={`M ${frameOffset + imageScaledW - frame.width * 1.5}, ${frameOffset} Q ${frameOffset + imageScaledW}, ${frameOffset} ${frameOffset + imageScaledW}, ${frameOffset + frame.width * 1.5}`}
+                      stroke={frame.color}
+                      strokeWidth={frame.width}
+                      lineCap="round"
+                      {...shadowProps}
+                    />
+                    <Path
+                      data={`M ${frameOffset + frame.width * 1.5}, ${frameOffset + imageScaledH} Q ${frameOffset}, ${frameOffset + imageScaledH} ${frameOffset}, ${frameOffset + imageScaledH - frame.width * 1.5}`}
+                      stroke={frame.color}
+                      strokeWidth={frame.width}
+                      lineCap="round"
+                      {...shadowProps}
+                    />
+                  </Group>
+                )}
 
-              {/* Dotted Frame */}
-              {showFrame && frame.type === 'dotted' && (
-                <Rect
-                  width={framedW}
-                  height={framedH}
-                  stroke={frame.color}
-                  strokeWidth={frame.width}
-                  dash={[frame.width * 2, frame.width * 1.2]}
-                  cornerRadius={screenshot.radius}
+                <KonvaImage
+                  image={image}
+                  x={frameOffset + windowPadding}
+                  y={frameOffset + windowPadding + windowHeader}
+                  width={imageScaledW}
+                  height={imageScaledH}
+                  opacity={has3DTransform ? 0 : imageOpacity}
+                  cornerRadius={
+                    showFrame && frame.type === 'window'
+                      ? [0, 0, screenshot.radius, screenshot.radius]
+                      : showFrame && frame.type === 'ruler'
+                        ? screenshot.radius * 0.8
+                        : screenshot.radius
+                  }
+                  imageSmoothingEnabled={false}
+                  {...(!showFrame || frame.type === 'none' || frame.type === 'dotted'
+                    ? shadowProps
+                    : {})}
                 />
-              )}
-
-              {/* Focus Frame */}
-              {showFrame && frame.type === 'focus' && (
-                <Group>
-                  <Path
-                    data={`M ${frameOffset}, ${frameOffset + frame.width * 1.5} Q ${frameOffset}, ${frameOffset} ${frameOffset + frame.width * 1.5}, ${frameOffset}`}
-                    stroke={frame.color}
-                    strokeWidth={frame.width}
-                    lineCap="round"
-                    {...shadowProps}
-                  />
-                  <Path
-                    data={`M ${frameOffset + imageScaledW}, ${frameOffset + imageScaledH - frame.width * 1.5} Q ${frameOffset + imageScaledW}, ${frameOffset + imageScaledH} ${frameOffset + imageScaledW - frame.width * 1.5}, ${frameOffset + imageScaledH}`}
-                    stroke={frame.color}
-                    strokeWidth={frame.width}
-                    lineCap="round"
-                    {...shadowProps}
-                  />
-                  <Path
-                    data={`M ${frameOffset + imageScaledW - frame.width * 1.5}, ${frameOffset} Q ${frameOffset + imageScaledW}, ${frameOffset} ${frameOffset + imageScaledW}, ${frameOffset + frame.width * 1.5}`}
-                    stroke={frame.color}
-                    strokeWidth={frame.width}
-                    lineCap="round"
-                    {...shadowProps}
-                  />
-                  <Path
-                    data={`M ${frameOffset + frame.width * 1.5}, ${frameOffset + imageScaledH} Q ${frameOffset}, ${frameOffset + imageScaledH} ${frameOffset}, ${frameOffset + imageScaledH - frame.width * 1.5}`}
-                    stroke={frame.color}
-                    strokeWidth={frame.width}
-                    lineCap="round"
-                    {...shadowProps}
-                  />
-                </Group>
-              )}
-
-              <KonvaImage
-                image={image}
-                x={frameOffset + windowPadding}
-                y={frameOffset + windowPadding + windowHeader}
-                width={imageScaledW}
-                height={imageScaledH}
-                opacity={has3DTransform ? 0 : imageOpacity}
-                cornerRadius={
-                  showFrame && frame.type === 'window'
-                    ? [0, 0, screenshot.radius, screenshot.radius]
-                    : showFrame && frame.type === 'ruler'
-                    ? screenshot.radius * 0.8
-                    : screenshot.radius
-                }
-                imageSmoothingEnabled={false}
-                {...(!showFrame || frame.type === 'none' || frame.type === 'dotted' ? shadowProps : {})}
-              />
-            </Group>
-          </Layer>
+              </Group>
+            </Layer>
           )}
 
           {/* Text Overlays Layer - Canvas based */}
@@ -953,7 +963,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                     const newX = (e.target.x() / canvasW) * 100
                     const newY = (e.target.y() / canvasH) * 100
                     updateTextOverlay(overlay.id, {
-                      position: { x: newX, y: newY }
+                      position: { x: newX, y: newY },
                     })
                   }}
                   onMouseEnter={(e) => {
@@ -1010,7 +1020,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   draggable={true}
                   onDragEnd={(e) => {
                     updateImageOverlay(overlay.id, {
-                      position: { x: e.target.x(), y: e.target.y() }
+                      position: { x: e.target.x(), y: e.target.y() },
                     })
                   }}
                   onMouseEnter={(e) => {
@@ -1037,7 +1047,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
 
 // Export function to get the Konva stage
 export function getKonvaStage(): any {
-  return globalKonvaStage;
+  return globalKonvaStage
 }
 
 export default function ClientCanvas() {

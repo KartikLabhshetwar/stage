@@ -51,7 +51,12 @@ export function UploadDropzone() {
     [handleFile]
   )
 
-  const { getRootProps, getInputProps, isDragActive: dropzoneActive, fileRejections } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive: dropzoneActive,
+    fileRejections,
+  } = useDropzone({
     onDrop,
     accept: {
       'image/jpeg': ['.jpg', '.jpeg'],
@@ -154,12 +159,15 @@ export function UploadDropzone() {
               </div>
 
               {active ? (
-                <p className="text-sm sm:text-base font-medium text-primary">Drop the image here...</p>
+                <p className="text-sm sm:text-base font-medium text-primary">
+                  Drop the image here...
+                </p>
               ) : (
                 <div className="space-y-2 text-center px-2">
                   <p className="text-sm sm:text-base font-medium">Drag & drop an image here</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    or tap to browse • PNG, JPG, WEBP up to {MAX_IMAGE_SIZE / 1024 / 1024}MB • or paste an image
+                    or tap to browse • PNG, JPG, WEBP up to {MAX_IMAGE_SIZE / 1024 / 1024}MB • or
+                    paste an image
                   </p>
                 </div>
               )}
@@ -180,4 +188,3 @@ export function UploadDropzone() {
     </div>
   )
 }
-
