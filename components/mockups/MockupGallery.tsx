@@ -13,22 +13,31 @@ export function MockupGallery() {
   const [activeType, setActiveType] = useState<'iphone' | 'macbook' | 'imac' | 'iwatch'>('macbook')
   const responsiveDimensions = useResponsiveCanvasDimensions()
 
-  const getDefaultPosition = () => {
+  const getDefaultPosition = (mockupSize: number, mockupType: string) => {
     const canvasWidth = responsiveDimensions.width || 1920
     const canvasHeight = responsiveDimensions.height || 1080
+    
+    let aspectRatio = 16 / 9
+    if (mockupType === 'iphone') aspectRatio = 9 / 16
+    else if (mockupType === 'iwatch') aspectRatio = 1
+    else if (mockupType === 'imac') aspectRatio = 2146 / 1207
+    
+    const mockupHeight = mockupSize / aspectRatio
+    
     return {
-      x: Math.max(20, (canvasWidth / 2) - 300),
-      y: Math.max(20, (canvasHeight / 2) - 200),
+      x: Math.max(20, (canvasWidth / 2) - (mockupSize / 2)),
+      y: Math.max(20, (canvasHeight / 2) - (mockupHeight / 2)),
     }
   }
 
   const handleAddMockup = (definitionId: string) => {
-    const defaultPosition = getDefaultPosition()
     const definition = MOCKUP_DEFINITIONS.find(d => d.id === definitionId)
     let defaultSize = 600
     if (definition?.type === 'iphone') defaultSize = 220
     else if (definition?.type === 'iwatch') defaultSize = 150
-    else if (definition?.type === 'imac') defaultSize = 800
+    else if (definition?.type === 'imac') defaultSize = 500
+    
+    const defaultPosition = getDefaultPosition(defaultSize, definition?.type || 'macbook')
     
     addMockup({
       definitionId,

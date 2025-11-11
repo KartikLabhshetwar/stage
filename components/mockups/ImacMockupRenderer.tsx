@@ -33,9 +33,8 @@ export function ImacMockupRenderer({ mockup }: ImacMockupRendererProps) {
   const screenAreaWidth = definition.screenArea.width * mockupWidth
   const screenAreaHeight = definition.screenArea.height * mockupHeight
 
-  const contentStartY = screenAreaY
-  const contentHeight = screenAreaHeight
   const contentWidth = screenAreaWidth
+  const contentHeight = screenAreaHeight
 
   const userImageAspectRatio = userImg ? userImg.width / userImg.height : 1
   const contentAspectRatio = contentWidth / contentHeight
@@ -45,29 +44,42 @@ export function ImacMockupRenderer({ mockup }: ImacMockupRendererProps) {
   let userImageX = screenAreaX
   let userImageY = screenAreaY
 
-  if (mockup.imageFit === 'cover') {
-    if (userImageAspectRatio > contentAspectRatio) {
+  if (userImg) {
+    if (mockup.imageFit === 'cover') {
+      if (userImageAspectRatio > contentAspectRatio) {
+        userImageHeight = contentHeight
+        userImageWidth = userImageHeight * userImageAspectRatio
+        userImageX = screenAreaX - (userImageWidth - contentWidth) / 2
+      } else {
+        userImageWidth = contentWidth
+        userImageHeight = userImageWidth / userImageAspectRatio
+        userImageY = screenAreaY - (userImageHeight - contentHeight) / 2
+      }
+    } else if (mockup.imageFit === 'fill') {
+      userImageWidth = contentWidth
       userImageHeight = contentHeight
-      userImageWidth = userImageHeight * userImageAspectRatio
-      userImageX = screenAreaX - (userImageWidth - contentWidth) / 2
-    } else {
-      userImageWidth = contentWidth
-      userImageHeight = userImageWidth / userImageAspectRatio
-      userImageY = screenAreaY - (userImageHeight - contentHeight) / 2
-    }
-  } else {
-    if (userImageAspectRatio > contentAspectRatio) {
-      userImageWidth = contentWidth
-      userImageHeight = userImageWidth / userImageAspectRatio
       userImageX = screenAreaX
-      userImageY = screenAreaY + (contentHeight - userImageHeight) / 2
-    } else {
-      userImageHeight = contentHeight
-      userImageWidth = userImageHeight * userImageAspectRatio
-      userImageX = screenAreaX + (contentWidth - userImageWidth) / 2
       userImageY = screenAreaY
+    } else {
+      if (userImageAspectRatio > contentAspectRatio) {
+        userImageWidth = contentWidth
+        userImageHeight = userImageWidth / userImageAspectRatio
+        userImageX = screenAreaX
+        userImageY = screenAreaY + (contentHeight - userImageHeight) / 2
+      } else {
+        userImageHeight = contentHeight
+        userImageWidth = userImageHeight * userImageAspectRatio
+        userImageX = screenAreaX + (contentWidth - userImageWidth) / 2
+        userImageY = screenAreaY
+      }
     }
   }
+
+  // snap to integers to avoid subpixel gaps at edges
+  userImageWidth = Math.ceil(userImageWidth)
+  userImageHeight = Math.ceil(userImageHeight)
+  userImageX = Math.floor(userImageX)
+  userImageY = Math.floor(userImageY)
 
   return (
     <Group
@@ -89,8 +101,8 @@ export function ImacMockupRenderer({ mockup }: ImacMockupRendererProps) {
             const borderRadius = definition.screenArea.borderRadius || 0
             const x = screenAreaX
             const y = screenAreaY
-            const w = contentWidth
-            const h = contentHeight
+            const w = screenAreaWidth
+            const h = screenAreaHeight
             const r = borderRadius
             ctx.beginPath()
             if (borderRadius > 0) {
