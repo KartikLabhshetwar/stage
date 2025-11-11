@@ -9,7 +9,9 @@
     "upload-backgrounds": "tsx scripts/upload-backgrounds.ts",
     "upload-demo-images": "tsx scripts/upload-demo-images.ts",
     "upload-overlays": "tsx scripts/upload-overlays.ts",
-    "upload-assets": "tsx scripts/upload-assets.ts"
+    "upload-assets": "tsx scripts/upload-assets.ts",
+    "format": "prettier --write .",
+    "check-format": "prettier --check ."
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",

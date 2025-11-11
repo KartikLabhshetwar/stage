@@ -16,18 +16,37 @@ interface MockupRendererProps {
 export function MockupRenderer({ mockup, canvasWidth, canvasHeight }: MockupRendererProps) {
   const definition = getMockupDefinition(mockup.definitionId)
   if (!definition) return null
-  
+
   switch (definition.type) {
     case 'iphone':
-      return <IphoneMockupRenderer mockup={mockup} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
+      return (
+        <IphoneMockupRenderer
+          mockup={mockup}
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
+        />
+      )
     case 'macbook':
-      return <MacbookMockupRenderer mockup={mockup} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
+      return (
+        <MacbookMockupRenderer
+          mockup={mockup}
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
+        />
+      )
     case 'imac':
-      return <ImacMockupRenderer mockup={mockup} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
+      return (
+        <ImacMockupRenderer mockup={mockup} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
+      )
     case 'iwatch':
-      return <IwatchMockupRenderer mockup={mockup} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
+      return (
+        <IwatchMockupRenderer
+          mockup={mockup}
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
+        />
+      )
     default:
       return null
   }
 }
-

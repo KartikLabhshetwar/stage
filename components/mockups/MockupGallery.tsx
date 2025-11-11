@@ -16,29 +16,29 @@ export function MockupGallery() {
   const getDefaultPosition = (mockupSize: number, mockupType: string) => {
     const canvasWidth = responsiveDimensions.width || 1920
     const canvasHeight = responsiveDimensions.height || 1080
-    
+
     let aspectRatio = 16 / 9
     if (mockupType === 'iphone') aspectRatio = 9 / 16
     else if (mockupType === 'iwatch') aspectRatio = 1
     else if (mockupType === 'imac') aspectRatio = 2146 / 1207
-    
+
     const mockupHeight = mockupSize / aspectRatio
-    
+
     return {
-      x: Math.max(20, (canvasWidth / 2) - (mockupSize / 2)),
-      y: Math.max(20, (canvasHeight / 2) - (mockupHeight / 2)),
+      x: Math.max(20, canvasWidth / 2 - mockupSize / 2),
+      y: Math.max(20, canvasHeight / 2 - mockupHeight / 2),
     }
   }
 
   const handleAddMockup = (definitionId: string) => {
-    const definition = MOCKUP_DEFINITIONS.find(d => d.id === definitionId)
+    const definition = MOCKUP_DEFINITIONS.find((d) => d.id === definitionId)
     let defaultSize = 600
     if (definition?.type === 'iphone') defaultSize = 220
     else if (definition?.type === 'iwatch') defaultSize = 150
     else if (definition?.type === 'imac') defaultSize = 500
-    
+
     const defaultPosition = getDefaultPosition(defaultSize, definition?.type || 'macbook')
-    
+
     addMockup({
       definitionId,
       position: defaultPosition,
@@ -59,36 +59,37 @@ export function MockupGallery() {
     <div className="space-y-5">
       <div className="space-y-1.5">
         <h3 className="font-semibold text-sm text-foreground">Device Mockups</h3>
-        <p className="text-xs text-muted-foreground">
-          Add device frames to showcase your designs
-        </p>
+        <p className="text-xs text-muted-foreground">Add device frames to showcase your designs</p>
       </div>
 
-      <Tabs value={activeType} onValueChange={(v) => setActiveType(v as 'iphone' | 'macbook' | 'imac' | 'iwatch')}>
+      <Tabs
+        value={activeType}
+        onValueChange={(v) => setActiveType(v as 'iphone' | 'macbook' | 'imac' | 'iwatch')}
+      >
         <TabsList className="w-full grid grid-cols-4 gap-1 p-1 h-auto bg-muted/50 rounded-lg">
-          <TabsTrigger 
-            value="macbook" 
+          <TabsTrigger
+            value="macbook"
             className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
           >
             <Laptop className="h-3.5 w-3.5" />
             <span>MacBook</span>
           </TabsTrigger>
-          <TabsTrigger 
-            value="imac" 
+          <TabsTrigger
+            value="imac"
             className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
           >
             <Monitor className="h-3.5 w-3.5" />
             <span>iMac</span>
           </TabsTrigger>
-          <TabsTrigger 
-            value="iwatch" 
+          <TabsTrigger
+            value="iwatch"
             className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
           >
             <Watch className="h-3.5 w-3.5" />
             <span>Watch</span>
           </TabsTrigger>
-          <TabsTrigger 
-            value="iphone" 
+          <TabsTrigger
+            value="iphone"
             className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
           >
             <Smartphone className="h-3.5 w-3.5" />
@@ -202,4 +203,3 @@ export function MockupGallery() {
     </div>
   )
 }
-

@@ -134,5 +134,3 @@ export function MacbookMockupRenderer({ mockup }: MacbookMockupRendererProps) {
     </Group>
   )
 }
-
-

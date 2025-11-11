@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { CldImage } from 'next-cloudinary';
+import { CldImage } from 'next-cloudinary'
 
 interface OptimizedImageProps {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  fill?: boolean;
-  className?: string;
-  priority?: boolean;
-  sizes?: string;
-  quality?: number | 'auto';
-  crop?: 'fill' | 'fit' | 'scale' | 'crop';
-  gravity?: 'auto' | 'center' | 'face';
-  [key: string]: any;
+  src: string
+  alt: string
+  width?: number
+  height?: number
+  fill?: boolean
+  className?: string
+  priority?: boolean
+  sizes?: string
+  quality?: number | 'auto'
+  crop?: 'fill' | 'fit' | 'scale' | 'crop'
+  gravity?: 'auto' | 'center' | 'face'
+  [key: string]: any
 }
 
 /**
@@ -36,11 +36,13 @@ export function OptimizedImage({
   gravity = 'auto',
   ...props
 }: OptimizedImageProps) {
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+
   if (!cloudName) {
-    console.error('NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is not set. All images require Cloudinary configuration.');
-    return null;
+    console.error(
+      'NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is not set. All images require Cloudinary configuration.'
+    )
+    return null
   }
 
   // Always use Cloudinary - src should be a Cloudinary public ID
@@ -59,7 +61,7 @@ export function OptimizedImage({
         unoptimized={false}
         {...props}
       />
-    );
+    )
   }
 
   return (
@@ -77,6 +79,5 @@ export function OptimizedImage({
       unoptimized={false}
       {...props}
     />
-  );
+  )
 }
-

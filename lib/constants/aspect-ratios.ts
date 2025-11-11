@@ -1,12 +1,12 @@
 export interface AspectRatio {
-  id: string;
-  name: string;
-  ratio: number;
-  width: number;
-  height: number;
-  category: string;
-  description: string;
-  useCase?: string;
+  id: string
+  name: string
+  ratio: number
+  width: number
+  height: number
+  category: string
+  description: string
+  useCase?: string
 }
 
 export const aspectRatios: AspectRatio[] = [
@@ -41,7 +41,7 @@ export const aspectRatios: AspectRatio[] = [
     description: 'Full-screen vertical stories and reels',
     useCase: 'Instagram Stories, Reels, TikTok',
   },
-  
+
   // Social Media
   {
     id: '16_9',
@@ -123,7 +123,7 @@ export const aspectRatios: AspectRatio[] = [
     description: 'LinkedIn profile/company banner format (1584×396px)',
     useCase: 'LinkedIn Profile & Company Banners',
   },
-  
+
   // Standard Formats
   {
     id: '3_2',
@@ -165,7 +165,6 @@ export const aspectRatios: AspectRatio[] = [
     description: 'Widescreen desktop format',
     useCase: 'Desktop Displays',
   },
-];
+]
 
-export type AspectRatioKey = (typeof aspectRatios)[number]['id'];
-
+export type AspectRatioKey = (typeof aspectRatios)[number]['id']

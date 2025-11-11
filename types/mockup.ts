@@ -34,4 +34,3 @@ export interface Mockup {
   isVisible: boolean
   imageFit: 'cover' | 'contain' | 'fill'
 }
-

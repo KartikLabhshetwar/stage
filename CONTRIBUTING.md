@@ -35,18 +35,21 @@ Thank you for your interest in contributing to Stage! This document provides gui
 ### Development Setup
 
 1. **Fork and Clone**
+
    ```bash
    git clone https://github.com/your-username/stage.git
    cd stage
    ```
 
 2. **Install Dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set Up Environment Variables**
    Create a `.env.local` file in the root directory:
+
    ```env
    # Required for screenshot caching: Cloudinary Configuration
    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
@@ -62,6 +65,7 @@ Thank you for your interest in contributing to Stage! This document provides gui
    Note: The app works without Cloudinary, but screenshot caching will be limited. The screenshot API uses the free Screen-Shot.xyz service by default (no API key required).
 
 4. **Start Development Server**
+
    ```bash
    npm run dev
    ```
@@ -152,6 +156,7 @@ import './styles.css'
 ### Branch Strategy
 
 1. **Create a Feature Branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    # or
@@ -187,6 +192,7 @@ Follow conventional commits format:
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -197,6 +203,7 @@ Follow conventional commits format:
 - `chore`: Maintenance tasks
 
 **Examples:**
+
 ```
 feat(export): add watermark to exported images
 fix(canvas): fix image positioning on resize
@@ -214,6 +221,7 @@ refactor(store): simplify state management
 4. Update types if needed
 
 Example:
+
 ```typescript
 // components/controls/NewControl.tsx
 'use client'
@@ -222,7 +230,7 @@ import { useImageStore } from '@/lib/store'
 
 export function NewControl() {
   const { someValue, setSomeValue } = useImageStore()
-  
+
   return (
     <div>
       {/* Your control UI */}
@@ -279,6 +287,7 @@ npm run build
 ```
 
 This will:
+
 - Check TypeScript types
 - Verify imports
 - Catch compilation errors
@@ -296,6 +305,7 @@ npm run lint
 ### Pull Request Process
 
 1. **Push Your Branch**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -307,25 +317,31 @@ npm run lint
    - Fill out the PR template
 
 3. **PR Description Template**
+
    ```markdown
    ## Description
+
    Brief description of changes
 
    ## Type of Change
+
    - [ ] Bug fix
    - [ ] New feature
    - [ ] Breaking change
    - [ ] Documentation update
 
    ## Testing
+
    - [ ] Tested manually
    - [ ] TypeScript compiles without errors
    - [ ] No console errors
 
    ## Screenshots (if applicable)
+
    [Add screenshots here]
 
    ## Checklist
+
    - [ ] Code follows project style guidelines
    - [ ] Self-review completed
    - [ ] Comments added for complex code
@@ -408,28 +424,35 @@ Use the bug report template and include:
 
 ```markdown
 ## Bug Description
+
 [Clear description of the bug]
 
 ## Steps to Reproduce
+
 1. Go to '...'
 2. Click on '...'
 3. See error
 
 ## Expected Behavior
+
 [What should happen]
 
 ## Actual Behavior
+
 [What actually happens]
 
 ## Environment
+
 - Browser: [e.g., Chrome 120]
 - OS: [e.g., macOS 14]
 - Device: [e.g., Desktop]
 
 ## Screenshots
+
 [Add screenshots if applicable]
 
 ## Console Errors
+
 [Any console errors]
 ```
 
@@ -446,7 +469,7 @@ Use the bug report template and include:
 ```typescript
 /**
  * Exports the canvas element as an image
- * 
+ *
  * @param elementId - ID of the element to export
  * @param options - Export options (format, quality, scale)
  * @param konvaStage - Konva stage instance
@@ -484,6 +507,7 @@ export async function exportElement(
 ## Recognition
 
 Contributors will be:
+
 - Listed in the project README (if desired)
 - Credited in release notes
 - Appreciated by the community!
@@ -495,4 +519,3 @@ By contributing, you agree that your contributions will be licensed under the sa
 ---
 
 Thank you for contributing to Stage! 🎨
-

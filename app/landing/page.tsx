@@ -1,22 +1,22 @@
-import { LandingPage } from "@/components/landing/LandingPage";
+import { LandingPage } from '@/components/landing/LandingPage'
 
 const features = [
   {
-    title: "Image Upload & Customization",
+    title: 'Image Upload & Customization',
     description:
-      "Upload images and customize size, opacity, borders, shadows, and border radius for complete control over your visuals.",
+      'Upload images and customize size, opacity, borders, shadows, and border radius for complete control over your visuals.',
   },
   {
-    title: "Text Overlays & Backgrounds",
+    title: 'Text Overlays & Backgrounds',
     description:
-      "Add multiple text layers with custom fonts, colors, and shadows. Choose from gradients, solid colors, or upload your own backgrounds.",
+      'Add multiple text layers with custom fonts, colors, and shadows. Choose from gradients, solid colors, or upload your own backgrounds.',
   },
   {
-    title: "Professional Export",
+    title: 'Professional Export',
     description:
-      "Export as PNG (with transparency) with adjustable quality and scale up to 5x. All processing happens in your browser—no external services required. Perfect for social media and high-resolution output.",
+      'Export as PNG (with transparency) with adjustable quality and scale up to 5x. All processing happens in your browser—no external services required. Perfect for social media and high-resolution output.',
   },
-];
+]
 
 export default function Landing() {
   return (
@@ -28,6 +28,5 @@ export default function Landing() {
       ctaHref="/home"
       features={features}
     />
-  );
+  )
 }
-

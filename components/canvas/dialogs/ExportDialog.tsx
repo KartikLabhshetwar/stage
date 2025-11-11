@@ -1,45 +1,48 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ScaleSlider } from "@/components/export";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { ScaleSlider } from '@/components/export'
 
 interface ExportDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onExport: () => Promise<void>;
-  scale: number;
-  isExporting: boolean;
-  onScaleChange: (scale: number) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onExport: () => Promise<void>
+  scale: number
+  isExporting: boolean
+  onScaleChange: (scale: number) => void
 }
 
-export function ExportDialog({ 
-  open, 
-  onOpenChange, 
+export function ExportDialog({
+  open,
+  onOpenChange,
   onExport,
   scale,
   isExporting,
   onScaleChange,
 }: ExportDialogProps) {
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null)
 
   const handleExport = async () => {
-    setError(null);
+    setError(null)
     try {
-      await onExport();
-      onOpenChange(false);
+      await onExport()
+      onOpenChange(false)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to export image. Please try again.";
-      setError(errorMessage);
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to export image. Please try again.'
+      setError(errorMessage)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl font-semibold text-foreground">Export Canvas</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-foreground">
+            Export Canvas
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 sm:space-y-5">
           <ScaleSlider scale={scale} onScaleChange={onScaleChange} />
@@ -62,11 +65,10 @@ export function ExportDialog({
             className="w-full h-11 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
             size="lg"
           >
-            {isExporting ? "Exporting..." : "Export as PNG"}
+            {isExporting ? 'Exporting...' : 'Export as PNG'}
           </Button>
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
-

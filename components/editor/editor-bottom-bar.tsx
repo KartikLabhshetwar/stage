@@ -1,57 +1,55 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Shuffle, Undo2, Redo2 } from 'lucide-react';
-import { FaGithub } from 'react-icons/fa';
-import { SponsorButton } from '@/components/SponsorButton';
-import { motion, useSpring, useTransform } from 'motion/react';
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Shuffle, Undo2, Redo2 } from 'lucide-react'
+import { FaGithub } from 'react-icons/fa'
+import { SponsorButton } from '@/components/SponsorButton'
+import { motion, useSpring, useTransform } from 'motion/react'
 
 function useGitHubStars() {
-  const [stars, setStars] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [stars, setStars] = useState<number | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchStars = async () => {
       try {
-        const response = await fetch("https://api.github.com/repos/KartikLabhshetwar/stage");
+        const response = await fetch('https://api.github.com/repos/KartikLabhshetwar/stage')
         if (response.ok) {
-          const data = await response.json();
-          setStars(data.stargazers_count);
+          const data = await response.json()
+          setStars(data.stargazers_count)
         }
       } catch (error) {
-        console.error("Failed to fetch GitHub stars:", error);
+        console.error('Failed to fetch GitHub stars:', error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchStars();
-  }, []);
+    fetchStars()
+  }, [])
 
-  return { stars, isLoading };
+  return { stars, isLoading }
 }
 
 function AnimatedCounter({ value }: { value: number }) {
   const spring = useSpring(0, {
     damping: 30,
     stiffness: 100,
-  });
+  })
 
   useEffect(() => {
-    spring.set(value);
-  }, [spring, value]);
+    spring.set(value)
+  }, [spring, value])
 
-  const display = useTransform(spring, (current) =>
-    Math.round(current).toLocaleString()
-  );
+  const display = useTransform(spring, (current) => Math.round(current).toLocaleString())
 
-  return <motion.span>{display}</motion.span>;
+  return <motion.span>{display}</motion.span>
 }
 
 export function EditorBottomBar() {
-  const { stars, isLoading } = useGitHubStars();
+  const { stars, isLoading } = useGitHubStars()
 
   return (
     <div className="h-14 bg-background border-t border-border flex items-center justify-between px-3 sm:px-4 md:px-6">
@@ -84,6 +82,5 @@ export function EditorBottomBar() {
         <SponsorButton variant="bar" />
       </div>
     </div>
-  );
+  )
 }
-

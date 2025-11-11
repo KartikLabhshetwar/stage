@@ -1,36 +1,32 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { FaCoffee, FaDollarSign, FaMobileAlt, FaCopy, FaCheck, FaHeart } from 'react-icons/fa';
-import { cn } from '@/lib/utils';
-import { Heart } from 'lucide-react';
-import { Button as MovingBorderButton } from '@/components/ui/moving-border';
+import * as React from 'react'
+import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { FaCoffee, FaDollarSign, FaMobileAlt, FaCopy, FaCheck, FaHeart } from 'react-icons/fa'
+import { cn } from '@/lib/utils'
+import { Heart } from 'lucide-react'
+import { Button as MovingBorderButton } from '@/components/ui/moving-border'
 
 interface SponsorButtonProps {
-  className?: string;
-  variant?: 'bar' | 'floating';
+  className?: string
+  variant?: 'bar' | 'floating'
 }
 
 export function SponsorButton({ className, variant = 'bar' }: SponsorButtonProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [copied, setCopied] = React.useState(false);
-  const upiId = 'kartik.labhshetwar@oksbi';
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [copied, setCopied] = React.useState(false)
+  const upiId = 'kartik.labhshetwar@oksbi'
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(upiId);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(upiId)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error('Failed to copy:', err)
     }
-  };
+  }
 
   if (variant === 'floating') {
     return (
@@ -44,17 +40,12 @@ export function SponsorButton({ className, variant = 'bar' }: SponsorButtonProps
               <Heart className="h-6 w-6" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent 
-            className="w-80 p-0" 
-            align="end"
-            side="top"
-            sideOffset={12}
-          >
+          <PopoverContent className="w-80 p-0" align="end" side="top" sideOffset={12}>
             <SponsorContent upiId={upiId} copied={copied} onCopy={handleCopy} />
           </PopoverContent>
         </Popover>
       </div>
-    );
+    )
   }
 
   return (
@@ -63,7 +54,7 @@ export function SponsorButton({ className, variant = 'bar' }: SponsorButtonProps
         <MovingBorderButton
           as="button"
           borderRadius="0.5rem"
-          containerClassName={cn("h-10", className)}
+          containerClassName={cn('h-10', className)}
           borderClassName=""
           gradientColor="var(--primary)"
           className="gap-2 bg-background hover:bg-accent text-foreground border border-border"
@@ -72,26 +63,21 @@ export function SponsorButton({ className, variant = 'bar' }: SponsorButtonProps
           <span>Sponsor</span>
         </MovingBorderButton>
       </PopoverTrigger>
-      <PopoverContent 
-        className="w-80 p-0" 
-        align="end"
-        side="top"
-        sideOffset={8}
-      >
+      <PopoverContent className="w-80 p-0" align="end" side="top" sideOffset={8}>
         <SponsorContent upiId={upiId} copied={copied} onCopy={handleCopy} />
       </PopoverContent>
     </Popover>
-  );
+  )
 }
 
-function SponsorContent({ 
-  upiId, 
-  copied, 
-  onCopy 
-}: { 
-  upiId: string; 
-  copied: boolean; 
-  onCopy: () => void;
+function SponsorContent({
+  upiId,
+  copied,
+  onCopy,
+}: {
+  upiId: string
+  copied: boolean
+  onCopy: () => void
 }) {
   return (
     <div className="p-4 space-y-3">
@@ -132,9 +118,7 @@ function SponsorContent({
             <FaMobileAlt className="h-5 w-5 text-white" />
           </div>
           <div className="flex-1">
-            <span className="text-sm font-medium text-foreground block">
-              UPI Payment
-            </span>
+            <span className="text-sm font-medium text-foreground block">UPI Payment</span>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-xs text-muted-foreground">Scan QR or copy UPI ID</span>
               <button
@@ -151,24 +135,23 @@ function SponsorContent({
             </div>
           </div>
         </div>
-        
+
         {/* QR Code */}
         <div className="bg-background p-4 rounded-lg flex items-center justify-center mb-3">
           <div className="w-48 h-48 border-2 border-border rounded-lg flex items-center justify-center bg-background relative overflow-hidden">
-            <img 
-              src="/qr.jpeg" 
-              alt="UPI QR Code" 
+            <img
+              src="/qr.jpeg"
+              alt="UPI QR Code"
               className="w-full h-full object-contain rounded-lg"
             />
           </div>
         </div>
-        
+
         <div className="text-center">
           <p className="text-xs font-medium text-foreground mb-1">UPI ID: {upiId}</p>
           <p className="text-xs text-muted-foreground">Scan to pay with any UPI app</p>
         </div>
       </div>
     </div>
-  );
+  )
 }
-

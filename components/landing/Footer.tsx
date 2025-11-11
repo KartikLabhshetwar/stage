@@ -1,16 +1,13 @@
-"use client";
+'use client'
 
-import { FaGithub } from "react-icons/fa";
+import { FaGithub } from 'react-icons/fa'
 
 interface FooterProps {
-  brandName?: string;
-  additionalText?: string;
+  brandName?: string
+  additionalText?: string
 }
 
-export function Footer({ 
-  brandName = "Stage", 
-  additionalText = "" 
-}: FooterProps) {
+export function Footer({ brandName = 'Stage', additionalText = '' }: FooterProps) {
   return (
     <footer className="w-full border-t border-border py-4 sm:py-6 shrink-0 bg-background">
       <div className="container mx-auto px-4 sm:px-6">
@@ -21,6 +18,5 @@ export function Footer({
         </div>
       </div>
     </footer>
-  );
+  )
 }
-

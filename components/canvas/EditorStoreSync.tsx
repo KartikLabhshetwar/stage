@@ -8,7 +8,11 @@ import { GradientKey } from '@/lib/constants/gradient-colors'
 import { AspectRatioKey } from '@/lib/constants/aspect-ratios'
 
 // Helper function to parse gradient string and extract colors
-function parseGradientColors(gradientStr: string): { colorA: string; colorB: string; direction: number } {
+function parseGradientColors(gradientStr: string): {
+  colorA: string
+  colorB: string
+  direction: number
+} {
   let colorA = '#4168d0'
   let colorB = '#c850c0'
   let direction = 43
@@ -61,7 +65,8 @@ export function EditorStoreSync() {
     // Sync background
     const bgConfig = imageStore.backgroundConfig
     if (bgConfig.type === 'gradient') {
-      const gradientStr = gradientColors[bgConfig.value as GradientKey] || gradientColors.sunset_vibes
+      const gradientStr =
+        gradientColors[bgConfig.value as GradientKey] || gradientColors.sunset_vibes
       const { colorA, colorB, direction } = parseGradientColors(gradientStr)
       if (
         editorStore.background.mode !== 'gradient' ||
@@ -157,4 +162,3 @@ export function EditorStoreSync() {
 
   return null
 }
-

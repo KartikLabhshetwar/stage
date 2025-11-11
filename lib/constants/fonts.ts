@@ -1,10 +1,10 @@
 export interface FontFamily {
-  id: string;
-  name: string;
-  category: 'system' | 'custom';
-  file?: string; // TTF file path for custom fonts
-  fallback?: string; // Fallback font stack
-  availableWeights?: string[]; // Available font weights for this font
+  id: string
+  name: string
+  category: 'system' | 'custom'
+  file?: string // TTF file path for custom fonts
+  fallback?: string // Fallback font stack
+  availableWeights?: string[] // Available font weights for this font
 }
 
 export const fontFamilies: FontFamily[] = [
@@ -13,8 +13,7 @@ export const fontFamilies: FontFamily[] = [
     id: 'system',
     name: 'System Default',
     category: 'system',
-    fallback:
-      'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fallback: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     availableWeights: ['normal', 'bold'],
   },
   {
@@ -89,33 +88,32 @@ export const fontFamilies: FontFamily[] = [
     availableWeights: ['normal', 'bold'],
   },
   // we will add custom fonts here
-];
+]
 
 export const getFontFamily = (id: string): FontFamily | undefined => {
-  return fontFamilies.find((font) => font.id === id);
-};
+  return fontFamilies.find((font) => font.id === id)
+}
 
 export const getFontCSS = (fontId: string): string => {
-  const font = getFontFamily(fontId);
-  if (!font) return fontFamilies[0].fallback || 'system-ui, sans-serif';
+  const font = getFontFamily(fontId)
+  if (!font) return fontFamilies[0].fallback || 'system-ui, sans-serif'
 
   if (font.category === 'custom') {
     if (font.file) {
       // Local custom font
-      return `"${font.name}", ${font.fallback}`;
+      return `"${font.name}", ${font.fallback}`
     } else {
       // Google Font
-      return `"${font.name}", ${font.fallback}`;
+      return `"${font.name}", ${font.fallback}`
     }
   }
 
-  return font.fallback || 'system-ui, sans-serif';
-};
+  return font.fallback || 'system-ui, sans-serif'
+}
 
 export const getAvailableFontWeights = (fontId: string): string[] => {
-  const font = getFontFamily(fontId);
-  if (!font) return ['normal', 'bold'];
+  const font = getFontFamily(fontId)
+  if (!font) return ['normal', 'bold']
 
-  return font.availableWeights || ['normal', 'bold'];
-};
-
+  return font.availableWeights || ['normal', 'bold']
+}

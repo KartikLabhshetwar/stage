@@ -1,19 +1,15 @@
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '@/components/ui/popover';
-import { aspectRatios } from '@/lib/constants/aspect-ratios';
-import { useImageStore } from '@/lib/store';
-import { AspectRatioPicker } from './aspect-ratio-picker';
-import { Button } from '@/components/ui/button';
-import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
-import * as React from 'react';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { aspectRatios } from '@/lib/constants/aspect-ratios'
+import { useImageStore } from '@/lib/store'
+import { AspectRatioPicker } from './aspect-ratio-picker'
+import { Button } from '@/components/ui/button'
+import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper'
+import * as React from 'react'
 
 export const AspectRatioDropdown = () => {
-  const { selectedAspectRatio } = useImageStore();
-  const current = aspectRatios.find((ar) => ar.id === selectedAspectRatio);
-  const [open, setOpen] = React.useState(false);
+  const { selectedAspectRatio } = useImageStore()
+  const current = aspectRatios.find((ar) => ar.id === selectedAspectRatio)
+  const [open, setOpen] = React.useState(false)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -45,6 +41,5 @@ export const AspectRatioDropdown = () => {
         <AspectRatioPicker onSelect={() => setOpen(false)} />
       </PopoverContent>
     </Popover>
-  );
-};
-
+  )
+}

@@ -11,7 +11,7 @@ export function generatePattern(
   canvas.width = size
   canvas.height = size
   const ctx = canvas.getContext('2d')
-  
+
   if (!ctx) return canvas
 
   ctx.save()
@@ -78,4 +78,3 @@ export function generatePattern(
 
   return canvas
 }
-

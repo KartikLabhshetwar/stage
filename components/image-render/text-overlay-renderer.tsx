@@ -1,24 +1,23 @@
-'use client';
+'use client'
 
-import { useImageStore } from '@/lib/store';
-import { getFontCSS } from '@/lib/constants/fonts';
+import { useImageStore } from '@/lib/store'
+import { getFontCSS } from '@/lib/constants/fonts'
 
 export const TextOverlayRenderer = () => {
-  const { textOverlays } = useImageStore();
+  const { textOverlays } = useImageStore()
 
   return (
     <>
       {textOverlays.map((overlay) => {
-        if (!overlay.isVisible) return null;
+        if (!overlay.isVisible) return null
 
         const textShadowStyle = overlay.textShadow.enabled
           ? {
               textShadow: `${overlay.textShadow.offsetX}px ${overlay.textShadow.offsetY}px ${overlay.textShadow.blur}px ${overlay.textShadow.color}`,
             }
-          : {};
+          : {}
 
-        const writingMode =
-          overlay.orientation === 'vertical' ? 'vertical-rl' : 'horizontal-tb';
+        const writingMode = overlay.orientation === 'vertical' ? 'vertical-rl' : 'horizontal-tb'
 
         return (
           <div
@@ -41,9 +40,8 @@ export const TextOverlayRenderer = () => {
           >
             {overlay.text}
           </div>
-        );
+        )
       })}
     </>
-  );
-};
-
+  )
+}

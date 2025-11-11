@@ -25,7 +25,7 @@ export function OverlayGallery() {
     const overlaySize = 150
     // Position at top center: x = (canvasWidth / 2) - (overlaySize / 2), y = small offset from top
     return {
-      x: Math.max(20, (canvasWidth / 2) - (overlaySize / 2)),
+      x: Math.max(20, canvasWidth / 2 - overlaySize / 2),
       y: 30, // Small offset from top
     }
   }
@@ -136,4 +136,3 @@ export function OverlayGallery() {
     </div>
   )
 }
-

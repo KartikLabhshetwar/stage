@@ -138,4 +138,3 @@ export function IwatchMockupRenderer({ mockup }: IwatchMockupRendererProps) {
     </Group>
   )
 }
-

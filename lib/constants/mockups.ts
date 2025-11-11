@@ -8,8 +8,8 @@ export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
     src: '/mockups/mac/macbook.png',
     screenArea: {
       x: 0.116,
-      y: 0.060,
-      width: 0.770,
+      y: 0.06,
+      width: 0.77,
       height: 0.865,
     },
   },
@@ -34,7 +34,7 @@ export const MOCKUP_DEFINITIONS: MockupDefinition[] = [
     screenArea: {
       x: 0.042,
       y: 0.18,
-      width: 0.900,
+      width: 0.9,
       height: 0.632,
       borderRadius: 40,
     },
@@ -65,7 +65,8 @@ export const getMockupDefinition = (id: string): MockupDefinition | undefined =>
   return MOCKUP_DEFINITIONS.find((def) => def.id === id)
 }
 
-export const getMockupsByType = (type: 'iphone' | 'macbook' | 'imac' | 'iwatch'): MockupDefinition[] => {
+export const getMockupsByType = (
+  type: 'iphone' | 'macbook' | 'imac' | 'iwatch'
+): MockupDefinition[] => {
   return MOCKUP_DEFINITIONS.filter((def) => def.type === type)
 }
-

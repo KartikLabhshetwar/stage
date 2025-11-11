@@ -1,183 +1,185 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import Link from "next/link";
-import { Instrument_Serif } from "next/font/google";
-import { Globe } from "lucide-react";
-import { FaXTwitter, FaGithub } from "react-icons/fa6";
+import Image from 'next/image'
+import Link from 'next/link'
+import { Instrument_Serif } from 'next/font/google'
+import { Globe } from 'lucide-react'
+import { FaXTwitter, FaGithub } from 'react-icons/fa6'
 
 const instrumentSerif = Instrument_Serif({
-  weight: ["400"],
-  subsets: ["latin"],
-});
+  weight: ['400'],
+  subsets: ['latin'],
+})
 
 export interface Sponsor {
-  name: string;
-  avatar?: string;
-  avatarAlt?: string;
-  amount?: string;
-  amountType?: "one time" | "monthly" | "yearly";
-  total?: string;
-  github?: string;
-  website?: string;
-  twitter?: string;
-  isSpecial?: boolean;
-  specialSince?: string;
-  url?: string;
+  name: string
+  avatar?: string
+  avatarAlt?: string
+  amount?: string
+  amountType?: 'one time' | 'monthly' | 'yearly'
+  total?: string
+  github?: string
+  website?: string
+  twitter?: string
+  isSpecial?: boolean
+  specialSince?: string
+  url?: string
 }
 
 interface SponsorsProps {
-  title?: string;
-  sponsors?: Sponsor[];
-  showDescription?: boolean;
+  title?: string
+  sponsors?: Sponsor[]
+  showDescription?: boolean
 }
 
 const defaultSponsors: Sponsor[] = [
   {
-    name: "Aayushman Singh",
-    avatar: "/aayushman.jpg",
-    avatarAlt: "aayushman singh",
-    amount: "$10.00",
-    amountType: "one time",
-    total: "$10.00",
-    github: "aayushman-singh",
-    twitter: "aayushman2703",
-    website: "https://aayushman.dev",
-    url: "https://x.com/aayushman2703",
+    name: 'Aayushman Singh',
+    avatar: '/aayushman.jpg',
+    avatarAlt: 'aayushman singh',
+    amount: '$10.00',
+    amountType: 'one time',
+    total: '$10.00',
+    github: 'aayushman-singh',
+    twitter: 'aayushman2703',
+    website: 'https://aayushman.dev',
+    url: 'https://x.com/aayushman2703',
   },
   {
-    name: "Kanak Kumar Mahala",
-    avatar: "/kanak.jpg",
-    avatarAlt: "kanak kumar mahala",
-    amount: "$7.90",
-    amountType: "one time",
-    total: "$7.90",
-    github: "kanakk365",
-    twitter: "Lbringer_nikki",
-    website: "https://www.kanakk.me",
-    url: "https://x.com/kanak_k365",
+    name: 'Kanak Kumar Mahala',
+    avatar: '/kanak.jpg',
+    avatarAlt: 'kanak kumar mahala',
+    amount: '$7.90',
+    amountType: 'one time',
+    total: '$7.90',
+    github: 'kanakk365',
+    twitter: 'Lbringer_nikki',
+    website: 'https://www.kanakk.me',
+    url: 'https://x.com/kanak_k365',
   },
   {
-    name: "Aditya Garimella",
-    avatar: "/aditya.jpg",
-    avatarAlt: "aditya garimella",
-    amount: "$7.88",
-    amountType: "one time",
-    total: "$7.88",
-    github: "",
-    twitter: "Lbringer_nikki",
-    website: "",
-    url: "https://x.com/Lbringer_nikki",
+    name: 'Aditya Garimella',
+    avatar: '/aditya.jpg',
+    avatarAlt: 'aditya garimella',
+    amount: '$7.88',
+    amountType: 'one time',
+    total: '$7.88',
+    github: '',
+    twitter: 'Lbringer_nikki',
+    website: '',
+    url: 'https://x.com/Lbringer_nikki',
   },
   {
-    name: "Karan Kendre",
-    avatar: "/karan.jpg",
-    avatarAlt: "karan kendre",
-    amount: "$5.64",
-    amountType: "one time",
-    total: "$5.64",
-    github: "kendrekaran",
-    twitter: "karaan_dev",
-    website: "https://www.karaan.me/",
-    url: "https://x.com/karaan_dev",
+    name: 'Karan Kendre',
+    avatar: '/karan.jpg',
+    avatarAlt: 'karan kendre',
+    amount: '$5.64',
+    amountType: 'one time',
+    total: '$5.64',
+    github: 'kendrekaran',
+    twitter: 'karaan_dev',
+    website: 'https://www.karaan.me/',
+    url: 'https://x.com/karaan_dev',
   },
   {
-    name: "Fardeen Mansoori",
-    avatar: "/fardeen.jpg",
-    avatarAlt: "fardeen mansoori",
-    amount: "$5.64",
-    amountType: "one time",
-    total: "$5.64",
-    github: "Fardeen26",
-    twitter: "fardeentwt",
-    website: "https://www.fardeen.me/",
-    url: "https://x.com/fardeentwt",
+    name: 'Fardeen Mansoori',
+    avatar: '/fardeen.jpg',
+    avatarAlt: 'fardeen mansoori',
+    amount: '$5.64',
+    amountType: 'one time',
+    total: '$5.64',
+    github: 'Fardeen26',
+    twitter: 'fardeentwt',
+    website: 'https://www.fardeen.me/',
+    url: 'https://x.com/fardeentwt',
   },
   {
-    name: "Suhail Roushan",
-    avatar: "/suhail.png",
-    avatarAlt: "suhail roushan",
-    amount: "$5.00",
-    amountType: "one time",
-    total: "$5.00",
-    github: "suhailroushan13",
-    twitter: "0xsuhailroushan",
-    website: "https://suhailroushan.in/",
-    url: "https://x.com/0xsuhailroushan",
+    name: 'Suhail Roushan',
+    avatar: '/suhail.png',
+    avatarAlt: 'suhail roushan',
+    amount: '$5.00',
+    amountType: 'one time',
+    total: '$5.00',
+    github: 'suhailroushan13',
+    twitter: '0xsuhailroushan',
+    website: 'https://suhailroushan.in/',
+    url: 'https://x.com/0xsuhailroushan',
   },
   {
-    name: "Arinjay Wyawhare",
-    avatar: "/arinjay.jpg",
-    avatarAlt: "arinjay wyawhare",
-    amount: "$4.74",
-    amountType: "one time",
-    total: "$4.74",
-    github: "jaywyawhare",
-    twitter: "jaywyawhare",
-    website: "https://jaywyawhare-github-io.vercel.app",
-    url: "https://x.com/jaywyawhare",
+    name: 'Arinjay Wyawhare',
+    avatar: '/arinjay.jpg',
+    avatarAlt: 'arinjay wyawhare',
+    amount: '$4.74',
+    amountType: 'one time',
+    total: '$4.74',
+    github: 'jaywyawhare',
+    twitter: 'jaywyawhare',
+    website: 'https://jaywyawhare-github-io.vercel.app',
+    url: 'https://x.com/jaywyawhare',
   },
   {
-    name: "Chinmay Kabi",
-    avatar: "/chinmay.jpg",
-    avatarAlt: "chinmay kabi",
-    amount: "$2.82",
-    amountType: "one time",
-    total: "$2.82",
-    github: "",
-    twitter: "chinmaykabi",
-    website: "https://www.linkedin.com/in/chinmaykabi",
-    url: "https://x.com/ChinuKabi",
+    name: 'Chinmay Kabi',
+    avatar: '/chinmay.jpg',
+    avatarAlt: 'chinmay kabi',
+    amount: '$2.82',
+    amountType: 'one time',
+    total: '$2.82',
+    github: '',
+    twitter: 'chinmaykabi',
+    website: 'https://www.linkedin.com/in/chinmaykabi',
+    url: 'https://x.com/ChinuKabi',
   },
   {
-    name: "Vedant Lamba",
-    avatar: "/vedant.jpg",
-    avatarAlt: "vedant lamba",
-    amount: "$1.14",
-    amountType: "one time",
-    total: "$1.14",
-    github: "vedantlamba",
-    twitter: "Vedantlamba",
-    website: "https://www.vedantlamba.com",
-    url: "https://x.com/Vedantlamba",
+    name: 'Vedant Lamba',
+    avatar: '/vedant.jpg',
+    avatarAlt: 'vedant lamba',
+    amount: '$1.14',
+    amountType: 'one time',
+    total: '$1.14',
+    github: 'vedantlamba',
+    twitter: 'Vedantlamba',
+    website: 'https://www.vedantlamba.com',
+    url: 'https://x.com/Vedantlamba',
   },
   {
-    name: "Pranav Patil",
-    avatar: "/pranav.jpg",
-    avatarAlt: "pranav patil",
-    amount: "$1.14",
-    amountType: "one time",
-    total: "$1.14",
-    github: "21prnv",
-    twitter: "21prnv",
-    website: "https://www.prnv.space",
-    url: "https://x.com/21prnv",
+    name: 'Pranav Patil',
+    avatar: '/pranav.jpg',
+    avatarAlt: 'pranav patil',
+    amount: '$1.14',
+    amountType: 'one time',
+    total: '$1.14',
+    github: '21prnv',
+    twitter: '21prnv',
+    website: 'https://www.prnv.space',
+    url: 'https://x.com/21prnv',
   },
   {
-    name: "Atharva Mhaske",
-    avatar: "/atharva.jpg",
-    avatarAlt: "atharva",
-    amount: "$1.14",
-    amountType: "one time",
-    total: "$1.14",
-    github: "atharvamhaske",
-    twitter: "AtharvaXDevs",
-    website: "https://atharvaxdevs.xyz/",
-    url: "https://x.com/AtharvaXDevs",
+    name: 'Atharva Mhaske',
+    avatar: '/atharva.jpg',
+    avatarAlt: 'atharva',
+    amount: '$1.14',
+    amountType: 'one time',
+    total: '$1.14',
+    github: 'atharvamhaske',
+    twitter: 'AtharvaXDevs',
+    website: 'https://atharvaxdevs.xyz/',
+    url: 'https://x.com/AtharvaXDevs',
   },
-];
+]
 
-export function Sponsors({ 
-  title = "Our Sponsors", 
+export function Sponsors({
+  title = 'Our Sponsors',
   sponsors = defaultSponsors,
-  showDescription = false 
+  showDescription = false,
 }: SponsorsProps) {
-  const hasSponsors = sponsors && sponsors.length > 0;
+  const hasSponsors = sponsors && sponsors.length > 0
 
   return (
     <section className="w-full py-12 sm:py-16 px-4 sm:px-6 border-t border-border bg-muted/30">
       <div className="container mx-auto max-w-6xl">
-        <h2 className={`text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 px-2 ${instrumentSerif.className}`}>
+        <h2
+          className={`text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 px-2 ${instrumentSerif.className}`}
+        >
           {title}
         </h2>
         {hasSponsors ? (
@@ -185,7 +187,6 @@ export function Sponsors({
             {sponsors.map((sponsor, index) => {
               const content = (
                 <div className="group relative rounded-xl border border-border/50 bg-background/95 backdrop-blur-sm hover:border-border hover:shadow-lg transition-all duration-200 overflow-hidden h-full flex flex-col">
-
                   <div className="p-5 sm:p-6 rounded-[calc(0.75rem-1px)] flex-1 flex flex-col">
                     <div className="flex gap-4 items-start flex-1">
                       {/* Avatar */}
@@ -214,11 +215,11 @@ export function Sponsors({
                         <h3 className="text-lg sm:text-xl font-bold text-foreground mb-1.5 truncate">
                           {sponsor.name}
                         </h3>
-                        
+
                         {sponsor.amount && (
                           <div className="mb-2.5">
                             <p className="text-sm font-medium text-primary">
-                              {sponsor.amount} {sponsor.amountType || "one time"}
+                              {sponsor.amount} {sponsor.amountType || 'one time'}
                             </p>
                             {sponsor.total && (
                               <p className="text-xs text-primary/80 mt-0.5">
@@ -234,8 +235,12 @@ export function Sponsors({
                             <button
                               type="button"
                               onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(`https://github.com/${sponsor.github}`, '_blank', 'noopener,noreferrer');
+                                e.stopPropagation()
+                                window.open(
+                                  `https://github.com/${sponsor.github}`,
+                                  '_blank',
+                                  'noopener,noreferrer'
+                                )
                               }}
                               className="flex items-center gap-1.5 text-xs text-foreground/80 hover:text-foreground transition-colors bg-transparent border-0 p-0 cursor-pointer"
                             >
@@ -247,8 +252,12 @@ export function Sponsors({
                             <button
                               type="button"
                               onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(`https://twitter.com/${sponsor.twitter}`, '_blank', 'noopener,noreferrer');
+                                e.stopPropagation()
+                                window.open(
+                                  `https://twitter.com/${sponsor.twitter}`,
+                                  '_blank',
+                                  'noopener,noreferrer'
+                                )
                               }}
                               className="flex items-center gap-1.5 text-xs text-foreground/80 hover:text-foreground transition-colors bg-transparent border-0 p-0 cursor-pointer"
                             >
@@ -262,8 +271,8 @@ export function Sponsors({
                             <button
                               type="button"
                               onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(sponsor.website, '_blank', 'noopener,noreferrer');
+                                e.stopPropagation()
+                                window.open(sponsor.website, '_blank', 'noopener,noreferrer')
                               }}
                               className="flex items-center gap-1.5 text-xs text-foreground/80 hover:text-foreground transition-colors bg-transparent border-0 p-0 cursor-pointer"
                             >
@@ -278,7 +287,7 @@ export function Sponsors({
                     </div>
                   </div>
                 </div>
-              );
+              )
 
               if (sponsor.url) {
                 return (
@@ -291,14 +300,14 @@ export function Sponsors({
                   >
                     {content}
                   </Link>
-                );
+                )
               }
 
               return (
                 <div key={index} className="h-full">
                   {content}
                 </div>
-              );
+              )
             })}
           </div>
         ) : (
@@ -318,5 +327,5 @@ export function Sponsors({
         )}
       </div>
     </section>
-  );
+  )
 }

@@ -6,88 +6,88 @@
  * These are used to generate optimized URLs via getCldImageUrl
  */
 export const OVERLAY_PUBLIC_IDS = [
-  "overlays/overlay1",
-  "overlays/anime",
-  "overlays/animeboy",
-  "overlays/animechar",
-  "overlays/animegirl",
-  "overlays/animegirl2",
-  "overlays/animegirl3",
-  "overlays/animegirl4",
-  "overlays/ash",
-  "overlays/character",
-  "overlays/chika",
-  "overlays/cute",
-  "overlays/dragonballz",
-  "overlays/girlpink",
-  "overlays/goku1",
-  "overlays/goku2",
-  "overlays/goku3",
-  "overlays/luffy",
-  "overlays/naruto",
-  "overlays/naruto1",
-  "overlays/naruto2",
-  "overlays/naruto3",
-  "overlays/naruto4",
-  "overlays/naruto5",
-  "overlays/onepiece",
-  "overlays/onepiece",
-  "overlays/onepiece2",
-  "overlays/onepunchman2",
-  "overlays/onepunchman3",
-  "overlays/overlay2",
-  "overlays/overlay3",
-  "overlays/tanjiro"
-] as const;
+  'overlays/overlay1',
+  'overlays/anime',
+  'overlays/animeboy',
+  'overlays/animechar',
+  'overlays/animegirl',
+  'overlays/animegirl2',
+  'overlays/animegirl3',
+  'overlays/animegirl4',
+  'overlays/ash',
+  'overlays/character',
+  'overlays/chika',
+  'overlays/cute',
+  'overlays/dragonballz',
+  'overlays/girlpink',
+  'overlays/goku1',
+  'overlays/goku2',
+  'overlays/goku3',
+  'overlays/luffy',
+  'overlays/naruto',
+  'overlays/naruto1',
+  'overlays/naruto2',
+  'overlays/naruto3',
+  'overlays/naruto4',
+  'overlays/naruto5',
+  'overlays/onepiece',
+  'overlays/onepiece',
+  'overlays/onepiece2',
+  'overlays/onepunchman2',
+  'overlays/onepunchman3',
+  'overlays/overlay2',
+  'overlays/overlay3',
+  'overlays/tanjiro',
+] as const
 
 /**
  * Mapping from original filename to Cloudinary public ID
  */
 export const OVERLAY_MAPPING: Record<string, string> = {
-  "anime.webp": "overlays/anime",
-  "animeboy.png": "overlays/animeboy",
-  "animechar.png": "overlays/animechar",
-  "animegirl.png": "overlays/animegirl",
-  "animegirl2.png": "overlays/animegirl2",
-  "animegirl3.png": "overlays/animegirl3",
-  "animegirl4.png": "overlays/animegirl4",
-  "ash.webp": "overlays/ash",
-  "character.webp": "overlays/character",
-  "chika.png": "overlays/chika",
-  "cute.png": "overlays/cute",
-  "dragonballz.png": "overlays/dragonballz",
-  "girlpink.png": "overlays/girlpink",
-  "goku1.webp": "overlays/goku1",
-  "goku2.webp": "overlays/goku2",
-  "goku3.webp": "overlays/goku3",
-  "luffy.webp": "overlays/luffy",
-  "naruto.png": "overlays/naruto",
-  "naruto1.webp": "overlays/naruto1",
-  "naruto2.webp": "overlays/naruto2",
-  "naruto3.webp": "overlays/naruto3",
-  "naruto4.png": "overlays/naruto4",
-  "naruto5.png": "overlays/naruto5",
-  "onepiece.png": "overlays/onepiece",
-  "onepiece.webp": "overlays/onepiece",
-  "onepiece2.png": "overlays/onepiece2",
-  "onepunchman2.webp": "overlays/onepunchman2",
-  "onepunchman3.webp": "overlays/onepunchman3",
-  "overlay1.png": "overlays/overlay1",
-  "overlay2.png": "overlays/overlay2",
-  "overlay3.png": "overlays/overlay3",
-  "tanjiro.webp": "overlays/tanjiro"
-};
+  'anime.webp': 'overlays/anime',
+  'animeboy.png': 'overlays/animeboy',
+  'animechar.png': 'overlays/animechar',
+  'animegirl.png': 'overlays/animegirl',
+  'animegirl2.png': 'overlays/animegirl2',
+  'animegirl3.png': 'overlays/animegirl3',
+  'animegirl4.png': 'overlays/animegirl4',
+  'ash.webp': 'overlays/ash',
+  'character.webp': 'overlays/character',
+  'chika.png': 'overlays/chika',
+  'cute.png': 'overlays/cute',
+  'dragonballz.png': 'overlays/dragonballz',
+  'girlpink.png': 'overlays/girlpink',
+  'goku1.webp': 'overlays/goku1',
+  'goku2.webp': 'overlays/goku2',
+  'goku3.webp': 'overlays/goku3',
+  'luffy.webp': 'overlays/luffy',
+  'naruto.png': 'overlays/naruto',
+  'naruto1.webp': 'overlays/naruto1',
+  'naruto2.webp': 'overlays/naruto2',
+  'naruto3.webp': 'overlays/naruto3',
+  'naruto4.png': 'overlays/naruto4',
+  'naruto5.png': 'overlays/naruto5',
+  'onepiece.png': 'overlays/onepiece',
+  'onepiece.webp': 'overlays/onepiece',
+  'onepiece2.png': 'overlays/onepiece2',
+  'onepunchman2.webp': 'overlays/onepunchman2',
+  'onepunchman3.webp': 'overlays/onepunchman3',
+  'overlay1.png': 'overlays/overlay1',
+  'overlay2.png': 'overlays/overlay2',
+  'overlay3.png': 'overlays/overlay3',
+  'tanjiro.webp': 'overlays/tanjiro',
+}
 
 /**
  * Get Cloudinary public ID for an overlay by filename
  */
 export function getOverlayPublicId(filename: string): string | undefined {
-  return OVERLAY_MAPPING[filename];
+  return OVERLAY_MAPPING[filename]
 }
 
 /**
  * Get all available overlay public IDs
  */
 export function getAllOverlayPublicIds(): readonly string[] {
-  return OVERLAY_PUBLIC_IDS;
+  return OVERLAY_PUBLIC_IDS
 }

@@ -13,17 +13,13 @@ export async function POST(request: NextRequest) {
     }
 
     await clearOldCache()
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Cache cleanup completed' 
+
+    return NextResponse.json({
+      success: true,
+      message: 'Cache cleanup completed',
     })
   } catch (error) {
     console.error('Cache cleanup error:', error)
-    return NextResponse.json(
-      { error: 'Cache cleanup failed' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Cache cleanup failed' }, { status: 500 })
   }
 }
-

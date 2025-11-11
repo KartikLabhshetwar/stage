@@ -122,5 +122,3 @@ export function IphoneMockupRenderer({ mockup }: IphoneMockupRendererProps) {
     </Group>
   )
 }
-
-

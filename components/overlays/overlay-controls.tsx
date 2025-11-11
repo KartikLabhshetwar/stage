@@ -9,18 +9,12 @@ import { getCldImageUrl } from '@/lib/cloudinary'
 import { OVERLAY_PUBLIC_IDS } from '@/lib/cloudinary-overlays'
 
 export function OverlayControls() {
-  const {
-    imageOverlays,
-    updateImageOverlay,
-    removeImageOverlay,
-    clearImageOverlays,
-  } = useImageStore()
+  const { imageOverlays, updateImageOverlay, removeImageOverlay, clearImageOverlays } =
+    useImageStore()
 
   const [selectedOverlayId, setSelectedOverlayId] = useState<string | null>(null)
 
-  const selectedOverlay = imageOverlays.find(
-    (overlay) => overlay.id === selectedOverlayId
-  )
+  const selectedOverlay = imageOverlays.find((overlay) => overlay.id === selectedOverlayId)
 
   const handleUpdateSize = (value: number[]) => {
     if (selectedOverlay) {
@@ -108,30 +102,28 @@ export function OverlayControls() {
                   }}
                   className="h-6 w-6 p-0"
                 >
-                  {overlay.isVisible ? (
-                    <Eye className="h-3 w-3" />
-                  ) : (
-                    <EyeOff className="h-3 w-3" />
-                  )}
+                  {overlay.isVisible ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
                 </Button>
                 <div className="relative w-8 h-8 shrink-0 rounded overflow-hidden">
                   {(() => {
                     // Check if this is a Cloudinary public ID or a custom upload
-                    const isCloudinaryId = OVERLAY_PUBLIC_IDS.includes(overlay.src as any) || 
-                                         (typeof overlay.src === 'string' && overlay.src.startsWith('overlays/'))
-                    
+                    const isCloudinaryId =
+                      OVERLAY_PUBLIC_IDS.includes(overlay.src as any) ||
+                      (typeof overlay.src === 'string' && overlay.src.startsWith('overlays/'))
+
                     // Get the image URL - use Cloudinary if it's a Cloudinary ID, otherwise use the src directly
-                    const imageUrl = isCloudinaryId && !overlay.isCustom
-                      ? getCldImageUrl({
-                          src: overlay.src,
-                          width: 32,
-                          height: 32,
-                          quality: 'auto',
-                          format: 'auto',
-                          crop: 'fit',
-                        })
-                      : overlay.src
-                    
+                    const imageUrl =
+                      isCloudinaryId && !overlay.isCustom
+                        ? getCldImageUrl({
+                            src: overlay.src,
+                            width: 32,
+                            height: 32,
+                            quality: 'auto',
+                            format: 'auto',
+                            crop: 'fit',
+                          })
+                        : overlay.src
+
                     // Use regular img tag for Cloudinary URLs and data URLs
                     return (
                       <img
@@ -166,9 +158,7 @@ export function OverlayControls() {
       {selectedOverlay && (
         <div className="space-y-5 border-t pt-5">
           <div className="space-y-5">
-            <p className="text-sm font-semibold text-foreground">
-              Edit Overlay
-            </p>
+            <p className="text-sm font-semibold text-foreground">Edit Overlay</p>
 
             {/* Size */}
             <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
@@ -181,13 +171,17 @@ export function OverlayControls() {
                   min={20}
                   step={1}
                 />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedOverlay.size}px</span>
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                  {selectedOverlay.size}px
+                </span>
               </div>
             </div>
 
             {/* Rotation */}
             <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
-              <span className="text-sm font-medium text-foreground whitespace-nowrap">Rotation</span>
+              <span className="text-sm font-medium text-foreground whitespace-nowrap">
+                Rotation
+              </span>
               <div className="flex-1 flex items-center gap-3">
                 <Slider
                   value={[selectedOverlay.rotation]}
@@ -196,7 +190,9 @@ export function OverlayControls() {
                   min={0}
                   step={1}
                 />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedOverlay.rotation}°</span>
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                  {selectedOverlay.rotation}°
+                </span>
               </div>
             </div>
 
@@ -211,7 +207,9 @@ export function OverlayControls() {
                   min={0}
                   step={0.01}
                 />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.opacity * 100)}%</span>
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                  {Math.round(selectedOverlay.opacity * 100)}%
+                </span>
               </div>
             </div>
 
@@ -240,7 +238,9 @@ export function OverlayControls() {
               <p className="text-sm font-semibold text-foreground">Position</p>
               {/* X position */}
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">X Position</span>
+                <span className="text-sm font-medium text-foreground whitespace-nowrap">
+                  X Position
+                </span>
                 <div className="flex-1 flex items-center gap-3">
                   <Slider
                     value={[selectedOverlay.position.x]}
@@ -249,13 +249,17 @@ export function OverlayControls() {
                     min={0}
                     step={1}
                   />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.position.x)}px</span>
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                    {Math.round(selectedOverlay.position.x)}px
+                  </span>
                 </div>
               </div>
 
               {/* Y position */}
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">Y Position</span>
+                <span className="text-sm font-medium text-foreground whitespace-nowrap">
+                  Y Position
+                </span>
                 <div className="flex-1 flex items-center gap-3">
                   <Slider
                     value={[selectedOverlay.position.y]}
@@ -264,7 +268,9 @@ export function OverlayControls() {
                     min={0}
                     step={1}
                   />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.position.y)}px</span>
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                    {Math.round(selectedOverlay.position.y)}px
+                  </span>
                 </div>
               </div>
             </div>
@@ -288,4 +294,3 @@ export function OverlayControls() {
     </div>
   )
 }
-

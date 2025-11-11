@@ -4,7 +4,13 @@ import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useEditorStore, useImageStore } from '@/lib/store'
 import { Loader2, Globe, Monitor, Smartphone } from 'lucide-react'
 
@@ -20,36 +26,41 @@ export function WebsiteScreenshotInput() {
 
   const normalizeUrl = (urlString: string): string => {
     let normalized = urlString.trim()
-    
+
     // Remove leading/trailing whitespace
     normalized = normalized.trim()
-    
+
     // If URL doesn't start with http:// or https://, add https://
     if (!normalized.match(/^https?:\/\//i)) {
       normalized = `https://${normalized}`
     }
-    
+
     return normalized
   }
 
-  const validateUrl = (urlString: string): { valid: boolean; normalized?: string; error?: string } => {
+  const validateUrl = (
+    urlString: string
+  ): { valid: boolean; normalized?: string; error?: string } => {
     try {
       const normalized = normalizeUrl(urlString)
       const urlObj = new URL(normalized)
-      
+
       // Ensure URL has http or https protocol
       if (!['http:', 'https:'].includes(urlObj.protocol)) {
         return { valid: false, error: 'URL must use http or https protocol' }
       }
-      
+
       // Basic validation - must have a hostname
       if (!urlObj.hostname || urlObj.hostname.length === 0) {
         return { valid: false, error: 'Please enter a valid URL with a domain name' }
       }
-      
+
       return { valid: true, normalized }
     } catch (error) {
-      return { valid: false, error: 'Please enter a valid URL (e.g., example.com or https://example.com)' }
+      return {
+        valid: false,
+        error: 'Please enter a valid URL (e.g., example.com or https://example.com)',
+      }
     }
   }
 
@@ -92,15 +103,15 @@ export function WebsiteScreenshotInput() {
 
       // Convert base64 to blob URL
       let base64Data = data.screenshot.trim()
-      
+
       // Remove data URL prefix if present (e.g., "data:image/png;base64,")
       if (base64Data.includes(',')) {
         base64Data = base64Data.split(',')[1]
       }
-      
+
       // Clean base64 string (remove whitespace and newlines)
       base64Data = base64Data.replace(/\s/g, '')
-      
+
       if (!base64Data) {
         throw new Error('Empty screenshot data received')
       }
@@ -133,15 +144,12 @@ export function WebsiteScreenshotInput() {
     } catch (error) {
       console.error('Screenshot error:', error)
       setError(
-        error instanceof Error
-          ? error.message
-          : 'Failed to capture screenshot. Please try again.'
+        error instanceof Error ? error.message : 'Failed to capture screenshot. Please try again.'
       )
     } finally {
       setIsLoading(false)
     }
   }
-
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !isLoading) {
@@ -171,7 +179,11 @@ export function WebsiteScreenshotInput() {
                 const value = e.target.value.trim()
                 if (value) {
                   const validation = validateUrl(value)
-                  if (validation.valid && validation.normalized && validation.normalized !== value) {
+                  if (
+                    validation.valid &&
+                    validation.normalized &&
+                    validation.normalized !== value
+                  ) {
                     setUrl(validation.normalized)
                   }
                 }
@@ -181,11 +193,7 @@ export function WebsiteScreenshotInput() {
               className="pl-9"
             />
           </div>
-          <Button
-            onClick={handleCapture}
-            disabled={isLoading || !url.trim()}
-            className="shrink-0"
-          >
+          <Button onClick={handleCapture} disabled={isLoading || !url.trim()} className="shrink-0">
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -200,7 +208,11 @@ export function WebsiteScreenshotInput() {
           <Label htmlFor="device-type" className="text-sm font-medium whitespace-nowrap">
             Device Type:
           </Label>
-          <Select value={deviceType} onValueChange={(value) => setDeviceType(value as DeviceType)} disabled={isLoading}>
+          <Select
+            value={deviceType}
+            onValueChange={(value) => setDeviceType(value as DeviceType)}
+            disabled={isLoading}
+          >
             <SelectTrigger id="device-type" className="w-[140px]">
               <SelectValue>
                 {deviceType === 'desktop' ? (
@@ -233,7 +245,8 @@ export function WebsiteScreenshotInput() {
           </Select>
         </div>
         <p className="text-xs text-muted-foreground">
-          Enter a website URL to capture a viewport screenshot. Choose desktop (1920x1080) or mobile (375x667) viewport size.
+          Enter a website URL to capture a viewport screenshot. Choose desktop (1920x1080) or mobile
+          (375x667) viewport size.
         </p>
       </div>
 
@@ -246,15 +259,10 @@ export function WebsiteScreenshotInput() {
       {isLoading && (
         <div className="rounded-lg border border-border bg-muted p-8 flex flex-col items-center justify-center min-h-[200px]">
           <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-          <p className="text-sm text-muted-foreground">
-            Capturing screenshot...
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            This may take a few seconds
-          </p>
+          <p className="text-sm text-muted-foreground">Capturing screenshot...</p>
+          <p className="text-xs text-muted-foreground mt-1">This may take a few seconds</p>
         </div>
       )}
     </div>
   )
 }
-
