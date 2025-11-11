@@ -45,12 +45,24 @@ async function getBrowser() {
 
   if (isProduction) {
     const puppeteerCore = await import('puppeteer-core')
-    return await puppeteerCore.default.launch({
-      args: [...chromium.args, ...memoryOptimizedArgs],
-      defaultViewport: { width: 1920, height: 1080 },
-      executablePath: await chromium.executablePath(),
-      headless: true,
-    })
+    try {
+      return await puppeteerCore.default.launch({
+        args: [...chromium.args, ...memoryOptimizedArgs],
+        defaultViewport: { width: 1920, height: 1080 },
+        executablePath: await chromium.executablePath(),
+        headless: true,
+      })
+    } catch (error) {
+      console.error(
+        'Failed to launch browser with chromium, trying without executable path:',
+        error
+      )
+      return await puppeteerCore.default.launch({
+        args: [...chromium.args, ...memoryOptimizedArgs],
+        defaultViewport: { width: 1920, height: 1080 },
+        headless: true,
+      })
+    }
   } else {
     const puppeteer = await import('puppeteer')
     return await puppeteer.default.launch({
@@ -137,21 +149,33 @@ export async function POST(request: NextRequest) {
       deviceScaleFactor: 1,
     })
 
-    await page.setDefaultNavigationTimeout(8000)
-    await page.setDefaultTimeout(8000)
+    await page.setDefaultNavigationTimeout(30000)
+    await page.setDefaultTimeout(30000)
 
-    await page.goto(normalizedUrl, {
-      waitUntil: 'domcontentloaded',
-      timeout: 8000,
-    })
+    try {
+      await page.goto(normalizedUrl, {
+        waitUntil: 'networkidle2',
+        timeout: 30000,
+      })
+    } catch (navError) {
+      console.warn('Navigation with networkidle2 failed, trying load:', navError)
+      await page.goto(normalizedUrl, {
+        waitUntil: 'load',
+        timeout: 30000,
+      })
+    }
 
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 2000))
 
     const screenshot = (await page.screenshot({
       type: 'png',
       encoding: 'base64',
       fullPage: false,
     })) as string
+
+    if (!screenshot || screenshot.length === 0) {
+      throw new Error('Screenshot capture returned empty result')
+    }
 
     await browser.close()
     browser = null
