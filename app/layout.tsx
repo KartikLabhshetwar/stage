@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Stage - Image Showcase Builder',
+    default: 'Stage',
     template: '%s | Stage',
   },
   description:
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
       'Create stunning showcase images for your projects with customizable templates and layouts',
     images: [
       {
-        url: 'https://stage-psi-one.vercel.app/og.png',
+        url: 'https://stage-psi-one.vercel.app/og.jpeg',
         width: 1200,
         height: 630,
         alt: 'Stage - Image Showcase Builder',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     title: 'Stage - Image Showcase Builder',
     description:
       'Create stunning showcase images for your projects with customizable templates and layouts',
-    images: ['https://stage-psi-one.vercel.app/og.png'],
+    images: ['https://stage-psi-one.vercel.app/og.jpeg'],
     creator: '@stage',
   },
   robots: {
