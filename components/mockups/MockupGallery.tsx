@@ -56,35 +56,47 @@ export function MockupGallery() {
   const iwatchMockups = getMockupsByType('iwatch')
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h3 className="font-semibold text-sm text-foreground mb-2">Device Mockups</h3>
+    <div className="space-y-5">
+      <div className="space-y-1.5">
+        <h3 className="font-semibold text-sm text-foreground">Device Mockups</h3>
         <p className="text-xs text-muted-foreground">
           Add device frames to showcase your designs
         </p>
       </div>
 
       <Tabs value={activeType} onValueChange={(v) => setActiveType(v as 'iphone' | 'macbook' | 'imac' | 'iwatch')}>
-        <TabsList className="w-full grid grid-cols-4">
-          <TabsTrigger value="macbook" className="text-xs">
-            <Laptop className="h-3 w-3 mr-1" />
-            MacBook
+        <TabsList className="w-full grid grid-cols-4 gap-1 p-1 h-auto bg-muted/50 rounded-lg">
+          <TabsTrigger 
+            value="macbook" 
+            className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
+          >
+            <Laptop className="h-3.5 w-3.5" />
+            <span>MacBook</span>
           </TabsTrigger>
-          <TabsTrigger value="imac" className="text-xs">
-            <Monitor className="h-3 w-3 mr-1" />
-            iMac
+          <TabsTrigger 
+            value="imac" 
+            className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
+          >
+            <Monitor className="h-3.5 w-3.5" />
+            <span>iMac</span>
           </TabsTrigger>
-          <TabsTrigger value="iwatch" className="text-xs">
-            <Watch className="h-3 w-3 mr-1" />
-            Watch
+          <TabsTrigger 
+            value="iwatch" 
+            className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
+          >
+            <Watch className="h-3.5 w-3.5" />
+            <span>Watch</span>
           </TabsTrigger>
-          <TabsTrigger value="iphone" className="text-xs">
-            <Smartphone className="h-3 w-3 mr-1" />
-            iPhone
+          <TabsTrigger 
+            value="iphone" 
+            className="text-xs gap-1.5 px-3 py-2.5 h-auto border-0 rounded-md transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none hover:bg-muted"
+          >
+            <Smartphone className="h-3.5 w-3.5" />
+            <span>iPhone</span>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="macbook" className="mt-4">
+        <TabsContent value="macbook" className="mt-5">
           <div className="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
             {macbookMockups.map((mockup) => (
               <button
@@ -108,7 +120,7 @@ export function MockupGallery() {
           </div>
         </TabsContent>
 
-        <TabsContent value="imac" className="mt-4">
+        <TabsContent value="imac" className="mt-5">
           <div className="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
             {imacMockups.map((mockup) => (
               <button
@@ -132,7 +144,7 @@ export function MockupGallery() {
           </div>
         </TabsContent>
 
-        <TabsContent value="iwatch" className="mt-4">
+        <TabsContent value="iwatch" className="mt-5">
           <div className="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
             {iwatchMockups.map((mockup) => (
               <button
@@ -156,7 +168,7 @@ export function MockupGallery() {
           </div>
         </TabsContent>
 
-        <TabsContent value="iphone" className="mt-4">
+        <TabsContent value="iphone" className="mt-5">
           {iphoneMockups.length > 0 ? (
             <div className="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
               {iphoneMockups.map((mockup) => (
