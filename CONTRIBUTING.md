@@ -48,16 +48,18 @@ Thank you for your interest in contributing to Stage! This document provides gui
 3. **Set Up Environment Variables**
    Create a `.env.local` file in the root directory:
    ```env
-   # Optional: Cloudinary Configuration
+   # Required for screenshot caching: Cloudinary Configuration
    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
    CLOUDINARY_API_KEY=your-api-key
    CLOUDINARY_API_SECRET=your-api-secret
 
-   # Optional: Screenshot API
-   SCREENSHOTAPI_KEY=your-screenshot-api-key
+   # Optional: Screenshot API URL (defaults to free Screen-Shot.xyz API)
+   # Uses https://api.screen-shot.xyz by default (no API key required)
+   # Can be set to your own Cloudflare Worker instance
+   SCREENSHOT_API_URL=https://api.screen-shot.xyz
    ```
-   
-   Note: The app works without these, but some features (like Cloudinary image optimization) will be limited.
+
+   Note: The app works without Cloudinary, but screenshot caching will be limited. The screenshot API uses the free Screen-Shot.xyz service by default (no API key required).
 
 4. **Start Development Server**
    ```bash
@@ -256,7 +258,8 @@ export function NewControl() {
 Before submitting changes, test:
 
 - [ ] Image upload (drag & drop and file picker)
-- [ ] Website screenshot functionality
+- [ ] Website screenshot functionality (desktop and mobile device types)
+- [ ] Device type selector works correctly (desktop/mobile)
 - [ ] All control panels work correctly
 - [ ] Export functionality (PNG format)
 - [ ] Copy to clipboard functionality

@@ -27,7 +27,8 @@ Stage is a modern web-based canvas editor built with Next.js 16 and React 19. It
 - **Lucide React** - Icon library
 
 ### Image Processing & Storage
-- **Cloudinary** (optional) - Image optimization and CDN
+- **Cloudinary** (optional) - Image optimization, CDN, and screenshot caching
+- **Screen-Shot.xyz API** - Free website screenshot capture service (no API key required)
 - **IndexedDB** - Client-side storage for images and exports
 - **Sharp** - Server-side image processing (dev dependency)
 
@@ -210,8 +211,11 @@ When an image is uploaded:
 
 ### 1. Image Upload
 - **File Upload**: Uses `react-dropzone` for drag-and-drop
-- **Website Screenshot**: API route calls ScreenshotAPI.net service
-- **Validation**: File type and size validation
+- **Website Screenshot**: API route calls [Screen-Shot.xyz](https://screen-shot.xyz) service
+  - Supports desktop (1920x1080) and mobile (375x667) viewport sizes
+  - Device type selection via UI dropdown
+  - Screenshots cached separately by device type
+- **Validation**: File type and size validation, URL validation
 - **Storage**: Blob URL creation + IndexedDB persistence
 
 ### 2. Background System
@@ -336,12 +340,15 @@ ClientCanvas re-renders with new state
 ## Environment Variables
 
 ```bash
-# Optional: Cloudinary Configuration
+# Required for screenshot caching: Cloudinary Configuration
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 
-# Screenshot functionality uses Puppeteer (no API key needed)
+# Optional: Screenshot API URL (defaults to free Screen-Shot.xyz API)
+# Uses https://api.screen-shot.xyz by default (no API key required)
+# Can be set to your own Cloudflare Worker instance
+SCREENSHOT_API_URL=https://api.screen-shot.xyz
 
 # Optional: Analytics
 BETTER_AUTH_URL=https://your-domain.com
@@ -351,10 +358,33 @@ BETTER_AUTH_URL=https://your-domain.com
 
 ### `/api/screenshot`
 - **Method**: POST
-- **Purpose**: Capture website screenshots using Puppeteer
-- **Body**: `{ url: string }`
-- **Returns**: `{ screenshot: string (base64), url: string }`
-- **Technology**: Puppeteer with @sparticuz/chromium for Vercel/serverless compatibility
+- **Purpose**: Capture website screenshots using Screen-Shot.xyz API
+- **Body**:
+  ```json
+  {
+    "url": "string (required)",
+    "deviceType": "desktop" | "mobile" (optional, defaults to "desktop"),
+    "forceRefresh": "boolean" (optional)
+  }
+  ```
+- **Returns**:
+  ```json
+  {
+    "screenshot": "string (base64)",
+    "url": "string",
+    "cached": "boolean",
+    "deviceType": "desktop" | "mobile",
+    "strategy": "string"
+  }
+  ```
+- **Technology**: [Screen-Shot.xyz API](https://screen-shot.xyz) - Free, open-source screenshot service
+  - Default endpoint: `https://api.screen-shot.xyz/take`
+  - Supports viewport customization (width/height parameters)
+  - Desktop: 1920x1080 viewport
+  - Mobile: 375x667 viewport
+  - Can be self-hosted on Cloudflare Workers
+- **Caching**: Screenshots cached in Cloudinary and database, keyed by URL and device type
+- **Rate Limiting**: 20 requests per minute per IP
 
 ## Browser Storage
 
@@ -447,7 +477,7 @@ npm run build  # Next.js production build
 
 ### Runtime Configuration
 - `vercel.json` configures function timeouts and memory
-- Screenshot API route has 10s timeout and 1024MB memory
+- Screenshot API route has 60s timeout (maxDuration) for external API calls
 
 ## Monitoring & Analytics
 
