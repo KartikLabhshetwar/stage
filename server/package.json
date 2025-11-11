@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "echo 'No build step required'",
     "start": "node index.js",
     "dev": "node --watch index.js"
   },
