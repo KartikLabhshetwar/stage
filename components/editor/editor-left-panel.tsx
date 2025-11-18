@@ -7,33 +7,13 @@ import { TextOverlayControls } from '@/components/text-overlay/text-overlay-cont
 import { OverlayGallery, OverlayControls } from '@/components/overlays';
 import { MockupGallery, MockupControls } from '@/components/mockups';
 import { StyleTabs } from './style-tabs';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Download, Trash2, Copy, ImageIcon, Type, Sticker } from 'lucide-react';
-import { useImageStore } from '@/lib/store';
-import { ExportDialog } from '@/components/canvas/dialogs/ExportDialog';
-import { useExport } from '@/hooks/useExport';
+import { ImageIcon, Type, Sticker } from 'lucide-react';
 import { PresetSelector } from '@/components/presets/PresetSelector';
 import { FaXTwitter } from 'react-icons/fa6';
 
 export function EditorLeftPanel() {
-  const { 
-    uploadedImageUrl, 
-    selectedAspectRatio, 
-    clearImage,
-  } = useImageStore();
-  
-  const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
-  const [copySuccess, setCopySuccess] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState('image');
-
-  const {
-    settings: exportSettings,
-    isExporting,
-    updateScale,
-    exportImage,
-    copyImage,
-  } = useExport(selectedAspectRatio);
 
   return (
     <>
@@ -118,57 +98,7 @@ export function EditorLeftPanel() {
             </TabsContent>
           </div>
         </Tabs>
-
-        {/* Footer Actions */}
-        <div className="p-4 border-t border-border bg-background space-y-2">
-          <div className="flex gap-2">
-            <Button
-              onClick={() => setExportDialogOpen(true)}
-              disabled={!uploadedImageUrl}
-              className="flex-1 h-11 justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow-md transition-all font-medium"
-            >
-              <Download className="size-4" />
-              <span>Download</span>
-            </Button>
-            <Button
-              onClick={() => {
-                copyImage()
-                  .then(() => {
-                    setCopySuccess(true);
-                    setTimeout(() => setCopySuccess(false), 2000);
-                  })
-                  .catch((error) => {
-                    console.error('Failed to copy:', error);
-                    alert('Failed to copy image to clipboard. Please try again.');
-                  });
-              }}
-              disabled={!uploadedImageUrl || isExporting}
-              className="flex-1 h-11 justify-center gap-2 rounded-xl bg-muted hover:bg-muted/80 text-foreground shadow-sm hover:shadow-md transition-all font-medium border border-border"
-            >
-              <Copy className="size-4" />
-              <span>{copySuccess ? 'Copied!' : 'Copy'}</span>
-            </Button>
-          </div>
-          <Button
-            onClick={clearImage}
-            disabled={!uploadedImageUrl}
-            variant="outline"
-            className="w-full h-10 justify-center gap-2 rounded-xl border-border hover:bg-accent text-foreground transition-all"
-          >
-            <Trash2 className="size-4" />
-            <span>Remove Image</span>
-          </Button>
-        </div>
       </div>
-
-      <ExportDialog
-        open={exportDialogOpen}
-        onOpenChange={setExportDialogOpen}
-        onExport={() => exportImage().then(() => {})}
-        scale={exportSettings.scale}
-        isExporting={isExporting}
-        onScaleChange={updateScale}
-      />
     </>
   );
 }
