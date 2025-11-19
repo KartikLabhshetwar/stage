@@ -46,7 +46,7 @@ export function useExport(selectedAspectRatio: string) {
         console.error('Failed to load export preferences:', error);
       }
     };
-    
+
     loadPreferences();
   }, []);
 
@@ -83,11 +83,11 @@ export function useExport(selectedAspectRatio: string) {
 
   const exportImage = useCallback(async (): Promise<void> => {
     setIsExporting(true);
-    
+
     try {
       // Get Konva stage
       const konvaStage = getKonvaStage();
-      
+
       // Get actual pixel dimensions from aspect ratio preset
       const preset = getAspectRatioPreset(selectedAspectRatio);
       if (!preset) {
@@ -151,18 +151,18 @@ export function useExport(selectedAspectRatio: string) {
       const link = document.createElement('a');
       link.download = fileName;
       link.href = result.dataURL;
-      
+
       document.body.appendChild(link);
       link.click();
-      
+
       // Small delay before removing to ensure download starts
       setTimeout(() => {
         document.body.removeChild(link);
       }, 100);
     } catch (error) {
       console.error('Export failed:', error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
+      const errorMessage = error instanceof Error
+        ? error.message
         : 'Failed to export image. Please try again.';
       throw new Error(errorMessage);
     } finally {
@@ -172,11 +172,11 @@ export function useExport(selectedAspectRatio: string) {
 
   const copyImage = useCallback(async (): Promise<void> => {
     setIsExporting(true);
-    
+
     try {
       // Get Konva stage
       const konvaStage = getKonvaStage();
-      
+
       // Get actual pixel dimensions from aspect ratio preset
       const preset = getAspectRatioPreset(selectedAspectRatio);
       if (!preset) {
@@ -213,31 +213,31 @@ export function useExport(selectedAspectRatio: string) {
 
       // Copy to clipboard using Clipboard API
       // Ensure we have a PNG blob for clipboard
-      const blob = result.blob.type === 'image/png' 
-        ? result.blob 
+      const blob = result.blob.type === 'image/png'
+        ? result.blob
         : await new Promise<Blob>((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => {
-              const canvas = document.createElement('canvas');
-              canvas.width = img.width;
-              canvas.height = img.height;
-              const ctx = canvas.getContext('2d');
-              if (!ctx) {
-                reject(new Error('Failed to get canvas context'));
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+              reject(new Error('Failed to get canvas context'));
+              return;
+            }
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                reject(new Error('Failed to create blob'));
                 return;
               }
-              ctx.drawImage(img, 0, 0);
-              canvas.toBlob((blob) => {
-                if (!blob) {
-                  reject(new Error('Failed to create blob'));
-                  return;
-                }
-                resolve(blob);
-              }, 'image/png');
-            };
-            img.onerror = reject;
-            img.src = result.dataURL;
-          });
+              resolve(blob);
+            }, 'image/png');
+          };
+          img.onerror = reject;
+          img.src = result.dataURL;
+        });
 
       // Write to clipboard
       if (navigator.clipboard && navigator.clipboard.write) {
@@ -258,8 +258,8 @@ export function useExport(selectedAspectRatio: string) {
       }
     } catch (error) {
       console.error('Copy failed:', error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
+      const errorMessage = error instanceof Error
+        ? error.message
         : 'Failed to copy image to clipboard. Please try again.';
       throw new Error(errorMessage);
     } finally {

@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { TextOverlayControls } from "@/components/text-overlay/text-overlay-controls";
 import { OverlayGallery, OverlayControls } from "@/components/overlays";
-import { MockupGallery, MockupControls } from "@/components/mockups";
 import { StyleTabs } from "./style-tabs";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -38,7 +37,7 @@ export function EditorLeftPanel() {
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-3">
             <Link
-              href="/landing"
+              href="/"
               className="flex items-center hover:opacity-80 transition-opacity shrink-0"
             >
               <Image
@@ -99,12 +98,6 @@ export function EditorLeftPanel() {
             <TabsContent value="image" className="m-0 p-4 space-y-6">
               {/* Style Controls */}
               <StyleTabs />
-
-              {/* Mockup Gallery */}
-              <MockupGallery />
-
-              {/* Mockup Controls */}
-              <MockupControls />
             </TabsContent>
 
             <TabsContent value="text" className="m-0 p-4 space-y-6">

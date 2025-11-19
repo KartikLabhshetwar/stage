@@ -8,22 +8,26 @@ export interface BackgroundCategory {
 export const backgroundCategories: BackgroundCategory = {
   "assets": [
     "backgrounds/backgrounds/assets/asset-26",
-    "backgrounds/backgrounds/assets/asset-2",
-    "backgrounds/backgrounds/assets/asset-11",
-    "backgrounds/backgrounds/assets/asset-12",
     "backgrounds/backgrounds/assets/asset-13",
-    "backgrounds/backgrounds/assets/asset-14",
-    "backgrounds/backgrounds/assets/asset-15",
-    "backgrounds/backgrounds/assets/asset-16",
-    "backgrounds/backgrounds/assets/asset-17",
-    "backgrounds/backgrounds/assets/asset-18",
     "backgrounds/backgrounds/assets/asset-19",
+    "backgrounds/backgrounds/assets/asset-27",
+    "backgrounds/backgrounds/assets/asset-28",
+    "backgrounds/backgrounds/assets/asset-29",
+    "backgrounds/backgrounds/assets/asset-30",
+    "backgrounds/backgrounds/assets/asset-18",
     "backgrounds/backgrounds/assets/asset-20",
     "backgrounds/backgrounds/assets/asset-21",
     "backgrounds/backgrounds/assets/asset-22",
     "backgrounds/backgrounds/assets/asset-23",
     "backgrounds/backgrounds/assets/asset-24",
     "backgrounds/backgrounds/assets/asset-25",
+    "backgrounds/backgrounds/assets/asset-2",
+    "backgrounds/backgrounds/assets/asset-11",
+    "backgrounds/backgrounds/assets/asset-12",
+    "backgrounds/backgrounds/assets/asset-14",
+    "backgrounds/backgrounds/assets/asset-15",
+    "backgrounds/backgrounds/assets/asset-16",
+    "backgrounds/backgrounds/assets/asset-17",
   ],
   "mac": [
     "backgrounds/backgrounds/mac/mac-asset-1",
@@ -89,7 +93,7 @@ export const backgroundCategories: BackgroundCategory = {
     "backgrounds/backgrounds/silk/monochrome",
     "backgrounds/backgrounds/silk/silver",
     "backgrounds/backgrounds/silk/sky"
-  ]
+  ],
 };
 
 export const cloudinaryPublicIds: string[] = [
@@ -162,7 +166,11 @@ export const cloudinaryPublicIds: string[] = [
   "backgrounds/backgrounds/assets/asset-23",
   "backgrounds/backgrounds/assets/asset-24",
   "backgrounds/backgrounds/assets/asset-25",
-  "backgrounds/backgrounds/assets/asset-26"
+  "backgrounds/backgrounds/assets/asset-26",
+  "backgrounds/backgrounds/assets/asset-27",
+  "backgrounds/backgrounds/assets/asset-28",
+  "backgrounds/backgrounds/assets/asset-29",
+  "backgrounds/backgrounds/assets/asset-30"
 ];
 
 // Public ID for sign-in page background

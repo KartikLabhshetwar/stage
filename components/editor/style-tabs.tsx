@@ -27,13 +27,12 @@ export function StyleTabs() {
       <h4 className="text-md font-semibold text-foreground">IMAGE</h4>
       
       <Tabs defaultValue="style" className="w-full">
-        <TabsList className="w-full grid grid-cols-2">
-          <TabsTrigger value="style">Style</TabsTrigger>
-          <TabsTrigger value="3d" className="relative">
+        <TabsList className="w-full grid grid-cols-2 bg-transparent p-0 gap-1 h-auto">
+          <TabsTrigger value="style" className="border-0 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-[0_2px_8px_rgba(0,0,0,0.1)] rounded-none h-9">
+            Style
+          </TabsTrigger>
+          <TabsTrigger value="3d" className="relative border-0 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-[0_2px_8px_rgba(0,0,0,0.1)] rounded-none h-9">
             3D
-            <span className="ml-1.5 px-1.5 py-0.5 text-[9px] font-semibold rounded bg-primary/20 text-primary border border-primary/30">
-              BETA
-            </span>
           </TabsTrigger>
         </TabsList>
 

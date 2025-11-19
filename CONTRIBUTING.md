@@ -48,16 +48,18 @@ Thank you for your interest in contributing to Stage! This document provides gui
 3. **Set Up Environment Variables**
    Create a `.env.local` file in the root directory:
    ```env
-   # Optional: Cloudinary Configuration
+   # Required for screenshot caching: Cloudinary Configuration
    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
    CLOUDINARY_API_KEY=your-api-key
    CLOUDINARY_API_SECRET=your-api-secret
 
-   # Optional: Screenshot API
-   SCREENSHOTAPI_KEY=your-screenshot-api-key
+   # Optional: Screenshot API URL (defaults to free Screen-Shot.xyz API)
+   # Uses https://api.screen-shot.xyz by default (no API key required)
+   # Can be set to your own Cloudflare Worker instance
+   SCREENSHOT_API_URL=https://api.screen-shot.xyz
    ```
-   
-   Note: The app works without these, but some features (like Cloudinary image optimization) will be limited.
+
+   Note: The app works without Cloudinary, but screenshot caching will be limited. The screenshot API uses the free Screen-Shot.xyz service by default (no API key required).
 
 4. **Start Development Server**
    ```bash
@@ -122,6 +124,39 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed architecture documentation
 - Utilities: camelCase (e.g., `export-utils.ts`)
 - Constants: camelCase (e.g., `aspect-ratios.ts`)
 - Types: PascalCase interfaces/types (e.g., `CanvasObject`)
+
+### Linting and Code Quality
+
+We use ESLint to maintain code quality and consistency across the project.
+
+**Running Linters:**
+```bash
+# Check for linting errors
+npm run lint
+
+# Automatically fix linting errors
+npm run lint:fix
+```
+
+**Before Committing:**
+- Always run `npm run lint` before committing your changes
+- Fix any linting errors or warnings
+- Use `npm run lint:fix` to automatically fix auto-fixable issues
+
+**Linting Rules:**
+- TypeScript strict mode is enforced
+- React hooks rules are enforced
+- Unused variables must be prefixed with `_` (e.g., `_unusedVar`)
+- `any` types are discouraged (warnings will be shown)
+- Console statements are limited to `console.warn` and `console.error`
+
+**Configuration:**
+- ESLint config: `eslint.config.mjs` (flat config format)
+- The configuration includes:
+  - ESLint recommended rules
+  - TypeScript ESLint recommended rules
+  - React and React Hooks plugins
+  - Custom rules for Next.js best practices
 
 ### Import Organization
 
@@ -256,7 +291,8 @@ export function NewControl() {
 Before submitting changes, test:
 
 - [ ] Image upload (drag & drop and file picker)
-- [ ] Website screenshot functionality
+- [ ] Website screenshot functionality (desktop and mobile device types)
+- [ ] Device type selector works correctly (desktop/mobile)
 - [ ] All control panels work correctly
 - [ ] Export functionality (PNG format)
 - [ ] Copy to clipboard functionality

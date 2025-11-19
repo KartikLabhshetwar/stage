@@ -11,7 +11,7 @@ import { useImageStore } from '@/lib/store';
 import { ExportDialog } from '@/components/canvas/dialogs/ExportDialog';
 import { StyleTabs } from './style-tabs';
 import { Button } from '@/components/ui/button';
-import { Download, Trash2 } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { PresetSelector } from '@/components/presets/PresetSelector';
 import { useExport } from '@/hooks/useExport';
 import { FaGithub } from 'react-icons/fa';
@@ -21,8 +21,7 @@ export function SidebarLeft({
 }: React.ComponentProps<typeof Sidebar>) {
   const { 
     uploadedImageUrl, 
-    selectedAspectRatio, 
-    clearImage,
+    selectedAspectRatio,
     selectedGradient,
     borderRadius,
     backgroundBorderRadius,
@@ -62,16 +61,6 @@ export function SidebarLeft({
               >
                 <Download className="size-4 shrink-0" />
                 <span className="truncate">Download</span>
-              </Button>
-              <Button
-                onClick={clearImage}
-                disabled={!uploadedImageUrl}
-                className="w-full h-9 justify-center gap-2 rounded-lg bg-muted/50 hover:bg-destructive/10 text-destructive border border-destructive/20 hover:border-destructive/40 shadow-none hover:shadow-sm transition-all duration-200 font-medium text-xs px-3 hover:text-destructive overflow-hidden"
-                variant="outline"
-                size="sm"
-              >
-                <Trash2 className="size-3.5 shrink-0" />
-                <span className="truncate">Remove Image</span>
               </Button>
             </div>
           </div>

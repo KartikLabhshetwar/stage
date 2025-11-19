@@ -18,9 +18,10 @@ export const getBackgroundStyle = (config: BackgroundConfig): string => {
     case 'gradient':
       return gradientColors[value as GradientKey];
 
-    case 'solid':
+    case 'solid': {
       const color = solidColors[value as SolidColorKey];
       return color;
+    }
 
     case 'image':
       return `url(${value})`;
@@ -36,21 +37,23 @@ export const getBackgroundCSS = (
   const { type, value, opacity = 1 } = config;
 
   switch (type) {
-    case 'gradient':
+    case 'gradient': {
       const gradient = gradientColors[value as GradientKey] || gradientColors.sunset_vibes;
       return {
         background: gradient,
         opacity,
       };
+    }
 
-    case 'solid':
+    case 'solid': {
       const color = solidColors[value as SolidColorKey] || '#ffffff';
       return {
         backgroundColor: color,
         opacity,
       };
+    }
 
-    case 'image':
+    case 'image': {
       // Check if it's a Cloudinary public ID
       const isCloudinaryPublicId = typeof value === 'string' &&
         !value.startsWith('blob:') &&
@@ -96,6 +99,7 @@ export const getBackgroundCSS = (
         backgroundRepeat: 'no-repeat',
         opacity,
       };
+    }
 
     default:
       return {

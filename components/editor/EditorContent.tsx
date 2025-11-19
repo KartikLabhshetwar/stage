@@ -12,8 +12,7 @@ export function EditorContent({ children, className }: EditorContentProps) {
   return (
     <main
       className={cn(
-        "flex-1 flex items-center justify-center overflow-auto",
-        "p-3 sm:p-4 md:p-6",
+        "flex-1 flex flex-col overflow-hidden",
         className
       )}
       style={{ backgroundColor: 'transparent' }}

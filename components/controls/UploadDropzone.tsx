@@ -122,9 +122,13 @@ export function UploadDropzone() {
         </div>
 
         <Tabs defaultValue="upload" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="upload">Upload Image</TabsTrigger>
-            <TabsTrigger value="screenshot">Website Screenshot</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 bg-transparent p-0 gap-1 h-auto">
+            <TabsTrigger value="upload" className="border-0 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-[0_2px_8px_rgba(0,0,0,0.1)] rounded-none h-9">
+              Upload Image
+            </TabsTrigger>
+            <TabsTrigger value="screenshot" className="border-0 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-[0_2px_8px_rgba(0,0,0,0.1)] rounded-none h-9">
+              Website Screenshot
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="upload" className="mt-6">

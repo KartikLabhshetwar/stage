@@ -14,7 +14,7 @@ export async function applyTemplateBackground(
   const { background } = template;
 
   switch (background.type) {
-    case "solid":
+    case "solid": {
       // Set stage background color via CSS or add a background rect
       const bgRect = layer.findOne("#background-rect");
       if (bgRect) {
@@ -34,6 +34,7 @@ export async function applyTemplateBackground(
       rect.moveToBottom();
       layer.batchDraw();
       break;
+    }
 
     case "gradient":
       if (background.gradient) {
@@ -124,7 +125,7 @@ export async function applyTemplateBackground(
       }
       break;
 
-    case "shapes":
+    case "shapes": {
       // First set base color
       const bgRect3 = layer.findOne("#background-rect");
       if (bgRect3) {
@@ -177,8 +178,9 @@ export async function applyTemplateBackground(
         layer.batchDraw();
       }
       break;
+    }
 
-    default:
+    default: {
       const defaultRect = layer.findOne("#background-rect");
       if (defaultRect) {
         defaultRect.destroy();
@@ -196,5 +198,6 @@ export async function applyTemplateBackground(
       layer.add(rect2);
       rect2.moveToBottom();
       layer.batchDraw();
+    }
   }
 }

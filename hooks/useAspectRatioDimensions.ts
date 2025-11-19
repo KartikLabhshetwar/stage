@@ -49,7 +49,7 @@ export function useAspectRatioDimensions(options?: {
       originalWidth: preset.width,
       originalHeight: preset.height,
     };
-  }, [selectedAspectRatio, options?.maxWidth, options?.maxHeight]);
+  }, [selectedAspectRatio, options]);
   
   return dimensions;
 }

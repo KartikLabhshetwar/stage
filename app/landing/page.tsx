@@ -24,7 +24,7 @@ export default function Landing() {
       heroTitle="Create stunning visual designs"
       heroSubtitle="with Stage"
       heroDescription="A fully in-browser canvas editor that brings your ideas to life. Add images, text, backgrounds, and export your creations in high quality—all without external services. Built for designers and creators."
-      ctaLabel="Get Started"
+      ctaLabel="Try now it's free"
       ctaHref="/home"
       features={features}
     />

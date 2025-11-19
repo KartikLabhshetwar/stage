@@ -33,27 +33,99 @@ const PRESETS: TransformPreset[] = [
     },
   },
   {
+    name: 'Front View',
+    values: {
+      perspective: 250,
+      rotateX: 6,
+      rotateY: 0,
+      rotateZ: 0,
+      translateX: 0,
+      translateY: 0,
+      scale: 0.95,
+    },
+  },
+  {
+    name: 'Top Right',
+    values: {
+      perspective: 400,
+      rotateX: 18,
+      rotateY: -24,
+      rotateZ: 2,
+      translateX: 0,
+      translateY: 0,
+      scale: 0.82,
+    },
+  },
+  {
+    name: 'Dramatic Angle',
+    values: {
+      perspective: 450,
+      rotateX: 16,
+      rotateY: -28,
+      rotateZ: 3,
+      translateX: 0,
+      translateY: 0,
+      scale: 0.8,
+    },
+  },
+  {
+    name: 'Tablet View 1',
+    values: {
+      perspective: 350,
+      rotateX: 10,
+      rotateY: -16,
+      rotateZ: 1,
+      translateX: 0,
+      translateY: 0,
+      scale: 0.88,
+    },
+  },
+  {
+    name: 'Tablet View 2',
+    values: {
+      perspective: 380,
+      rotateX: 12,
+      rotateY: -20,
+      rotateZ: 1,
+      translateX: 0,
+      translateY: 0,
+      scale: 0.85,
+    },
+  },
+  {
+    name: 'Tablet View 3',
+    values: {
+      perspective: 320,
+      rotateX: 8,
+      rotateY: -14,
+      rotateZ: 1,
+      translateX: 0,
+      translateY: 0,
+      scale: 0.9,
+    },
+  },
+  {
     name: '3D Tilt',
     values: {
       perspective: 200,
-      rotateX: 11,
-      rotateY: -20,
-      rotateZ: 7,
-      translateX: -2,
-      translateY: -2,
-      scale: 0.9,
+      rotateX: 10,
+      rotateY: -18,
+      rotateZ: 5,
+      translateX: 0,
+      translateY: 0,
+      scale: 0.88,
     },
   },
   {
     name: 'Deep Perspective',
     values: {
       perspective: 500,
-      rotateX: 15,
-      rotateY: -25,
-      rotateZ: 5,
+      rotateX: 14,
+      rotateY: -22,
+      rotateZ: 4,
       translateX: 0,
       translateY: 0,
-      scale: 0.85,
+      scale: 0.82,
     },
   },
   {
@@ -62,10 +134,10 @@ const PRESETS: TransformPreset[] = [
       perspective: 300,
       rotateX: 5,
       rotateY: -10,
-      rotateZ: 2,
+      rotateZ: 1,
       translateX: 0,
       translateY: 0,
-      scale: 0.95,
+      scale: 0.92,
     },
   },
 ];
@@ -106,7 +178,7 @@ export function Perspective3DControls() {
       </div>
 
       {/* Presets */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {PRESETS.map((preset) => (
           <Button
             key={preset.name}
