@@ -21,18 +21,16 @@ export function QualitySlider({
   step = 0.01,
 }: QualitySliderProps) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-      <Label className="text-sm font-medium text-foreground whitespace-nowrap">JPEG Quality</Label>
-      <div className="flex-1 flex items-center gap-3">
-        <Slider
-          value={[quality]}
-          onValueChange={([value]) => onQualityChange(value)}
-          min={min}
-          max={max}
-          step={step}
-        />
-        <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(quality * 100)}%</span>
-      </div>
+    <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+      <Slider
+        value={[quality]}
+        onValueChange={([value]) => onQualityChange(value)}
+        min={min}
+        max={max}
+        step={step}
+        label="JPEG Quality"
+        valueDisplay={`${Math.round(quality * 100)}%`}
+      />
     </div>
   );
 }

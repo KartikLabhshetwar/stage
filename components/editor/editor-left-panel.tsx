@@ -17,7 +17,7 @@ export function EditorLeftPanel() {
 
   return (
     <>
-      <div className="w-full h-full bg-background flex flex-col overflow-hidden md:w-80 border-r border-border">
+      <div className="w-full h-full bg-[rgb(26,26,26)] flex flex-col overflow-hidden md:w-80 border-r border-border">
         {/* Header */}
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-3">
@@ -30,7 +30,7 @@ export function EditorLeftPanel() {
                 className="h-8 w-8"
               />
             </Link>
-            <div className="flex-1 min-w-0 max-w-[calc(100%-120px)]">
+            <div className="flex-1">
               <PresetSelector />
             </div>
             <a

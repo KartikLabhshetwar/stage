@@ -150,76 +150,66 @@ export function MockupControls() {
               Edit Mockup
             </p>
 
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
-              <span className="text-sm font-medium text-foreground whitespace-nowrap">Size</span>
-              <div className="flex-1 flex items-center gap-3">
-                <Slider
-                  value={[selectedMockup.size]}
-                  onValueChange={handleUpdateSize}
-                  max={1200}
-                  min={200}
-                  step={10}
-                />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedMockup.size}px</span>
-              </div>
+            <div className="p-3 rounded-xl bg-muted border border-border">
+              <Slider
+                value={[selectedMockup.size]}
+                onValueChange={handleUpdateSize}
+                max={1200}
+                min={200}
+                step={10}
+                label="Size"
+                valueDisplay={`${selectedMockup.size}px`}
+              />
             </div>
 
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
-              <span className="text-sm font-medium text-foreground whitespace-nowrap">Rotation</span>
-              <div className="flex-1 flex items-center gap-3">
-                <Slider
-                  value={[selectedMockup.rotation]}
-                  onValueChange={handleUpdateRotation}
-                  max={360}
-                  min={0}
-                  step={1}
-                />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedMockup.rotation}°</span>
-              </div>
+            <div className="p-3 rounded-xl bg-muted border border-border">
+              <Slider
+                value={[selectedMockup.rotation]}
+                onValueChange={handleUpdateRotation}
+                max={360}
+                min={0}
+                step={1}
+                label="Rotation"
+                valueDisplay={`${selectedMockup.rotation}°`}
+              />
             </div>
 
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
-              <span className="text-sm font-medium text-foreground whitespace-nowrap">Opacity</span>
-              <div className="flex-1 flex items-center gap-3">
-                <Slider
-                  value={[selectedMockup.opacity]}
-                  onValueChange={handleUpdateOpacity}
-                  max={1}
-                  min={0}
-                  step={0.01}
-                />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedMockup.opacity * 100)}%</span>
-              </div>
+            <div className="p-3 rounded-xl bg-muted border border-border">
+              <Slider
+                value={[selectedMockup.opacity]}
+                onValueChange={handleUpdateOpacity}
+                max={1}
+                min={0}
+                step={0.01}
+                label="Opacity"
+                valueDisplay={`${Math.round(selectedMockup.opacity * 100)}%`}
+              />
             </div>
 
             <div className="space-y-4">
               <p className="text-sm font-semibold text-foreground">Position</p>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">X Position</span>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[selectedMockup.position.x]}
-                    onValueChange={(value) => handleUpdatePosition('x', value)}
-                    max={1600}
-                    min={0}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedMockup.position.x)}px</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[selectedMockup.position.x]}
+                  onValueChange={(value) => handleUpdatePosition('x', value)}
+                  max={1600}
+                  min={0}
+                  step={1}
+                  label="X Position"
+                  valueDisplay={`${Math.round(selectedMockup.position.x)}px`}
+                />
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">Y Position</span>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[selectedMockup.position.y]}
-                    onValueChange={(value) => handleUpdatePosition('y', value)}
-                    max={1000}
-                    min={0}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedMockup.position.y)}px</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[selectedMockup.position.y]}
+                  onValueChange={(value) => handleUpdatePosition('y', value)}
+                  max={1000}
+                  min={0}
+                  step={1}
+                  label="Y Position"
+                  valueDisplay={`${Math.round(selectedMockup.position.y)}px`}
+                />
               </div>
             </div>
 

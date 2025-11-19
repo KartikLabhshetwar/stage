@@ -69,60 +69,52 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Blur</Label>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[shadow.blur]}
-                    onValueChange={(value) => onShadowChange({ blur: value[0] })}
-                    min={0}
-                    max={50}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.blur}px</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[shadow.blur]}
+                  onValueChange={(value) => onShadowChange({ blur: value[0] })}
+                  min={0}
+                  max={50}
+                  step={1}
+                  label="Blur"
+                  valueDisplay={`${shadow.blur}px`}
+                />
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Horizontal Offset</Label>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[shadow.offsetX]}
-                    onValueChange={(value) => onShadowChange({ offsetX: value[0] })}
-                    min={-20}
-                    max={20}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.offsetX}px</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[shadow.offsetX]}
+                  onValueChange={(value) => onShadowChange({ offsetX: value[0] })}
+                  min={-20}
+                  max={20}
+                  step={1}
+                  label="Horizontal Offset"
+                  valueDisplay={`${shadow.offsetX}px`}
+                />
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Vertical Offset</Label>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[shadow.offsetY]}
-                    onValueChange={(value) => onShadowChange({ offsetY: value[0] })}
-                    min={-20}
-                    max={20}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.offsetY}px</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[shadow.offsetY]}
+                  onValueChange={(value) => onShadowChange({ offsetY: value[0] })}
+                  min={-20}
+                  max={20}
+                  step={1}
+                  label="Vertical Offset"
+                  valueDisplay={`${shadow.offsetY}px`}
+                />
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Spread</Label>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[shadow.spread]}
-                    onValueChange={(value) => onShadowChange({ spread: value[0] })}
-                    min={-10}
-                    max={20}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.spread}px</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[shadow.spread]}
+                  onValueChange={(value) => onShadowChange({ spread: value[0] })}
+                  min={-10}
+                  max={20}
+                  step={1}
+                  label="Spread"
+                  valueDisplay={`${shadow.spread}px`}
+                />
               </div>
             </div>
 

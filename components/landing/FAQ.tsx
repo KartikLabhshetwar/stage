@@ -42,7 +42,7 @@ const defaultFAQs: FAQItem[] = [
   },
   {
     question: "What export formats are available?",
-    answer: "Export your designs as PNG (with transparency support) or JPG. You can adjust the quality for JPG files and scale your exports up to 5x the original size for high-resolution output. Exported images include a subtle Stage watermark in the bottom-right corner. Perfect for both digital use and printing.",
+    answer: "Export your designs as PNG (with transparency support) or JPG. You can adjust the quality for JPG files and scale your exports up to 5x the original size for high-resolution output. Perfect for both digital use and printing.",
   },
   {
     question: "Which aspect ratios does Stage support?",

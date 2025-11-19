@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { Layer, Rect, Image as KonvaImage } from 'react-konva';
 import Konva from 'konva';
 import { parseLinearGradient } from '../utils/gradient-utils';
@@ -28,10 +29,40 @@ export function BackgroundLayer({
   noiseTexture,
   backgroundNoise,
 }: BackgroundLayerProps) {
+  const backgroundNodeRef = React.useRef<Konva.Image | Konva.Rect | null>(null);
+  const assignBackgroundNode = React.useCallback(
+    (node: Konva.Image | Konva.Rect | null) => {
+      backgroundNodeRef.current = node;
+    },
+    []
+  );
+
+  React.useEffect(() => {
+    const node = backgroundNodeRef.current;
+    if (!node) return;
+
+    if (backgroundBlur > 0) {
+      node.cache({ pixelRatio: window.devicePixelRatio || 1 });
+    } else {
+      node.clearCache();
+    }
+
+    node.getLayer()?.batchDraw();
+  }, [
+    backgroundBlur,
+    backgroundConfig.type,
+    backgroundConfig.value,
+    backgroundConfig.opacity,
+    bgImage,
+    canvasW,
+    canvasH,
+  ]);
+
   return (
     <Layer>
       {backgroundConfig.type === 'image' && bgImage ? (
         <KonvaImage
+          ref={assignBackgroundNode}
           image={bgImage}
           width={canvasW}
           height={canvasH}
@@ -50,6 +81,7 @@ export function BackgroundLayer({
           );
           return gradientProps ? (
             <Rect
+              ref={assignBackgroundNode}
               width={canvasW}
               height={canvasH}
               fillLinearGradientStartPoint={gradientProps.startPoint}
@@ -62,6 +94,7 @@ export function BackgroundLayer({
             />
           ) : (
             <Rect
+              ref={assignBackgroundNode}
               width={canvasW}
               height={canvasH}
               fill="#ffffff"
@@ -72,6 +105,7 @@ export function BackgroundLayer({
         })()
       ) : (
         <Rect
+          ref={assignBackgroundNode}
           width={canvasW}
           height={canvasH}
           fill={

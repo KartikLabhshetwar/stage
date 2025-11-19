@@ -171,48 +171,42 @@ export function OverlayControls() {
             </p>
 
             {/* Size */}
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
-              <span className="text-sm font-medium text-foreground whitespace-nowrap">Size</span>
-              <div className="flex-1 flex items-center gap-3">
-                <Slider
-                  value={[selectedOverlay.size]}
-                  onValueChange={handleUpdateSize}
-                  max={400}
-                  min={20}
-                  step={1}
-                />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedOverlay.size}px</span>
-              </div>
+            <div className="p-3 rounded-xl bg-muted border border-border">
+              <Slider
+                value={[selectedOverlay.size]}
+                onValueChange={handleUpdateSize}
+                max={400}
+                min={20}
+                step={1}
+                label="Size"
+                valueDisplay={`${selectedOverlay.size}px`}
+              />
             </div>
 
             {/* Rotation */}
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
-              <span className="text-sm font-medium text-foreground whitespace-nowrap">Rotation</span>
-              <div className="flex-1 flex items-center gap-3">
-                <Slider
-                  value={[selectedOverlay.rotation]}
-                  onValueChange={handleUpdateRotation}
-                  max={360}
-                  min={0}
-                  step={1}
-                />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedOverlay.rotation}°</span>
-              </div>
+            <div className="p-3 rounded-xl bg-muted border border-border">
+              <Slider
+                value={[selectedOverlay.rotation]}
+                onValueChange={handleUpdateRotation}
+                max={360}
+                min={0}
+                step={1}
+                label="Rotation"
+                valueDisplay={`${selectedOverlay.rotation}°`}
+              />
             </div>
 
             {/* Opacity */}
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
-              <span className="text-sm font-medium text-foreground whitespace-nowrap">Opacity</span>
-              <div className="flex-1 flex items-center gap-3">
-                <Slider
-                  value={[selectedOverlay.opacity]}
-                  onValueChange={handleUpdateOpacity}
-                  max={1}
-                  min={0}
-                  step={0.01}
-                />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.opacity * 100)}%</span>
-              </div>
+            <div className="p-3 rounded-xl bg-muted border border-border">
+              <Slider
+                value={[selectedOverlay.opacity]}
+                onValueChange={handleUpdateOpacity}
+                max={1}
+                min={0}
+                step={0.01}
+                label="Opacity"
+                valueDisplay={`${Math.round(selectedOverlay.opacity * 100)}%`}
+              />
             </div>
 
             {/* Flip Controls */}
@@ -239,33 +233,29 @@ export function OverlayControls() {
             <div className="space-y-4">
               <p className="text-sm font-semibold text-foreground">Position</p>
               {/* X position */}
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">X Position</span>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[selectedOverlay.position.x]}
-                    onValueChange={(value) => handleUpdatePosition('x', value)}
-                    max={800}
-                    min={0}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.position.x)}px</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[selectedOverlay.position.x]}
+                  onValueChange={(value) => handleUpdatePosition('x', value)}
+                  max={800}
+                  min={0}
+                  step={1}
+                  label="X Position"
+                  valueDisplay={`${Math.round(selectedOverlay.position.x)}px`}
+                />
               </div>
 
               {/* Y position */}
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">Y Position</span>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[selectedOverlay.position.y]}
-                    onValueChange={(value) => handleUpdatePosition('y', value)}
-                    max={600}
-                    min={0}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.position.y)}px</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[selectedOverlay.position.y]}
+                  onValueChange={(value) => handleUpdatePosition('y', value)}
+                  max={600}
+                  min={0}
+                  step={1}
+                  label="Y Position"
+                  valueDisplay={`${Math.round(selectedOverlay.position.y)}px`}
+                />
               </div>
             </div>
 

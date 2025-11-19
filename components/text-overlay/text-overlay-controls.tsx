@@ -465,33 +465,29 @@ export const TextOverlayControls = () => {
                 Position
               </p>
               {/* X position */}
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">X Position</span>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[selectedOverlay.position.x]}
-                    onValueChange={(value) => handleUpdatePosition('x', value)}
-                    max={100}
-                    min={0}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.position.x)}%</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[selectedOverlay.position.x]}
+                  onValueChange={(value) => handleUpdatePosition('x', value)}
+                  max={100}
+                  min={0}
+                  step={1}
+                  label="X Position"
+                  valueDisplay={`${Math.round(selectedOverlay.position.x)}%`}
+                />
               </div>
 
               {/* Y position */}
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-                <span className="text-sm font-medium text-foreground whitespace-nowrap">Y Position</span>
-                <div className="flex-1 flex items-center gap-3">
-                  <Slider
-                    value={[selectedOverlay.position.y]}
-                    onValueChange={(value) => handleUpdatePosition('y', value)}
-                    max={100}
-                    min={0}
-                    step={1}
-                  />
-                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.position.y)}%</span>
-                </div>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Slider
+                  value={[selectedOverlay.position.y]}
+                  onValueChange={(value) => handleUpdatePosition('y', value)}
+                  max={100}
+                  min={0}
+                  step={1}
+                  label="Y Position"
+                  valueDisplay={`${Math.round(selectedOverlay.position.y)}%`}
+                />
               </div>
             </div>
           </div>

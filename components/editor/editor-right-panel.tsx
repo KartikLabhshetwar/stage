@@ -71,7 +71,7 @@ export function EditorRightPanel() {
   });
 
   return (
-    <div className="w-full h-full bg-muted flex flex-col overflow-hidden md:w-80 border-l border-border">
+    <div className="w-full h-full bg-[rgb(26,26,26)] flex flex-col overflow-hidden md:w-80 border-l border-border">
       {/* Header */}
       <div className="p-4 border-b border-border bg-background pr-12">
         <div className="flex items-center justify-between mb-3 gap-2">

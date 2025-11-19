@@ -50,12 +50,6 @@ export function ExportDialog({
             </div>
           )}
 
-          <div className="pt-2 pb-1">
-            <p className="text-xs text-muted-foreground text-center">
-              Exported images will include Stage watermark
-            </p>
-          </div>
-
           <Button
             onClick={handleExport}
             disabled={isExporting}

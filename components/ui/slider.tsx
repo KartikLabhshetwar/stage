@@ -5,14 +5,21 @@ import * as SliderPrimitive from "@radix-ui/react-slider"
 
 import { cn } from "@/lib/utils"
 
+interface SliderProps extends React.ComponentProps<typeof SliderPrimitive.Root> {
+  label?: string
+  valueDisplay?: string | number
+}
+
 function Slider({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
+  label,
+  valueDisplay,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: SliderProps) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -23,40 +30,53 @@ function Slider({
     [value, defaultValue, min, max]
   )
 
+  const displayValue = valueDisplay ?? (Array.isArray(value) ? value[0] : value ?? (Array.isArray(defaultValue) ? defaultValue[0] : defaultValue ?? min))
+
   return (
-    <SliderPrimitive.Root
-      data-slot="slider"
-      defaultValue={defaultValue}
-      value={value}
-      min={min}
-      max={max}
-      className={cn(
-        "relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col py-2",
-        className
+    <div className="relative flex items-center w-full">
+      {label && (
+        <span className="text-sm font-medium text-foreground whitespace-nowrap mr-3 select-none">
+          {label}
+        </span>
       )}
-      {...props}
-    >
-      <SliderPrimitive.Track
-        data-slot="slider-track"
+      <span className="text-sm text-foreground font-medium whitespace-nowrap mr-3 select-none">
+        {displayValue}
+      </span>
+      <SliderPrimitive.Root
+        data-slot="slider"
+        defaultValue={defaultValue}
+        value={value}
+        min={min}
+        max={max}
         className={cn(
-          "bg-muted relative grow overflow-hidden rounded-full data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5"
+          "relative flex touch-none select-none items-center cursor-grab flex-1",
+          "data-disabled:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col",
+          className
         )}
+        {...props}
       >
-        <SliderPrimitive.Range
-          data-slot="slider-range"
+        <SliderPrimitive.Track
+          data-slot="slider-track"
           className={cn(
-            "bg-primary/80 absolute rounded-full data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full transition-all duration-200"
+            "relative h-8 w-full grow overflow-hidden rounded-md bg-[#f5f5f5] dark:bg-neutral-950 data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5"
           )}
-        />
-      </SliderPrimitive.Track>
-      {Array.from({ length: _values.length }, (_, index) => (
-        <SliderPrimitive.Thumb
-          data-slot="slider-thumb"
-          key={index}
-          className="block h-4 w-1 shrink-0 rounded-sm bg-foreground/80 shadow-sm transition-all duration-200 ease-in-out hover:h-5 hover:bg-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-95"
-        />
-      ))}
-    </SliderPrimitive.Root>
+        >
+          <SliderPrimitive.Range
+            data-slot="slider-range"
+            className={cn(
+              "absolute h-full bg-[#dedede] dark:bg-[#303030] data-[orientation=vertical]:w-full transition-all duration-200"
+            )}
+          />
+        </SliderPrimitive.Track>
+        {Array.from({ length: _values.length }, (_, index) => (
+          <SliderPrimitive.Thumb
+            data-slot="slider-thumb"
+            key={index}
+            className="block h-8 w-1 bg-[#c8c7c7] dark:bg-[#3e3e3e] focus:outline-none transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50"
+          />
+        ))}
+      </SliderPrimitive.Root>
+    </div>
   )
 }
 

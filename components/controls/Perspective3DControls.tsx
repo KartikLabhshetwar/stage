@@ -195,107 +195,93 @@ export function Perspective3DControls() {
       {/* Sliders */}
       <div className="space-y-4">
         {/* Perspective */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <Label className="text-xs font-medium text-foreground">Perspective</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.perspective}px</span>
-          </div>
+        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.perspective]}
             onValueChange={(value) => setPerspective3D({ perspective: value[0] })}
             min={50}
             max={1000}
             step={10}
+            label="Perspective"
+            valueDisplay={`${perspective3D.perspective}px`}
           />
         </div>
 
         {/* Rotate X */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <Label className="text-xs font-medium text-foreground">Rotate X</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.rotateX}°</span>
-          </div>
+        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.rotateX]}
             onValueChange={(value) => setPerspective3D({ rotateX: value[0] })}
             min={-45}
             max={45}
             step={1}
+            label="Rotate X"
+            valueDisplay={`${perspective3D.rotateX}°`}
           />
         </div>
 
         {/* Rotate Y */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <Label className="text-xs font-medium text-foreground">Rotate Y</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.rotateY}°</span>
-          </div>
+        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.rotateY]}
             onValueChange={(value) => setPerspective3D({ rotateY: value[0] })}
             min={-45}
             max={45}
             step={1}
+            label="Rotate Y"
+            valueDisplay={`${perspective3D.rotateY}°`}
           />
         </div>
 
         {/* Rotate Z */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <Label className="text-xs font-medium text-foreground">Rotate Z</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.rotateZ}°</span>
-          </div>
+        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.rotateZ]}
             onValueChange={(value) => setPerspective3D({ rotateZ: value[0] })}
             min={-45}
             max={45}
             step={1}
+            label="Rotate Z"
+            valueDisplay={`${perspective3D.rotateZ}°`}
           />
         </div>
 
         {/* Translate X */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <Label className="text-xs font-medium text-foreground">Translate X</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.translateX}%</span>
-          </div>
+        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.translateX]}
             onValueChange={(value) => setPerspective3D({ translateX: value[0] })}
             min={-10}
             max={10}
             step={0.5}
+            label="Translate X"
+            valueDisplay={`${perspective3D.translateX}%`}
           />
         </div>
 
         {/* Translate Y */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <Label className="text-xs font-medium text-foreground">Translate Y</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.translateY}%</span>
-          </div>
+        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.translateY]}
             onValueChange={(value) => setPerspective3D({ translateY: value[0] })}
             min={-10}
             max={10}
             step={0.5}
+            label="Translate Y"
+            valueDisplay={`${perspective3D.translateY}%`}
           />
         </div>
 
         {/* Scale */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <Label className="text-xs font-medium text-foreground">Scale</Label>
-            <span className="text-xs text-muted-foreground font-medium">{perspective3D.scale.toFixed(2)}</span>
-          </div>
+        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.scale]}
             onValueChange={(value) => setPerspective3D({ scale: value[0] })}
             min={0.5}
             max={1.5}
             step={0.01}
+            label="Scale"
+            valueDisplay={perspective3D.scale.toFixed(2)}
           />
         </div>
       </div>

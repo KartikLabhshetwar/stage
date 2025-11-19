@@ -317,12 +317,9 @@ export function BorderControls() {
   }
 
   return (
-
     <div className="space-y-4">
-
-      <div className="text-sm font-medium text-muted-foreground">Frame</div>
-
-      <div className="space-y-4 border-t border-border pt-4">
+      <div className="text-sm font-semibold text-foreground">Frame</div>
+      <div className="space-y-4 pt-2">
 
         <div>
 
@@ -400,20 +397,16 @@ export function BorderControls() {
 
         {['solid', 'glassy', 'dotted', 'eclipse', 'ruler', 'focus'].includes(imageBorder.type) && (
 
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-            <label className="text-sm font-medium text-foreground whitespace-nowrap">
-              Width
-            </label>
-            <div className="flex-1 flex items-center gap-3">
-              <Slider
-                value={[imageBorder.width]}
-                onValueChange={([value]) => setImageBorder({ width: value })}
-                min={1}
-                max={50}
-                step={0.5}
-              />
-              <span className="text-sm text-foreground font-medium whitespace-nowrap">{imageBorder.width}px</span>
-            </div>
+          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+            <Slider
+              value={[imageBorder.width]}
+              onValueChange={([value]) => setImageBorder({ width: value })}
+              min={1}
+              max={50}
+              step={0.5}
+              label="Width"
+              valueDisplay={`${imageBorder.width}px`}
+            />
           </div>
 
         )}
@@ -438,20 +431,16 @@ export function BorderControls() {
 
             </div>
 
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-              <label className="text-sm font-medium text-foreground whitespace-nowrap">
-                Padding
-              </label>
-              <div className="flex-1 flex items-center gap-3">
-                <Slider
-                  value={[imageBorder.padding || 20]}
-                  onValueChange={([value]) => setImageBorder({ padding: value })}
-                  min={0}
-                  max={100}
-                  step={1}
-                />
-                <span className="text-sm text-foreground font-medium whitespace-nowrap">{imageBorder.padding || 20}px</span>
-              </div>
+            <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+              <Slider
+                value={[imageBorder.padding || 20]}
+                onValueChange={([value]) => setImageBorder({ padding: value })}
+                min={0}
+                max={100}
+                step={1}
+                label="Padding"
+                valueDisplay={`${imageBorder.padding || 20}px`}
+              />
             </div>
 
           </>

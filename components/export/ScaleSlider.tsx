@@ -21,18 +21,16 @@ export function ScaleSlider({
   step = 1,
 }: ScaleSliderProps) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
-      <Label className="text-sm font-medium text-foreground whitespace-nowrap">Resolution Scale</Label>
-      <div className="flex-1 flex items-center gap-3">
-        <Slider
-          value={[scale]}
-          onValueChange={([value]) => onScaleChange(value)}
-          min={min}
-          max={max}
-          step={step}
-        />
-        <span className="text-sm text-foreground font-medium whitespace-nowrap">{scale}x</span>
-      </div>
+    <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+      <Slider
+        value={[scale]}
+        onValueChange={([value]) => onScaleChange(value)}
+        min={min}
+        max={max}
+        step={step}
+        label="Resolution Scale"
+        valueDisplay={`${scale}x`}
+      />
     </div>
   );
 }
