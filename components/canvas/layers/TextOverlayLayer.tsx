@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { Layer, Text, Transformer } from 'react-konva';
-import Konva from 'konva';
-import { useRef, useEffect } from 'react';
-import { getFontCSS } from '@/lib/constants/fonts';
-import type { TextOverlay } from '@/lib/store';
+import { Layer, Text, Transformer } from "react-konva";
+import Konva from "konva";
+import { useRef, useEffect } from "react";
+import { getFontCSS } from "@/lib/constants/fonts";
+import type { TextOverlay } from "@/lib/store";
 
 interface TextOverlayLayerProps {
   textOverlays: TextOverlay[];
@@ -43,6 +43,16 @@ export function TextOverlayLayer({
     }
   }, [selectedTextId, textOverlays]);
 
+  useEffect(() => {
+    Object.values(textRefs.current).forEach((node) => {
+      if (!node) return;
+      const w = node.width();
+      const h = node.height();
+      node.offsetX(w / 2);
+      node.offsetY(h / 2);
+    });
+  }, [textOverlays]);
+
   return (
     <Layer ref={textLayerRef}>
       {textOverlays.map((overlay) => {
@@ -64,18 +74,15 @@ export function TextOverlayLayer({
             x={textX}
             y={textY}
             text={overlay.text}
+            rotation={overlay.rotation}
             fontSize={overlay.fontSize}
             fontFamily={getFontCSS(overlay.fontFamily)}
             fill={overlay.color}
             opacity={overlay.opacity}
-            offsetX={0}
-            offsetY={0}
             align="center"
             verticalAlign="middle"
             shadowColor={
-              overlay.textShadow.enabled
-                ? overlay.textShadow.color
-                : undefined
+              overlay.textShadow.enabled ? overlay.textShadow.color : undefined
             }
             shadowBlur={
               overlay.textShadow.enabled ? overlay.textShadow.blur : 0
@@ -87,9 +94,9 @@ export function TextOverlayLayer({
               overlay.textShadow.enabled ? overlay.textShadow.offsetY : 0
             }
             fontStyle={
-              String(overlay.fontWeight).includes('italic')
-                ? 'italic'
-                : 'normal'
+              String(overlay.fontWeight).includes("italic")
+                ? "italic"
+                : "normal"
             }
             fontVariant={String(overlay.fontWeight)}
             draggable={true}
@@ -130,18 +137,19 @@ export function TextOverlayLayer({
               updateTextOverlay(overlay.id, {
                 position: { x: newX, y: newY },
                 fontSize: newFontSize,
+                rotation: node.rotation(),
               });
             }}
             onMouseEnter={(e) => {
               const container = e.target.getStage()?.container();
               if (container) {
-                container.style.cursor = 'move';
+                container.style.cursor = "move";
               }
             }}
             onMouseLeave={(e) => {
               const container = e.target.getStage()?.container();
               if (container) {
-                container.style.cursor = 'default';
+                container.style.cursor = "default";
               }
             }}
           />
@@ -151,16 +159,13 @@ export function TextOverlayLayer({
         ref={textTransformerRef}
         keepRatio={false}
         enabledAnchors={[
-          'top-left',
-          'top-right',
-          'bottom-left',
-          'bottom-right',
+          "top-left",
+          "top-right",
+          "bottom-left",
+          "bottom-right",
         ]}
         boundBoxFunc={(oldBox, newBox) => {
-          if (
-            Math.abs(newBox.width) < 20 ||
-            Math.abs(newBox.height) < 20
-          ) {
+          if (Math.abs(newBox.width) < 20 || Math.abs(newBox.height) < 20) {
             return oldBox;
           }
           return newBox;
@@ -169,4 +174,3 @@ export function TextOverlayLayer({
     </Layer>
   );
 }
-
