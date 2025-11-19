@@ -22,7 +22,6 @@ const ClientCanvas = dynamic(() => import('@/components/canvas/ClientCanvas'), {
 export function EditorCanvas() {
   const { screenshot } = useEditorStore()
   const { uploadedImageUrl, selectedAspectRatio, clearImage } = useImageStore()
-  const [copySuccess, setCopySuccess] = useState(false)
   const [exportDialogOpen, setExportDialogOpen] = useState(false)
   const { copyImage, isExporting, settings: exportSettings, exportImage, updateScale } = useExport(selectedAspectRatio)
 
@@ -51,23 +50,13 @@ export function EditorCanvas() {
             <span>Download</span>
           </Button>
           <Button
-            onClick={() => {
-              copyImage()
-                .then(() => {
-                  setCopySuccess(true)
-                  setTimeout(() => setCopySuccess(false), 2000)
-                })
-                .catch((error) => {
-                  console.error('Failed to copy:', error)
-                  alert('Failed to copy image to clipboard. Please try again.')
-                })
-            }}
+            onClick={() => copyImage()}
             disabled={!uploadedImageUrl || isExporting}
             variant="secondary"
             className="h-9 justify-center gap-2 px-4"
           >
             <Copy className="size-4" />
-            <span>{copySuccess ? 'Copied!' : 'Copy'}</span>
+            <span>Copy</span>
           </Button>
           <Button
             onClick={clearImage}

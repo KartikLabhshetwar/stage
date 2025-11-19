@@ -3,7 +3,8 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import Konva from 'konva';
+import confetti from 'canvas-confetti';
+import { toast } from 'sonner';
 import { getAspectRatioPreset } from '@/lib/aspect-ratio-utils';
 import { exportElement, type ExportOptions } from '@/lib/export/export-service';
 import { saveExportPreferences, getExportPreferences, saveExportedImage } from '@/lib/export-storage';
@@ -159,11 +160,29 @@ export function useExport(selectedAspectRatio: string) {
       setTimeout(() => {
         document.body.removeChild(link);
       }, 100);
+
+      // Trigger confetti celebration
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      // Show success toast
+      toast('Image downloaded successfully!', {
+        description: `Saved as ${fileName}`,
+      });
     } catch (error) {
       console.error('Export failed:', error);
       const errorMessage = error instanceof Error
         ? error.message
         : 'Failed to export image. Please try again.';
+      
+      // Show error toast
+      toast('Export failed', {
+        description: errorMessage,
+      });
+      
       throw new Error(errorMessage);
     } finally {
       setIsExporting(false);
@@ -253,6 +272,18 @@ export function useExport(selectedAspectRatio: string) {
           width: preset.width,
           height: preset.height,
         });
+
+        // Trigger confetti celebration
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
+        // Show success toast
+        toast('Image copied to clipboard!', {
+          description: 'You can now paste it anywhere',
+        });
       } else {
         throw new Error('Clipboard API not supported');
       }
@@ -261,11 +292,17 @@ export function useExport(selectedAspectRatio: string) {
       const errorMessage = error instanceof Error
         ? error.message
         : 'Failed to copy image to clipboard. Please try again.';
+      
+      // Show error toast
+      toast('Copy failed', {
+        description: errorMessage,
+      });
+      
       throw new Error(errorMessage);
     } finally {
       setIsExporting(false);
     }
-  }, [selectedAspectRatio, settings, backgroundConfig, backgroundBorderRadius, backgroundBlur, backgroundNoise, backgroundOpacity, textOverlays, imageOverlays, perspective3D, screenshot.src, screenshot.radius]);
+  }, [selectedAspectRatio, backgroundConfig, backgroundBorderRadius, backgroundBlur, backgroundNoise, backgroundOpacity, textOverlays, imageOverlays, perspective3D, screenshot.src, screenshot.radius]);
 
   return {
     settings,
