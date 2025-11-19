@@ -24,7 +24,7 @@ export function EditorHeader({ className }: EditorHeaderProps) {
         <div className="flex h-14 sm:h-16 items-center gap-3 sm:gap-4">
           <SidebarTrigger className="transition-opacity hover:opacity-80 touch-manipulation rounded-lg" />
           
-          <Link href="/" className="flex items-center transition-opacity hover:opacity-80 rounded-lg p-1">
+          <Link href="/landing" className="flex items-center transition-opacity hover:opacity-80 rounded-lg p-1">
             <Image 
               src="/logo.png" 
               alt="Stage" 

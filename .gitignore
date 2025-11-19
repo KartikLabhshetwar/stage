@@ -44,3 +44,7 @@ public/backgrounds
 /scripts
 
 prisma/migrations
+/lib/generated/prisma
+# Prisma
+prisma/*.db
+prisma/*.db-journal

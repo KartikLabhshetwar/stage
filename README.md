@@ -66,27 +66,39 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
    npm install
    ```
 
-3. **Set up environment variables** (optional)
+3. **Set up environment variables**
 
    Create a `.env.local` file in the root directory:
    ```env
-   # Optional: Cloudinary Configuration (for image optimization)
+   # Database (Required for screenshot caching)
+   DATABASE_URL="postgresql://user:password@host:port/dbname?schema=public"
+
+   # Cloudinary (Required for screenshot storage)
    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
    CLOUDINARY_API_KEY=your-api-key
    CLOUDINARY_API_SECRET=your-api-secret
 
-   # Optional: Screenshot API (for website screenshots)
-   SCREENSHOTAPI_KEY=your-screenshot-api-key
+   # Cache Cleanup Security (Required for production)
+   CLEANUP_SECRET=your-random-secret-string
    ```
 
-   > **Note**: The app works completely without these environment variables. All core features including **export work fully in-browser**. Cloudinary is only used for optional image optimization of backgrounds and overlays.
+   > **Note**: Screenshot feature requires database and Cloudinary. All other core features including **export work fully in-browser**. Cloudinary is also used for optional image optimization of backgrounds and overlays.
 
-4. **Start the development server**
+4. **Set up the database**
+   ```bash
+   # Run Prisma migrations to create the database schema
+   npx prisma migrate dev --name init
+   
+   # Or use db push for quick setup (no migration files)
+   npx prisma db push
+   ```
+
+5. **Start the development server**
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
+6. **Open your browser**
 
    Navigate to [http://localhost:3000](http://localhost:3000)
 
@@ -138,9 +150,15 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
 - **[Radix UI](https://www.radix-ui.com/)** - Accessible component primitives
 - **[Lucide React](https://lucide.dev/)** - Icon library
 
-### Image Processing
-- **[Cloudinary](https://cloudinary.com/)** - Image optimization and CDN (optional)
+### Image Processing & Storage
+- **[Cloudinary](https://cloudinary.com/)** - Image optimization, CDN, and screenshot storage
 - **[Sharp](https://sharp.pixelplumbing.com/)** - Server-side image processing
+- **[Puppeteer](https://pptr.dev/)** - Website screenshot capture
+- **[@sparticuz/chromium](https://github.com/Sparticuz/chromium)** - Chromium for serverless
+
+### Database & Caching
+- **[Prisma](https://www.prisma.io/)** - Type-safe ORM
+- **[PostgreSQL](https://www.postgresql.org/)** - Database for screenshot caching
 
 ## 📁 Project Structure
 
@@ -175,6 +193,46 @@ For detailed architecture information, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 - `npm run upload-demo-images` - Upload demo images to Cloudinary
 - `npm run upload-overlays` - Upload overlays to Cloudinary
 
+## 🔒 Production Setup
+
+### Environment Variables for Vercel
+
+Set these in your Vercel project settings:
+
+```env
+DATABASE_URL="postgresql://user:password@host:port/dbname?schema=public"
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+CLEANUP_SECRET=your-random-secret-string
+```
+
+### Manual Screenshot Cache Cleanup
+
+To remove screenshots older than 2 days from both Cloudinary and the database:
+
+```bash
+curl -X POST https://your-domain.com/api/cleanup-cache \
+  -H "Content-Type: application/json" \
+  -d '{"secret": "your-cleanup-secret"}'
+```
+
+**Recommended schedule**: Run this weekly or when approaching Cloudinary storage limits.
+
+### Rate Limiting
+
+The screenshot API includes built-in rate limiting:
+- **Limit**: 20 requests per minute per IP
+- **Response**: 429 status with `Retry-After` header
+- **Headers**: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+
+### Cache Expiration
+
+Screenshot cache expires after 2 days to stay within Cloudinary free tier limits:
+- **Storage**: 25 GB
+- **Bandwidth**: 25 GB/month
+- **Transformations**: 25,000/month
+
 ## 🏗️ Architecture
 
 Stage is a **fully in-browser canvas editor** that requires no external services for core functionality.
@@ -196,20 +254,21 @@ The export pipeline composites these layers client-side in the correct order to 
 
 For comprehensive architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
-## 🤝 Contributing
+## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, project structure, and contribution guidelines.
 
-### Quick Contribution Guide
+## Contributors
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+Thanks to all our amazing contributors for their support and code!
 
-For detailed contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+<a href="https://github.com/KartikLabhshetwar/stage/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=KartikLabhshetwar/stage" />
+</a>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=KartikLabhshetwar/stage&type=Date)](https://star-history.com/#KartikLabhshetwar/stage&Date)
 
 ## 📚 Documentation
 
@@ -221,7 +280,9 @@ For detailed contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 - Export may take a few seconds for high-resolution images
 - Some browsers may have limitations with large canvas operations
-- Website screenshot feature requires API key
+- Website screenshot may timeout for slow-loading websites (8s timeout on Vercel free tier)
+- Screenshot feature requires database and Cloudinary configuration
+- Manual cache cleanup required on free Vercel account (no cron jobs)
 
 ## 📄 License
 

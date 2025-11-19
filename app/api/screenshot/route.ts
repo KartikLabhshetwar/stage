@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import chromium from '@sparticuz/chromium'
+import { getCachedScreenshot, cacheScreenshot, normalizeUrl, invalidateCache } from '@/lib/screenshot-cache'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export const maxDuration = 10
 
@@ -57,8 +59,29 @@ export async function POST(request: NextRequest) {
   let browser = null
   
   try {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    const rateLimit = checkRateLimit(ip)
+    
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { 
+          error: 'Rate limit exceeded. Please try again later.',
+          retryAfter: Math.ceil((rateLimit.resetAt - Date.now()) / 1000)
+        },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimit.resetAt - Date.now()) / 1000).toString(),
+            'X-RateLimit-Limit': '20',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimit.resetAt.toString()
+          }
+        }
+      )
+    }
+
     const body = await request.json()
-    const { url } = body
+    const { url, forceRefresh } = body
 
     if (!url || typeof url !== 'string') {
       return NextResponse.json(
@@ -83,6 +106,31 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const normalizedUrl = normalizeUrl(validUrl.toString())
+
+    if (forceRefresh) {
+      try {
+        await invalidateCache(normalizedUrl)
+      } catch (invalidateError) {
+        console.warn('Failed to invalidate cache, proceeding with screenshot:', invalidateError)
+      }
+    }
+
+    if (!forceRefresh) {
+      try {
+        const cachedScreenshot = await getCachedScreenshot(normalizedUrl)
+        if (cachedScreenshot) {
+          return NextResponse.json({
+            screenshot: cachedScreenshot,
+            url: normalizedUrl,
+            cached: true,
+          })
+        }
+      } catch (cacheError) {
+        console.warn('Cache check failed, proceeding with screenshot:', cacheError)
+      }
+    }
+
     browser = await getBrowser()
     const page = await browser.newPage()
 
@@ -92,76 +140,15 @@ export async function POST(request: NextRequest) {
       deviceScaleFactor: 1,
     })
 
-    // First, load the page to detect its default theme
-    await page.goto(validUrl.toString(), {
-      waitUntil: 'networkidle2',
+    await page.setDefaultNavigationTimeout(8000)
+    await page.setDefaultTimeout(8000)
+
+    await page.goto(normalizedUrl, {
+      waitUntil: 'domcontentloaded',
       timeout: 8000,
     })
 
-    // Detect the website's default theme preference
-    const themePreference = await page.evaluate(() => {
-      // Check for common dark mode indicators
-      const html = document.documentElement
-      const body = document.body
-      
-      // Check for dark mode classes (common in frameworks like Tailwind, Next.js, etc.)
-      const hasDarkClass = html.classList.contains('dark') || 
-                          html.classList.contains('dark-mode') ||
-                          body.classList.contains('dark') ||
-                          body.classList.contains('dark-mode')
-      
-      // Check for dark mode attribute
-      const hasDarkAttribute = html.getAttribute('data-theme') === 'dark' ||
-                               html.getAttribute('data-color-mode') === 'dark' ||
-                               html.getAttribute('class')?.includes('dark')
-      
-      // Check computed background color brightness
-      const bodyStyle = window.getComputedStyle(body)
-      const bgColor = bodyStyle.backgroundColor || bodyStyle.background
-      
-      // Check if background is dark (simple heuristic)
-      let isDarkBackground = false
-      if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
-        const rgbMatch = bgColor.match(/\d+/g)
-        if (rgbMatch && rgbMatch.length >= 3) {
-          const r = parseInt(rgbMatch[0])
-          const g = parseInt(rgbMatch[1])
-          const b = parseInt(rgbMatch[2])
-          // Calculate luminance (simplified)
-          const luminance = (r * 0.299 + g * 0.587 + b * 0.114) / 255
-          isDarkBackground = luminance < 0.5
-        }
-      }
-      
-      // Check CSS custom properties for theme
-      const rootStyle = window.getComputedStyle(html)
-      const colorScheme = rootStyle.colorScheme || ''
-      
-      // Return detected theme preference
-      if (hasDarkClass || hasDarkAttribute || colorScheme === 'dark') {
-        return 'dark'
-      }
-      if (isDarkBackground) {
-        return 'dark'
-      }
-      if (colorScheme === 'light') {
-        return 'light'
-      }
-      
-      // Default to light if we can't determine
-      return 'light'
-    })
-
-    // Reload page with the detected theme preference
-    await page.emulateMediaFeatures([
-      { name: 'prefers-color-scheme', value: themePreference }
-    ])
-
-    // Reload to apply theme preference
-    await page.reload({
-      waitUntil: 'networkidle2',
-      timeout: 8000,
-    })
+    await new Promise(resolve => setTimeout(resolve, 500))
 
     const screenshot = await page.screenshot({
       type: 'png',
@@ -172,9 +159,16 @@ export async function POST(request: NextRequest) {
     await browser.close()
     browser = null
 
+    try {
+      await cacheScreenshot(normalizedUrl, screenshot)
+    } catch (cacheError) {
+      console.warn('Failed to cache screenshot:', cacheError)
+    }
+
     return NextResponse.json({
       screenshot,
-      url: validUrl.toString(),
+      url: normalizedUrl,
+      cached: false,
     })
   } catch (error) {
     if (browser) {
@@ -199,6 +193,13 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           { error: 'Failed to connect to the website. Please check the URL and try again.' },
           { status: 400 }
+        )
+      }
+
+      if (error.message.includes('detached') || error.message.includes('LifecycleWatcher disposed')) {
+        return NextResponse.json(
+          { error: 'Screenshot capture was interrupted. Please try again.' },
+          { status: 500 }
         )
       }
     }

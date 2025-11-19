@@ -112,7 +112,7 @@ function SponsorContent({
 
       {/* PayPal */}
       <a
-        href="https://wise.com/pay/r/Zlc3_90igqVqILo"
+        href="https://www.paypal.com/paypalme/KartikLabhshetwar"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer group"
@@ -121,7 +121,7 @@ function SponsorContent({
           <FaDollarSign className="h-5 w-5 text-white" />
         </div>
         <span className="text-sm font-medium text-foreground group-hover:text-foreground">
-          Wise
+          PayPal
         </span>
       </a>
 

@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ScreenshotCache {
+  id        String   @id @default(cuid())
+  urlHash   String   @unique
+  url       String
+  cloudinaryPublicId String @unique
+  cloudinaryUrl     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([urlHash])
+  @@index([createdAt])
+  @@map("screenshot_cache")
+}

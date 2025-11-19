@@ -8,6 +8,7 @@ import { AspectRatioKey } from "@/lib/constants/aspect-ratios";
 import { BackgroundConfig, BackgroundType } from "@/lib/constants/backgrounds";
 import { gradientColors } from "@/lib/constants/gradient-colors";
 import { solidColors } from "@/lib/constants/solid-colors";
+import type { Mockup } from "@/types/mockup";
 
 interface TextShadow {
   enabled: boolean;
@@ -461,6 +462,7 @@ interface ImageState {
   backgroundNoise: number;
   textOverlays: TextOverlay[];
   imageOverlays: ImageOverlay[];
+  mockups: Mockup[];
   imageOpacity: number;
   imageScale: number;
   imageBorder: ImageBorder;
@@ -494,6 +496,10 @@ interface ImageState {
   updateImageOverlay: (id: string, updates: Partial<ImageOverlay>) => void;
   removeImageOverlay: (id: string) => void;
   clearImageOverlays: () => void;
+  addMockup: (mockup: Omit<Mockup, "id">) => void;
+  updateMockup: (id: string, updates: Partial<Mockup>) => void;
+  removeMockup: (id: string) => void;
+  clearMockups: () => void;
   setImageOpacity: (opacity: number) => void;
   setImageScale: (scale: number) => void;
   setImageBorder: (border: ImageBorder | Partial<ImageBorder>) => void;
@@ -518,6 +524,7 @@ export const useImageStore = create<ImageState>((set, get) => ({
   backgroundNoise: 0,
   textOverlays: [],
   imageOverlays: [],
+  mockups: [],
   imageOpacity: 1,
   imageScale: 100,
   imageBorder: {
@@ -720,6 +727,33 @@ export const useImageStore = create<ImageState>((set, get) => ({
 
   clearImageOverlays: () => {
     set({ imageOverlays: [] });
+  },
+
+  addMockup: (mockup) => {
+    const id = `mockup-${Date.now()}-${Math.random()
+      .toString(36)
+      .substr(2, 9)}`;
+    set((state) => ({
+      mockups: [...state.mockups, { ...mockup, id }],
+    }));
+  },
+
+  updateMockup: (id, updates) => {
+    set((state) => ({
+      mockups: state.mockups.map((mockup) =>
+        mockup.id === id ? { ...mockup, ...updates } : mockup
+      ),
+    }));
+  },
+
+  removeMockup: (id) => {
+    set((state) => ({
+      mockups: state.mockups.filter((mockup) => mockup.id !== id),
+    }));
+  },
+
+  clearMockups: () => {
+    set({ mockups: [] });
   },
 
   setImageOpacity: (opacity: number) => {

@@ -152,12 +152,6 @@ export function OverlayControls() {
                     );
                   })()}
                 </div>
-                <span className="flex-1 text-xs truncate">
-                  {overlay.src
-                    .split("/")
-                    .pop()
-                    ?.replace(/\.(png|webp|jpg|jpeg)$/i, "") || "Overlay"}
-                </span>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -168,7 +162,7 @@ export function OverlayControls() {
                       setSelectedOverlayId(null);
                     }
                   }}
-                  className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                  className="h-6 w-6 p-0 text-destructive hover:text-destructive ml-auto"
                 >
                   <Trash2 className="h-3 w-3" />
                 </Button>
