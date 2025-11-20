@@ -81,15 +81,19 @@ export function PresetGallery({ onPresetSelect }: PresetGalleryProps) {
     setImageScale(preset.imageScale);
     setImageBorder(preset.imageBorder);
     setImageShadow(preset.imageShadow);
-    if (preset.backgroundBlur !== undefined) {
-      setBackgroundBlur(preset.backgroundBlur);
-    }
-    if (preset.backgroundNoise !== undefined) {
-      setBackgroundNoise(preset.backgroundNoise);
-    }
-    if (preset.perspective3D !== undefined) {
-      setPerspective3D(preset.perspective3D);
-    }
+    // Reset blur and noise to 0 if not specified, otherwise use preset values
+    setBackgroundBlur(preset.backgroundBlur ?? 0);
+    setBackgroundNoise(preset.backgroundNoise ?? 0);
+    // Reset 3D transform to defaults if not specified, otherwise use preset values
+    setPerspective3D(preset.perspective3D ?? {
+      perspective: 200,
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+      translateX: 0,
+      translateY: 0,
+      scale: 1,
+    });
     onPresetSelect?.(preset);
   }, [
     setAspectRatio,

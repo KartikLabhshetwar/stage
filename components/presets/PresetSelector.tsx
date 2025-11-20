@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/popover';
 import { useImageStore } from '@/lib/store';
 import { presets, type PresetConfig } from '@/lib/constants/presets';
-import { getBackgroundStyle, getBackgroundCSS } from '@/lib/constants/backgrounds';
+import { getBackgroundCSS } from '@/lib/constants/backgrounds';
 import { cn } from '@/lib/utils';
 
 export function PresetSelector() {
@@ -84,17 +84,19 @@ export function PresetSelector() {
     setImageScale(preset.imageScale);
     setImageBorder(preset.imageBorder);
     setImageShadow(preset.imageShadow);
-    // Apply blur and noise if specified in preset
-    if (preset.backgroundBlur !== undefined) {
-      setBackgroundBlur(preset.backgroundBlur);
-    }
-    if (preset.backgroundNoise !== undefined) {
-      setBackgroundNoise(preset.backgroundNoise);
-    }
-    // Apply 3D transform if specified in preset
-    if (preset.perspective3D !== undefined) {
-      setPerspective3D(preset.perspective3D);
-    }
+    // Reset blur and noise to 0 if not specified, otherwise use preset values
+    setBackgroundBlur(preset.backgroundBlur ?? 0);
+    setBackgroundNoise(preset.backgroundNoise ?? 0);
+    // Reset 3D transform to defaults if not specified, otherwise use preset values
+    setPerspective3D(preset.perspective3D ?? {
+      perspective: 200,
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+      translateX: 0,
+      translateY: 0,
+      scale: 1,
+    });
     
     // Close the popover after applying
     setOpen(false);
