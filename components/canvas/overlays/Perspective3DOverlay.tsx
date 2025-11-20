@@ -221,12 +221,10 @@ export function Perspective3DOverlay({
               height: `${imageScaledH}px`,
               objectFit: 'cover',
               opacity: imageOpacity,
-              borderRadius:
-                showFrame && frame.type === 'window'
-                  ? `0 0 ${screenshot.radius}px ${screenshot.radius}px`
-                  : showFrame && frame.type === 'ruler'
-                  ? `${screenshot.radius * 0.8}px`
-                  : `${screenshot.radius}px`,
+              borderRadius: frame.type === 'arc-light' ? '8px' : `${screenshot.radius}px`,
+              border: frame.type === 'arc-light' ? '6px solid rgba(255, 255, 255, 0.5)' : 'none',
+              boxSizing: 'border-box',
+              overflow: 'hidden',
             }}
           />
         </div>

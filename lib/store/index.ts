@@ -49,7 +49,7 @@ export interface ImageBorder {
   enabled: boolean
   width: number
   color: string
-  type: 'none' | 'solid' | 'glassy' | 'infinite-mirror' | 'window' | 'stack' | 'ruler' | 'eclipse' | 'dotted' | 'focus'
+  type: 'none' | 'arc-light' | 'arc-dark' | 'macos-dark' | 'macos-light' | 'windows-dark' | 'windows-light' | 'photograph'
   theme?: 'light' | 'dark'
   padding?: number
   title?: string
@@ -151,7 +151,7 @@ interface EditorState {
   // Frame state (same as imageBorder)
   frame: {
     enabled: boolean
-    type: 'none' | 'solid' | 'glassy' | 'infinite-mirror' | 'window' | 'stack' | 'ruler' | 'eclipse' | 'dotted' | 'focus'
+    type: 'none' | 'arc-light' | 'arc-dark' | 'macos-dark' | 'macos-light' | 'windows-dark' | 'windows-light' | 'photograph'
     width: number
     color: string
     theme?: 'light' | 'dark'
@@ -502,7 +502,7 @@ export const useImageStore = create<ImageState>((set, get) => ({
     enabled: false,
     width: 2,
     color: '#000000',
-    type: 'none',
+    type: 'none' as const,
     theme: 'light',
     padding: 20,
     title: '',
