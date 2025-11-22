@@ -11,11 +11,15 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Settings } from "lucide-react";
+import { useAutosaveDraft } from '@/hooks/useAutosaveDraft';
 
 function EditorMain() {
   const isMobile = useIsMobile();
   const [leftPanelOpen, setLeftPanelOpen] = React.useState(false);
   const [rightPanelOpen, setRightPanelOpen] = React.useState(false);
+
+  // enable autosave
+  useAutosaveDraft();
 
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';

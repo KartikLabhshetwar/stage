@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.8.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "html2canvas": "^1.4.1",
     "konva": "^10.0.8",
     "lucide-react": "^0.552.0",
