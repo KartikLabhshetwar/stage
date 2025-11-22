@@ -81,7 +81,7 @@ export function EditorCanvas() {
             </Button>
           </div>
         </div>
-        <div className='flex-1 flex items-center justify-center overflow-auto p-3 sm:p-4 md:p-6'>
+        <div className="flex-1 flex items-center justify-center overflow-x-auto overflow-y-hidden p-3 sm:p-4 md:p-6">
           <ClientCanvas />
         </div>
       </div>

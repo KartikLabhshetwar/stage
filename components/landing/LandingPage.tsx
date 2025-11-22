@@ -3,14 +3,22 @@ import { Hero } from "./Hero";
 import { Features } from "./Features";
 import { Footer } from "./Footer";
 import { MasonryGrid } from "./MasonryGrid";
-import { Pricing } from "./Pricing";
 import { FAQ } from "./FAQ";
 import { Sponsors, Sponsor } from "./Sponsors";
 import { SponsorButton } from "@/components/SponsorButton";
+import { VideoTestimonials } from "./VideoTestimonials";
 
 interface Feature {
   title: string;
   description: string;
+}
+
+interface VideoTestimonial {
+  videoId: string;
+  startTime?: number;
+  endTime?: number;
+  title?: string;
+  author?: string;
 }
 
 interface LandingPageProps {
@@ -25,6 +33,8 @@ interface LandingPageProps {
   sponsorsTitle?: string;
   brandName?: string;
   footerText?: string;
+  videoTestimonials?: VideoTestimonial[];
+  videoTestimonialsTitle?: string;
 }
 
 export function LandingPage({
@@ -38,7 +48,8 @@ export function LandingPage({
   sponsors,
   sponsorsTitle,
   brandName = "Stage",
-  footerText = "Built with Next.js and Konva.",
+  videoTestimonials,
+  videoTestimonialsTitle,
 }: LandingPageProps) {
   return (
     <div className="min-h-screen flex flex-col">
@@ -50,6 +61,12 @@ export function LandingPage({
         ctaLabel={ctaLabel}
         ctaHref={ctaHref}
       />
+      {videoTestimonials && videoTestimonials.length > 0 && (
+        <>
+          <VideoTestimonials testimonials={videoTestimonials} title={videoTestimonialsTitle} />
+          <div className="w-full border-t border-border" />
+        </>
+      )}
       <MasonryGrid />
       <Features features={features} title={featuresTitle} />
       {/* <Pricing /> */}

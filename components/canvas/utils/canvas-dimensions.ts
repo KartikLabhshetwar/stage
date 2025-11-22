@@ -68,6 +68,11 @@ export function calculateCanvasDimensions(
   }
 
   const showFrame = frame.enabled && frame.type !== 'none';
+  
+  if (showFrame) {
+    imageScaledW *= 0.88;
+    imageScaledH *= 0.88;
+  }
   const frameOffset =
     showFrame && frame.type === 'solid'
       ? frame.width

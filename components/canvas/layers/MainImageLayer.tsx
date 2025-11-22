@@ -153,11 +153,7 @@ export function MainImageLayer({
               container.style.cursor = 'default';
             }
           }}
-          {...(!showFrame ||
-          frame.type === 'none' ||
-          frame.type === 'dotted'
-            ? shadowProps
-            : {})}
+          {...shadowProps}
         />
         <Transformer
           ref={mainImageTransformerRef}

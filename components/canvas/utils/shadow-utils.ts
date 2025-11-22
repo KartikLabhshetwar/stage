@@ -13,21 +13,34 @@ export interface ShadowConfig {
   softness: number;
   color: string;
   intensity: number;
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export function getShadowProps(shadow: ShadowConfig): ShadowProps | Record<string, never> {
   if (!shadow.enabled) return {};
 
-  const { elevation, side, softness, color, intensity } = shadow;
-  const diag = elevation * 0.707;
-  const offset =
-    side === 'bottom'
-      ? { x: 0, y: elevation }
-      : side === 'right'
-      ? { x: elevation, y: 0 }
-      : side === 'bottom-right'
-      ? { x: diag, y: diag }
-      : { x: 0, y: 0 };
+  const { elevation, side, softness, color, intensity, offsetX, offsetY } = shadow;
+  
+  let x = 0;
+  let y = 0;
+  
+  if (offsetX !== undefined && offsetY !== undefined) {
+    x = offsetX;
+    y = offsetY;
+  } else {
+    const diag = elevation * 0.707;
+    const offset =
+      side === 'bottom'
+        ? { x: 0, y: elevation }
+        : side === 'right'
+        ? { x: elevation, y: 0 }
+        : side === 'bottom-right'
+        ? { x: diag, y: diag }
+        : { x: 0, y: 0 };
+    x = offset.x;
+    y = offset.y;
+  }
 
   const colorMatch = color.match(/rgba?\(([^)]+)\)/)
   let shadowColor = color
@@ -44,8 +57,8 @@ export function getShadowProps(shadow: ShadowConfig): ShadowProps | Record<strin
   return {
     shadowColor,
     shadowBlur: softness,
-    shadowOffsetX: offset.x,
-    shadowOffsetY: offset.y,
+    shadowOffsetX: x,
+    shadowOffsetY: y,
     shadowOpacity: Math.min(1, Math.max(0, intensity)),
   };
 }

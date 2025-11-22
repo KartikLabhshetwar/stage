@@ -39,6 +39,7 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                 size="sm"
                 onClick={() =>
                   onShadowChange({
+                    enabled: true,
                     blur: preset.blur,
                     offsetX: preset.offsetX,
                     offsetY: preset.offsetY,

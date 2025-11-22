@@ -18,6 +18,14 @@ const features = [
   },
 ];
 
+const videoTestimonials = [
+  {
+    videoId: "NAS4BEP2KtA",
+    startTime: 3562,
+    endTime: 3768,
+  },
+];
+
 export default function Landing() {
   return (
     <LandingPage
@@ -27,6 +35,8 @@ export default function Landing() {
       ctaLabel="Try now it's free"
       ctaHref="/home"
       features={features}
+      videoTestimonials={videoTestimonials}
+      videoTestimonialsTitle="What People Are Saying"
     />
   );
 }

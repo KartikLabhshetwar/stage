@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { TextOverlayControls } from '@/components/text-overlay/text-overlay-controls';
-import { OverlayGallery, OverlayControls, ArrowGallery } from '@/components/overlays';
+import { OverlayGallery, OverlayControls, ArrowGallery, OverlayShadowsGallery } from '@/components/overlays';
 import { MockupGallery, MockupControls } from '@/components/mockups';
 import { StyleTabs } from './style-tabs';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -60,11 +60,11 @@ export function EditorLeftPanel() {
               Text
             </TabsTrigger>
             <TabsTrigger 
-              value="stickers"
+              value="overlays"
               className="data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:shadow-black/20 rounded-md border-0 data-[state=active]:border-0 transition-all duration-200"
             >
               <Sticker className="size-4 mr-2" />
-              Stickers
+              Overlays
             </TabsTrigger>
           </TabsList>
 
@@ -86,9 +86,12 @@ export function EditorLeftPanel() {
               <TextOverlayControls />
             </TabsContent>
 
-            <TabsContent value="stickers" className="m-0 p-4 space-y-6">
+            <TabsContent value="overlays" className="m-0 p-4 space-y-6">
               {/* Arrow Gallery */}
               <ArrowGallery />
+              
+              {/* Overlay Shadows Gallery */}
+              <OverlayShadowsGallery />
               
               {/* Overlay Gallery */}
               <OverlayGallery />

@@ -27,7 +27,7 @@ export const getBackgroundStyle = (config: BackgroundConfig): string => {
       return `url(${value})`;
 
     default:
-      return gradientColors.sunset_vibes;
+      return gradientColors.vibrant_orange_pink;
   }
 };
 
@@ -38,7 +38,7 @@ export const getBackgroundCSS = (
 
   switch (type) {
     case 'gradient': {
-      const gradient = gradientColors[value as GradientKey] || gradientColors.sunset_vibes;
+      const gradient = gradientColors[value as GradientKey] || gradientColors.vibrant_orange_pink;
       return {
         background: gradient,
         opacity,
@@ -103,7 +103,7 @@ export const getBackgroundCSS = (
 
     default:
       return {
-        background: gradientColors.sunset_vibes,
+        background: gradientColors.vibrant_orange_pink,
         opacity,
       };
   }

@@ -29,8 +29,8 @@ export function StyleTabs() {
           <TabsTrigger value="style" className="data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:shadow-black/20 rounded-md border-0 data-[state=active]:border-0 transition-all duration-200">
             Style
           </TabsTrigger>
-          <TabsTrigger value="3d" className="data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:shadow-black/20 rounded-md border-0 data-[state=active]:border-0 transition-all duration-200">
-            3D
+          <TabsTrigger value="Transforms" className="data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:shadow-black/20 rounded-md border-0 data-[state=active]:border-0 transition-all duration-200">
+            Transforms
           </TabsTrigger>
         </TabsList>
 
@@ -110,7 +110,7 @@ export function StyleTabs() {
         <ShadowControls shadow={imageShadow} onShadowChange={setImageShadow} />
         </TabsContent>
 
-        <TabsContent value="3d" className="mt-4">
+        <TabsContent value="Transforms" className="mt-4">
           <Perspective3DControls />
         </TabsContent>
       </Tabs>

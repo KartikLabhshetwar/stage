@@ -232,7 +232,7 @@ export function EditorRightPanel() {
                   onClick={() => {
                     setBackgroundType('gradient');
                     if (!backgroundConfig.value || typeof backgroundConfig.value !== 'string' || !gradientColors[backgroundConfig.value as GradientKey]) {
-                      setBackgroundValue('sunset_vibes');
+                      setBackgroundValue('vibrant_orange_pink');
                     }
                   }}
                     className={`flex-1 text-xs font-medium transition-all rounded-lg h-8 border ${
@@ -343,7 +343,7 @@ export function EditorRightPanel() {
                                 onClick={() => {
                                   // Reset to default gradient
                                   setBackgroundType('gradient');
-                                  setBackgroundValue('sunset_vibes');
+                                  setBackgroundValue('vibrant_orange_pink');
                                   // If it's a blob URL, revoke it
                                   if (backgroundConfig.value.startsWith('blob:')) {
                                     URL.revokeObjectURL(backgroundConfig.value);

@@ -65,7 +65,7 @@ export function Perspective3DOverlay({
 
   const perspective3DTransform = `
     translate(${perspective3D.translateX}%, ${perspective3D.translateY}%)
-    scale(${perspective3D.scale})
+    scale(${perspective3D.scale * 0.85})
     rotateX(${perspective3D.rotateX}deg)
     rotateY(${perspective3D.rotateY}deg)
     rotateZ(${perspective3D.rotateZ + screenshot.rotation}deg)

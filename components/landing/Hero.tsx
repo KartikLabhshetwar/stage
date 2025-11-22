@@ -34,21 +34,13 @@ export function Hero({
     <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 md:py-20 bg-background">
       <div className="container mx-auto max-w-4xl text-center space-y-6 sm:space-y-8">
       <div className="flex justify-center pt-2">
-          <a
-            href="https://www.producthunt.com/products/stage-4?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-stage&#0045;8293d7bb&#0045;de6c&#0045;413b&#0045;91a2&#0045;172752f47444"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-          >
-            <img
-              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1038724&theme=dark&t=1763308899889"
-              alt="Stage - browser canvas editor that brings your ideas to life | Product Hunt"
-              style={{ width: "250px", height: "54px" }}
-              width="250"
-              height="54"
-              className="transition-opacity hover:opacity-80"
-            />
-          </a>
+      <a href="https://peerlist.io/code_kartik/project/stage" target="_blank" rel="noreferrer">
+				<img
+					src="https://peerlist.io/api/v1/projects/embed/PRJHOK88O79K6BNNNCG7GMP7BR6Q7K?showUpvote=true&theme=dark"
+					alt="Stage"
+					style={{ width: "auto", height: "72px" }}
+				/>
+			</a>
         </div>
         <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight ${instrumentSerif.className} px-2`}>
           {title}
