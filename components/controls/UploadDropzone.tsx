@@ -112,7 +112,7 @@ export function UploadDropzone() {
   const active = isDragActive || dropzoneActive
 
   return (
-    <div ref={containerRef} className="w-full max-w-2xl mx-auto">
+    <div ref={containerRef} className="w-full max-w-lg mx-auto">
       <div className="space-y-6 sm:space-y-8">
         <div className="text-center space-y-3">
           <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">Upload Image</h2>
