@@ -38,6 +38,7 @@ export function calculateCanvasDimensions(
 ): CanvasDimensions {
   const imageAspect = image.naturalWidth / image.naturalHeight;
   const canvasAspect = containerWidth / containerHeight;
+  const isMobileViewport = viewportSize.width < 768;
 
   const availableWidth = Math.min(viewportSize.width * 1.1, containerWidth);
   const availableHeight = Math.min(viewportSize.height * 1.1, containerHeight);
@@ -51,12 +52,27 @@ export function calculateCanvasDimensions(
     canvasH = canvasW / canvasAspect;
   }
 
-  const minContentSize = 300;
-  canvasW = Math.max(canvasW, minContentSize);
-  canvasH = Math.max(canvasH, minContentSize);
+  // Maintain a minimum preview size on larger screens but keep true ratio on mobile.
+  const minContentSize = isMobileViewport ? 0 : 300;
+  if (minContentSize > 0) {
+    const minDimension = Math.min(canvasW, canvasH);
+    if (minDimension < minContentSize && minDimension > 0) {
+      const scaleFactor = minContentSize / minDimension;
+      canvasW *= scaleFactor;
+      canvasH *= scaleFactor;
+    }
+  }
 
-  const contentW = canvasW - canvas.padding * 2;
-  const contentH = canvasH - canvas.padding * 2;
+  // Adapt padding so small canvases don't end up with huge borders.
+  const maxPaddingRatio = isMobileViewport ? 0.05 : 0.08;
+  const paddingLimit = Math.min(
+    canvas.padding,
+    Math.min(canvasW, canvasH) * maxPaddingRatio
+  );
+  const appliedPadding = Math.max(0, paddingLimit);
+
+  const contentW = Math.max(0, canvasW - appliedPadding * 2);
+  const contentH = Math.max(0, canvasH - appliedPadding * 2);
 
   let imageScaledW: number, imageScaledH: number;
   if (contentW / contentH > imageAspect) {

@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Settings } from "lucide-react";
+import { MobileBanner } from "./MobileBanner";
 
 function EditorMain() {
   const isMobile = useIsMobile();
@@ -27,6 +28,9 @@ function EditorMain() {
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
       <EditorStoreSync />
+      
+      {/* Mobile Banner */}
+      <MobileBanner />
       
       {/* Mobile Header */}
       {isMobile && (

@@ -34,13 +34,6 @@ export function Hero({
     <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 md:py-20 bg-background">
       <div className="container mx-auto max-w-4xl text-center space-y-6 sm:space-y-8">
       <div className="flex justify-center pt-2">
-      <a href="https://peerlist.io/code_kartik/project/stage" target="_blank" rel="noreferrer">
-				<img
-					src="https://peerlist.io/api/v1/projects/embed/PRJHOK88O79K6BNNNCG7GMP7BR6Q7K?showUpvote=true&theme=dark"
-					alt="Stage"
-					style={{ width: "auto", height: "72px" }}
-				/>
-			</a>
         </div>
         <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight ${instrumentSerif.className} px-2`}>
           {title}

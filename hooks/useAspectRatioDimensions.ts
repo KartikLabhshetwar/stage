@@ -86,17 +86,29 @@ export function useResponsiveCanvasDimensions() {
       return { width: 1920, height: 1080, aspectRatio: '16/9' };
     }
     
-    // Calculate viewport constraints
-    // Account for side panels (left: ~320px, right: ~320px) and padding
-    // More conservative values to ensure canvas always fits
-    const sidePanelsWidth = 640; // Approximate width of left + right panels
-    const padding = 48; // Container padding (24px * 2)
-    const availableWidth = viewportSize.width - sidePanelsWidth - padding;
-    const availableHeight = viewportSize.height - 200; // Account for header/bottom bar
-    
-    // Increased percentages and max dimensions for larger canvas
-    const maxWidth = Math.min(availableWidth * 1.1, 3000);
-    const maxHeight = Math.min(availableHeight * 1.1, 1500);
+    // Determine layout constraints based on viewport size.
+    // On mobile the side panels are hidden inside sheets, so we should not
+    // subtract their desktop width (otherwise calculations go negative and
+    // the canvas collapses). This keeps the preview and export canvases in sync.
+    const MOBILE_BREAKPOINT = 768;
+    const isMobileViewport = viewportSize.width < MOBILE_BREAKPOINT;
+    const sidePanelsWidth = isMobileViewport ? 0 : 640; // left + right panels on desktop
+    const horizontalPadding = isMobileViewport ? 32 : 48; // reduce padding on small screens
+    const verticalPadding = isMobileViewport ? 140 : 200; // header + footer allowance
+
+    const rawAvailableWidth = viewportSize.width - sidePanelsWidth - horizontalPadding;
+    const rawAvailableHeight = viewportSize.height - verticalPadding;
+
+    // Prevent negative/too-small values so fit calculations remain stable.
+    const MIN_AVAILABLE = 320;
+    const availableWidth = Math.max(rawAvailableWidth, MIN_AVAILABLE);
+    const availableHeight = Math.max(rawAvailableHeight, MIN_AVAILABLE);
+
+    // Allow a little breathing room on larger screens without over-scaling mobile.
+    const widthScale = isMobileViewport ? 1 : 1.1;
+    const heightScale = isMobileViewport ? 1 : 1.1;
+    const maxWidth = Math.min(availableWidth * widthScale, 3000);
+    const maxHeight = Math.min(availableHeight * heightScale, 1500);
     
     const fitDimensions = calculateFitDimensions(
       preset.width,
