@@ -92,7 +92,7 @@ export function FrameRenderer({
     return null;
   }
 
-  if (frame.type === 'arc-light') {
+  if (frame.type === 'arc-light' || frame.type === 'arc-dark') {
     return null;
   }
 
