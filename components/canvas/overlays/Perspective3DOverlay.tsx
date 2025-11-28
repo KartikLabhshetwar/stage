@@ -171,16 +171,18 @@ export function Perspective3DOverlay({
               position: 'absolute',
               left: `${frameOffset + windowPadding}px`,
               top: `${frameOffset + windowPadding + windowHeader}px`,
-              width: `${imageScaledW}px`,
+              width: frame.type === 'arc-light' || frame.type === 'arc-dark' ? '100%' : `${imageScaledW}px`,
               height: `${imageScaledH}px`,
               objectFit: 'cover',
               opacity: imageOpacity,
-              borderRadius:
-                showFrame && frame.type === 'window'
-                  ? `0 0 ${screenshot.radius}px ${screenshot.radius}px`
-                  : showFrame && frame.type === 'ruler'
-                  ? `${screenshot.radius * 0.8}px`
-                  : `${screenshot.radius}px`,
+              borderRadius: frame.type === 'arc-light' || frame.type === 'arc-dark' ? '8px' : `${screenshot.radius}px`,
+              border: frame.type === 'arc-light' 
+                ? '6px solid rgba(255, 255, 255, 0.5)' 
+                : frame.type === 'arc-dark' 
+                ? '6px solid rgba(0, 0, 0, 0.7)' 
+                : 'none',
+              boxSizing: 'border-box',
+              overflow: 'hidden',
             }}
           />
         </div>
