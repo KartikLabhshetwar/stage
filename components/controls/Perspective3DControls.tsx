@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ShadowControls } from '@/components/controls/ShadowControls';
+import { useWheelInput } from '@/hooks/useWheelInput';
 
 interface TransformPreset {
   name: string;
@@ -278,6 +279,55 @@ export function Perspective3DControls() {
       perspective: `${preset.values.perspective}px`,
     };
   };
+  
+  const { ref: perspectiveRef } = useWheelInput({
+    value: perspective3D.perspective,
+    onChange: (val) => setPerspective3D({ perspective: val }),
+    min: 50,
+    max: 1000,
+    step: 10,
+  });
+  
+  const { ref: rotateXRef } = useWheelInput({
+    value: perspective3D.rotateX,
+    onChange: (val) => setPerspective3D({ rotateX: val }),
+    min: -45,
+    max: 45,
+    step: 1,
+  });
+  
+  const { ref: rotateYRef } = useWheelInput({
+    value: perspective3D.rotateY,
+    onChange: (val) => setPerspective3D({ rotateY: val }),
+    min: -45,
+    max: 45,
+    step: 1,
+  });
+  
+  const { ref: rotateZRef } = useWheelInput({
+    value: perspective3D.rotateZ,
+    onChange: (val) => setPerspective3D({ rotateZ: val }),
+    min: -45,
+    max: 45,
+    step: 1,
+  });
+  
+  const { ref: translateXRef } = useWheelInput({
+    value: perspective3D.translateX,
+    onChange: (val) => setPerspective3D({ translateX: val }),
+    min: -10,
+    max: 10,
+    step: 0.5,
+  });
+  
+  const { ref: translateYRef } = useWheelInput({
+    value: perspective3D.translateY,
+    onChange: (val) => setPerspective3D({ translateY: val }),
+    min: -10,
+    max: 10,
+    step: 0.5,
+  });
+
 
   return (
     <div className="space-y-6">
@@ -321,7 +371,7 @@ export function Perspective3DControls() {
       {/* Sliders */}
       <div className="space-y-4">
         {/* Perspective */}
-        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+        <div ref={perspectiveRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.perspective]}
             onValueChange={(value) => setPerspective3D({ perspective: value[0] })}
@@ -334,7 +384,7 @@ export function Perspective3DControls() {
         </div>
 
         {/* Rotate X */}
-        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+        <div ref={rotateXRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.rotateX]}
             onValueChange={(value) => setPerspective3D({ rotateX: value[0] })}
@@ -347,7 +397,7 @@ export function Perspective3DControls() {
         </div>
 
         {/* Rotate Y */}
-        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+        <div ref={rotateYRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.rotateY]}
             onValueChange={(value) => setPerspective3D({ rotateY: value[0] })}
@@ -360,7 +410,7 @@ export function Perspective3DControls() {
         </div>
 
         {/* Rotate Z */}
-        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+        <div ref={rotateZRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.rotateZ]}
             onValueChange={(value) => setPerspective3D({ rotateZ: value[0] })}
@@ -373,7 +423,7 @@ export function Perspective3DControls() {
         </div>
 
         {/* Translate X */}
-        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+        <div ref={translateXRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.translateX]}
             onValueChange={(value) => setPerspective3D({ translateX: value[0] })}
@@ -386,7 +436,7 @@ export function Perspective3DControls() {
         </div>
 
         {/* Translate Y */}
-        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+        <div ref={translateYRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[perspective3D.translateY]}
             onValueChange={(value) => setPerspective3D({ translateY: value[0] })}

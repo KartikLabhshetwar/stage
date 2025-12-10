@@ -15,6 +15,7 @@ import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
 import { useImageStore } from '@/lib/store';
 import {  Trash2, Eye, EyeOff } from 'lucide-react';
 import { fontFamilies, getAvailableFontWeights } from '@/lib/constants/fonts';
+import { useWheelInput } from '@/hooks/useWheelInput';
 
 export const TextOverlayControls = () => {
   const {
@@ -152,6 +153,62 @@ export const TextOverlayControls = () => {
       updateTextOverlay(id, { isVisible: !overlay.isVisible });
     }
   };
+  
+  const { ref: fontSizeRef } = useWheelInput({
+    value: selectedOverlay?.fontSize ?? 24,
+    onChange: (val) => handleUpdateFontSize([val]),
+    min: 12,
+    max: 150,
+    step: 1,
+  });
+  
+  const { ref: opacityRef } = useWheelInput({
+    value: selectedOverlay?.opacity ?? 1,
+    onChange: (val) => handleUpdateOpacity([val]),
+    min: 0,
+    max: 1,
+    step: 0.01,
+  });
+  
+  const { ref: shadowBlurRef } = useWheelInput({
+    value: selectedOverlay?.textShadow.blur ?? 0,
+    onChange: (val) => handleUpdateTextShadow({ blur: val }),
+    min: 0,
+    max: 20,
+    step: 1,
+  });
+  
+  const { ref: shadowOffsetXRef } = useWheelInput({
+    value: selectedOverlay?.textShadow.offsetX ?? 0,
+    onChange: (val) => handleUpdateTextShadow({ offsetX: val }),
+    min: -20,
+    max: 20,
+    step: 1,
+  });
+  
+  const { ref: shadowOffsetYRef } = useWheelInput({
+    value: selectedOverlay?.textShadow.offsetY ?? 0,
+    onChange: (val) => handleUpdateTextShadow({ offsetY: val }),
+    min: -20,
+    max: 20,
+    step: 1,
+  });
+  
+  const { ref: positionXRef } = useWheelInput({
+    value: selectedOverlay?.position.x ?? 50,
+    onChange: (val) => handleUpdatePosition('x', [val]),
+    min: 0,
+    max: 100,
+    step: 1,
+  });
+  
+  const { ref: positionYRef } = useWheelInput({
+    value: selectedOverlay?.position.y ?? 50,
+    onChange: (val) => handleUpdatePosition('y', [val]),
+    min: 0,
+    max: 100,
+    step: 1,
+  });
 
   return (
     <div className="space-y-5">
@@ -336,7 +393,7 @@ export const TextOverlayControls = () => {
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
               <span className="text-sm font-medium text-foreground whitespace-nowrap">Font Size</span>
-              <div className="flex-1 flex items-center gap-3">
+              <div ref={fontSizeRef} className="flex-1 flex items-center gap-3">
                 <Slider
                   value={[selectedOverlay.fontSize]}
                   onValueChange={handleUpdateFontSize}
@@ -350,7 +407,7 @@ export const TextOverlayControls = () => {
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-muted border border-border">
               <span className="text-sm font-medium text-foreground whitespace-nowrap">Opacity</span>
-              <div className="flex-1 flex items-center gap-3">
+              <div ref={opacityRef} className="flex-1 flex items-center gap-3">
                 <Slider
                   value={[selectedOverlay.opacity]}
                   onValueChange={handleUpdateOpacity}
@@ -409,7 +466,7 @@ export const TextOverlayControls = () => {
                   {/* Shadow Blur */}
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
                     <span className="text-sm font-medium text-foreground whitespace-nowrap">Blur</span>
-                    <div className="flex-1 flex items-center gap-3">
+                    <div ref={shadowBlurRef} className="flex-1 flex items-center gap-3">
                       <Slider
                         value={[selectedOverlay.textShadow.blur]}
                         onValueChange={(value) =>
@@ -426,7 +483,7 @@ export const TextOverlayControls = () => {
                   {/* Shadow Offset X */}
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
                     <span className="text-sm font-medium text-foreground whitespace-nowrap">Offset X</span>
-                    <div className="flex-1 flex items-center gap-3">
+                    <div ref={shadowOffsetXRef} className="flex-1 flex items-center gap-3">
                       <Slider
                         value={[selectedOverlay.textShadow.offsetX]}
                         onValueChange={(value) =>
@@ -443,7 +500,7 @@ export const TextOverlayControls = () => {
                   {/* Shadow Offset Y */}
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
                     <span className="text-sm font-medium text-foreground whitespace-nowrap">Offset Y</span>
-                    <div className="flex-1 flex items-center gap-3">
+                    <div ref={shadowOffsetYRef} className="flex-1 flex items-center gap-3">
                       <Slider
                         value={[selectedOverlay.textShadow.offsetY]}
                         onValueChange={(value) =>
@@ -465,7 +522,7 @@ export const TextOverlayControls = () => {
                 Position
               </p>
               {/* X position */}
-              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+              <div ref={positionXRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
                 <Slider
                   value={[selectedOverlay.position.x]}
                   onValueChange={(value) => handleUpdatePosition('x', value)}
@@ -478,7 +535,7 @@ export const TextOverlayControls = () => {
               </div>
 
               {/* Y position */}
-              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+              <div ref={positionYRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
                 <Slider
                   value={[selectedOverlay.position.y]}
                   onValueChange={(value) => handleUpdatePosition('y', value)}

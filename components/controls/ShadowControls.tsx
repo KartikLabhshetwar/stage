@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
 import { ImageShadow } from '@/lib/store';
+import { useWheelInput } from '@/hooks/useWheelInput';
 
 interface ShadowControlsProps {
   shadow: ImageShadow;
@@ -14,6 +15,39 @@ interface ShadowControlsProps {
 }
 
 export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) {
+  
+  const { ref: blurRef } = useWheelInput({
+      value: shadow.blur,
+      onChange: (val) => onShadowChange({ blur: val }),
+      min: 0,
+      max: 50,
+      step: 1,
+    });
+  
+  const { ref: offsetXRef } = useWheelInput({
+    value: shadow.offsetX,
+    onChange: (val) => onShadowChange({ offsetX: val }),
+    min: -20,
+    max: 20,
+    step: 1,
+  });
+
+  const { ref: offsetYRef } = useWheelInput({
+    value: shadow.offsetY,
+    onChange: (val) => onShadowChange({ offsetY: val }),
+    min: -20,
+    max: 20,
+    step: 1,
+  });
+
+  const { ref: spreadRef } = useWheelInput({
+    value: shadow.spread,
+    onChange: (val) => onShadowChange({ spread: val }),
+    min: -10,
+    max: 20,
+    step: 1,
+  });  
+  
   const presetShadows = [
     { blur: 24, offsetX: 0, offsetY: 6, spread: 3, label: 'Floating' },
     { blur: 4, offsetX: 0, offsetY: 2, spread: 0, label: 'Small' },
@@ -55,7 +89,7 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
         </div>
 
         <div className="space-y-3">
-          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+          <div ref={blurRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
             <Slider
               value={[shadow.blur]}
               onValueChange={(value) => onShadowChange({ blur: value[0] })}
@@ -67,7 +101,7 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
             />
           </div>
 
-          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+          <div ref={offsetXRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
             <Slider
               value={[shadow.offsetX]}
               onValueChange={(value) => onShadowChange({ offsetX: value[0] })}
@@ -79,7 +113,7 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
             />
           </div>
 
-          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+          <div ref={offsetYRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
             <Slider
               value={[shadow.offsetY]}
               onValueChange={(value) => onShadowChange({ offsetY: value[0] })}
@@ -91,7 +125,7 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
             />
           </div>
 
-          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+          <div ref={spreadRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
             <Slider
               value={[shadow.spread]}
               onValueChange={(value) => onShadowChange({ spread: value[0] })}

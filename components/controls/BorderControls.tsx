@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input'
 
 import { useState, useEffect } from 'react'
 
+import { useWheelInput } from '@/hooks/useWheelInput'
+
 const isValidHex = (color: string) => /^#[0-9A-F]{6}$/i.test(color)
 
 function ColorInput({
@@ -315,6 +317,22 @@ export function BorderControls() {
     return imageBorder.type === value
 
   }
+  
+  const { ref: widthRef } = useWheelInput({
+    value: imageBorder.width,
+    onChange: (val) => setImageBorder({ width: val }),
+    min: 1,
+    max: 50,
+    step: 0.5,
+  });
+  
+  const { ref: paddingRef } = useWheelInput({
+    value: imageBorder.padding || 20,
+    onChange: (val) => setImageBorder({ padding: val }),
+    min: 0,
+    max: 100,
+    step: 1,
+  });
 
   return (
     <div className="space-y-4">
@@ -397,7 +415,7 @@ export function BorderControls() {
 
         {['solid', 'glassy', 'dotted', 'eclipse', 'ruler', 'focus'].includes(imageBorder.type) && (
 
-          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+          <div ref={widthRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
             <Slider
               value={[imageBorder.width]}
               onValueChange={([value]) => setImageBorder({ width: value })}
@@ -431,7 +449,7 @@ export function BorderControls() {
 
             </div>
 
-            <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+            <div ref={paddingRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
               <Slider
                 value={[imageBorder.padding || 20]}
                 onValueChange={([value]) => setImageBorder({ padding: value })}

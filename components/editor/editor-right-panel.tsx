@@ -18,6 +18,7 @@ import { BackgroundEffects } from '@/components/controls/BackgroundEffects';
 import { PresetGallery } from '@/components/presets/PresetGallery';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Settings, Sparkles } from 'lucide-react';
+import { useWheelInput } from '@/hooks/useWheelInput';
 
 export function EditorRightPanel() {
   const { 
@@ -70,6 +71,23 @@ export function EditorRightPanel() {
     maxSize: MAX_IMAGE_SIZE,
     multiple: false,
   });
+  
+  const { ref: opacityRef } = useWheelInput({
+    value: backgroundConfig.opacity ?? 1,
+    onChange: setBackgroundOpacity,
+    min: 0,
+    max: 1,
+    step: 0.01,
+  });
+  
+  const { ref: borderRadiusRef } = useWheelInput({
+    value: backgroundBorderRadius,
+    onChange: setBackgroundBorderRadius,
+    min: 0,
+    max: 100,
+    step: 1,
+  });
+
 
   return (
     <div className="w-full h-full bg-[rgb(26,26,26)] flex flex-col overflow-hidden md:w-80 border-l border-border">
@@ -130,7 +148,7 @@ export function EditorRightPanel() {
                   <h4 className="text-xs font-semibold text-foreground uppercase tracking-wide">Background</h4>
               
               {/* Opacity */}
-              <div className="space-y-3">
+              <div ref={opacityRef} className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label className="text-xs font-medium text-muted-foreground">Opacity</Label>
                   <span className="text-xs text-muted-foreground font-medium">
@@ -148,7 +166,7 @@ export function EditorRightPanel() {
               </div>
 
               {/* Border Radius */}
-              <div className="space-y-3">
+              <div ref={borderRadiusRef} className="space-y-3">
                 <Label className="text-xs font-medium text-muted-foreground">Border Radius</Label>
                 <div className="flex gap-2 mb-2">
                   <Button

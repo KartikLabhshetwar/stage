@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { BorderControls } from '@/components/controls/BorderControls';
 import { ShadowControls } from '@/components/controls/ShadowControls';
 import { Perspective3DControls } from '@/components/controls/Perspective3DControls';
+import { useWheelInput } from '@/hooks/useWheelInput';
 
 export function StyleTabs() {
   const {
@@ -22,6 +23,31 @@ export function StyleTabs() {
     setImageShadow,
   } = useImageStore();
 
+  const { ref: radiusRef } = useWheelInput({
+    value: borderRadius,
+    onChange: setBorderRadius,
+    min: 0,
+    max: 100,
+    step: 1,
+  });
+  
+  const { ref: imageSizeRef } = useWheelInput({
+    value: imageScale,
+    onChange: setImageScale,
+    min: 10,
+    max: 200,
+    step: 1,
+  });
+  
+  const { ref: imageOpacityRef } = useWheelInput({
+    value: imageOpacity,
+    onChange: setImageOpacity,
+    min: 0,
+    max: 1,
+    step: 0.01,
+  });
+
+  
   return (
     <div className="space-y-6">
       <Tabs defaultValue="style" className="w-full">
@@ -63,7 +89,7 @@ export function StyleTabs() {
               Rounded
             </Button>
           </div>
-          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+          <div ref={radiusRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
             <Slider
               value={[borderRadius]}
               onValueChange={(value) => setBorderRadius(value[0])}
@@ -77,7 +103,7 @@ export function StyleTabs() {
         </div>
 
         <div className="space-y-3">
-          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+          <div ref={imageSizeRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
             <Slider
               value={[imageScale]}
               onValueChange={(value) => setImageScale(value[0])}
@@ -93,7 +119,7 @@ export function StyleTabs() {
           </p>
         </div>
 
-        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+        <div ref={imageOpacityRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
           <Slider
             value={[imageOpacity]}
             onValueChange={(value) => setImageOpacity(value[0])}

@@ -7,6 +7,7 @@ import { useImageStore } from '@/lib/store'
 import { Trash2, Eye, EyeOff } from 'lucide-react'
 import { getCldImageUrl } from '@/lib/cloudinary'
 import { OVERLAY_PUBLIC_IDS } from '@/lib/cloudinary-overlays'
+import { useWheelInput } from '@/hooks/useWheelInput'
 
 export function OverlayControls() {
   const {
@@ -69,6 +70,47 @@ export function OverlayControls() {
       })
     }
   }
+  
+  const { ref: sizeRef } = useWheelInput({
+    value: selectedOverlay?.size ?? 100,
+    onChange: (val) => handleUpdateSize([val]),
+    min: 20,
+    max: 400,
+    step: 1,
+  });
+  
+  const { ref: rotationRef } = useWheelInput({
+    value: selectedOverlay?.rotation ?? 0,
+    onChange: (val) => handleUpdateRotation([val]),
+    min: 0,
+    max: 360,
+    step: 1,
+  });
+  
+  const { ref: opacityRef } = useWheelInput({
+    value: selectedOverlay?.opacity ?? 1,
+    onChange: (val) => handleUpdateOpacity([val]),
+    min: 0,
+    max: 1,
+    step: 0.01,
+  });
+  
+  const { ref: posXRef } = useWheelInput({
+    value: selectedOverlay?.position.x ?? 0,
+    onChange: (val) => handleUpdatePosition('x', [val]),
+    min: 0,
+    max: 800,
+    step: 1,
+  });
+  
+  const { ref: posYRef } = useWheelInput({
+    value: selectedOverlay?.position.y ?? 0,
+    onChange: (val) => handleUpdatePosition('y', [val]),
+    min: 0,
+    max: 600,
+    step: 1,
+  });
+
 
   return (
     <div className="space-y-5">
@@ -171,7 +213,7 @@ export function OverlayControls() {
             </p>
 
             {/* Size */}
-            <div className="p-3 rounded-xl bg-muted border border-border">
+            <div ref={sizeRef} className="p-3 rounded-xl bg-muted border border-border">
               <Slider
                 value={[selectedOverlay.size]}
                 onValueChange={handleUpdateSize}
@@ -184,7 +226,7 @@ export function OverlayControls() {
             </div>
 
             {/* Rotation */}
-            <div className="p-3 rounded-xl bg-muted border border-border">
+            <div ref={rotationRef} className="p-3 rounded-xl bg-muted border border-border">
               <Slider
                 value={[selectedOverlay.rotation]}
                 onValueChange={handleUpdateRotation}
@@ -197,7 +239,7 @@ export function OverlayControls() {
             </div>
 
             {/* Opacity */}
-            <div className="p-3 rounded-xl bg-muted border border-border">
+            <div ref={opacityRef} className="p-3 rounded-xl bg-muted border border-border">
               <Slider
                 value={[selectedOverlay.opacity]}
                 onValueChange={handleUpdateOpacity}
@@ -233,7 +275,7 @@ export function OverlayControls() {
             <div className="space-y-4">
               <p className="text-sm font-semibold text-foreground">Position</p>
               {/* X position */}
-              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+              <div ref={posXRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
                 <Slider
                   value={[selectedOverlay.position.x]}
                   onValueChange={(value) => handleUpdatePosition('x', value)}
@@ -246,7 +288,7 @@ export function OverlayControls() {
               </div>
 
               {/* Y position */}
-              <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+              <div ref={posYRef} className="p-3 rounded-lg bg-muted/50 border border-border/50">
                 <Slider
                   value={[selectedOverlay.position.y]}
                   onValueChange={(value) => handleUpdatePosition('y', value)}
