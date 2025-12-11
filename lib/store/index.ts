@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { create } from 'zustand'
+import { temporal } from 'zundo'
 import { exportImageWithGradient } from './export-utils'
 import { GradientKey } from '@/lib/constants/gradient-colors'
 import { AspectRatioKey } from '@/lib/constants/aspect-ratios'
@@ -121,7 +122,7 @@ export interface EditorState {
     rotation: number
     radius: number
   }
-  
+
   // Background state (for Konva)
   background: {
     mode: 'solid' | 'gradient'
@@ -129,7 +130,7 @@ export interface EditorState {
     colorB: string
     gradientDirection: number
   }
-  
+
   // Shadow state (for Konva)
   shadow: {
     enabled: boolean
@@ -141,7 +142,7 @@ export interface EditorState {
     offsetX: number
     offsetY: number
   }
-  
+
   // Pattern state
   pattern: {
     enabled: boolean
@@ -153,7 +154,7 @@ export interface EditorState {
     blur: number
     opacity: number
   }
-  
+
   // Frame state (same as imageBorder)
   frame: {
     enabled: boolean
@@ -164,20 +165,20 @@ export interface EditorState {
     padding?: number
     title?: string
   }
-  
+
   // Canvas state
   canvas: {
     aspectRatio: 'square' | '4:3' | '2:1' | '3:2' | 'free'
     padding: number
   }
-  
+
   // Noise state
   noise: {
     enabled: boolean
     type: string
     opacity: number
   }
-  
+
   // Setters
   setScreenshot: (screenshot: Partial<EditorState['screenshot']>) => void
   setBackground: (background: Partial<EditorState['background']>) => void
@@ -198,14 +199,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     rotation: 0,
     radius: 0,
   },
-  
+
   background: {
     mode: 'gradient',
     colorA: '#4168d0',
     colorB: '#c850c0',
     gradientDirection: 43,
   },
-  
+
   shadow: {
     enabled: false,
     elevation: 10,
@@ -216,7 +217,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     offsetX: 0,
     offsetY: 4,
   },
-  
+
   pattern: {
     enabled: false,
     type: 'grid',
@@ -227,7 +228,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     blur: 0,
     opacity: 0.5,
   },
-  
+
   frame: {
     enabled: false,
     type: 'none',
@@ -237,54 +238,54 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     padding: 20,
     title: '',
   },
-  
+
   canvas: {
     aspectRatio: 'free',
     padding: 40,
   },
-  
+
   noise: {
     enabled: false,
     type: 'none',
     opacity: 0.5,
   },
-  
+
   setScreenshot: (screenshot) => {
     set((state) => ({
       screenshot: { ...state.screenshot, ...screenshot },
     }))
   },
-  
+
   setBackground: (background) => {
     set((state) => ({
       background: { ...state.background, ...background },
     }))
   },
-  
+
   setShadow: (shadow) => {
     set((state) => ({
       shadow: { ...state.shadow, ...shadow },
     }))
   },
-  
+
   setPattern: (pattern) => {
     set((state) => ({
       pattern: { ...state.pattern, ...pattern },
     }))
   },
-  
+
   setFrame: (frame) => {
     set((state) => ({
       frame: { ...state.frame, ...frame },
     }))
   },
-  
+
   setCanvas: (canvas) => {
     set((state) => ({
       canvas: { ...state.canvas, ...canvas },
     }))
   },
-  
+
   setNoise: (noise) => {
     set((state) => ({
       noise: { ...state.noise, ...noise },
@@ -303,17 +304,17 @@ export function useEditorStoreSync() {
     if (imageStore.uploadedImageUrl !== editorStore.screenshot.src) {
       editorStore.setScreenshot({ src: imageStore.uploadedImageUrl })
     }
-    
+
     // Sync screenshot scale
     if (imageStore.imageScale / 100 !== editorStore.screenshot.scale) {
       editorStore.setScreenshot({ scale: imageStore.imageScale / 100 })
     }
-    
+
     // Sync screenshot radius
     if (imageStore.borderRadius !== editorStore.screenshot.radius) {
       editorStore.setScreenshot({ radius: imageStore.borderRadius })
     }
-    
+
     // Sync background
     const bgConfig = imageStore.backgroundConfig
     if (bgConfig.type === 'gradient') {
@@ -342,7 +343,7 @@ export function useEditorStoreSync() {
         })
       }
     }
-    
+
     // Sync frame
     const frame = imageStore.imageBorder
     if (
@@ -364,20 +365,20 @@ export function useEditorStoreSync() {
         title: frame.title,
       })
     }
-    
+
     // Sync shadow
     const shadow = imageStore.imageShadow
     const offsetX = shadow.offsetX || 0
     const offsetY = shadow.offsetY || 0
     const elevation = Math.max(Math.abs(offsetX), Math.abs(offsetY)) || 4
-    
+
     let side: 'bottom' | 'right' | 'bottom-right' = 'bottom'
     if (Math.abs(offsetX) > Math.abs(offsetY)) {
       side = 'right'
     } else if (Math.abs(offsetX) > 0 && Math.abs(offsetY) > 0) {
       side = 'bottom-right'
     }
-    
+
     if (
       editorStore.shadow.enabled !== shadow.enabled ||
       editorStore.shadow.softness !== shadow.blur ||
@@ -396,7 +397,7 @@ export function useEditorStoreSync() {
         offsetY,
       })
     }
-    
+
     // Sync canvas aspect ratio
     const aspectRatioMap: Record<AspectRatioKey, 'square' | '4:3' | '2:1' | '3:2' | 'free'> = {
       '1_1': 'square',
@@ -486,7 +487,7 @@ export interface ImageState {
   exportImage: () => Promise<void>
 }
 
-export const useImageStore = create<ImageState>((set, get) => ({
+export const useImageStore = create<ImageState>()(temporal((set, get) => ({
   uploadedImageUrl: null,
   imageName: null,
   selectedGradient: 'vibrant_orange_pink',
@@ -605,25 +606,25 @@ export const useImageStore = create<ImageState>((set, get) => ({
 
   setBackgroundType: (type: BackgroundType) => {
     const { backgroundConfig } = get()
-    
+
     // If switching to 'image' type and current value is not a valid image, set default to radiant9
     if (type === 'image') {
       const currentValue = backgroundConfig.value
       const isGradientKey = currentValue in gradientColors
       const isSolidColorKey = currentValue in solidColors
-      const isValidImage = 
+      const isValidImage =
         typeof currentValue === 'string' &&
         (currentValue.startsWith('blob:') ||
-         currentValue.startsWith('http') ||
-         currentValue.startsWith('data:') ||
-         // Check if it's a Cloudinary public ID (contains '/' but not a gradient/solid key)
-         (currentValue.includes('/') && !isGradientKey && !isSolidColorKey))
-      
+          currentValue.startsWith('http') ||
+          currentValue.startsWith('data:') ||
+          // Check if it's a Cloudinary public ID (contains '/' but not a gradient/solid key)
+          (currentValue.includes('/') && !isGradientKey && !isSolidColorKey))
+
       // If current value is a gradient or solid color key, or not a valid image, set default to asset-26
-      const newValue = (isGradientKey || isSolidColorKey || !isValidImage) 
-        ? 'backgrounds/backgrounds/assets/asset-26' 
+      const newValue = (isGradientKey || isSolidColorKey || !isValidImage)
+        ? 'backgrounds/backgrounds/assets/asset-26'
         : currentValue
-      
+
       set({
         backgroundConfig: {
           ...backgroundConfig,
@@ -790,3 +791,4 @@ export const useImageStore = create<ImageState>((set, get) => ({
     }
   },
 }))
+)
