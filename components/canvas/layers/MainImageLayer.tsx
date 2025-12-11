@@ -1,6 +1,6 @@
 'use client';
 
-import { Layer, Group, Image as KonvaImage, Transformer } from 'react-konva';
+import { Layer, Group, Image as KonvaImage, Rect, Transformer } from 'react-konva';
 import Konva from 'konva';
 import { useRef, useEffect } from 'react';
 import { FrameRenderer } from '../frames/FrameRenderer';
@@ -145,13 +145,7 @@ export function MainImageLayer({
           width={imageScaledW}
           height={imageScaledH}
           opacity={has3DTransform ? 0 : imageOpacity}
-          cornerRadius={
-            showFrame && frame.type === 'window'
-              ? [0, 0, screenshot.radius, screenshot.radius]
-              : showFrame && frame.type === 'ruler'
-              ? screenshot.radius * 0.8
-              : screenshot.radius
-          }
+          cornerRadius={frame.type === 'arc-light' || frame.type === 'arc-dark' ? 8 : screenshot.radius}
           imageSmoothingEnabled={false}
           draggable={false}
           onClick={(e) => {
@@ -180,6 +174,19 @@ export function MainImageLayer({
           }}
           {...shadowProps}
         />
+        {!has3DTransform && showFrame && (frame.type === 'arc-light' || frame.type === 'arc-dark') && (
+          <Rect
+            x={frameOffset + windowPadding}
+            y={frameOffset + windowPadding + windowHeader}
+            width={imageScaledW}
+            height={imageScaledH}
+            cornerRadius={8}
+            stroke={frame.type === 'arc-light' ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.7)'}
+            strokeWidth={6}
+            fillEnabled={false}
+            listening={false}
+          />
+        )}
       </Group>
       <Transformer
         ref={mainImageTransformerRef}
