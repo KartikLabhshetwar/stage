@@ -95,6 +95,12 @@ export const TextOverlayControls = () => {
 
   const handleUpdateColor = (color: string) => {
     if (selectedOverlay) {
+      if (!color.startsWith('#')) {
+        return;
+      }
+      else {
+        color = "#"+color
+      }
       updateTextOverlay(selectedOverlay.id, { color });
     }
   };
