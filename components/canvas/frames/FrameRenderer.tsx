@@ -51,18 +51,11 @@ export function FrameRenderer({
           <Rect
             width={framedW}
             height={framedH}
-            fill={isDark ? '#1a1a1a' : '#ffffff'}
-            cornerRadius={screenshotRadius + 8}
-            {...shadowProps}
-          />
-          <Rect
-            x={8}
-            y={8}
-            width={framedW - 16}
-            height={framedH - 16}
-            stroke={isDark ? '#333333' : '#e5e5e5'}
+            fill={isDark ? 'rgba(20, 20, 20, 0.85)' : 'rgba(255, 255, 255, 0.25)'}
+            cornerRadius={screenshotRadius + 12}
+            stroke={isDark ? 'rgba(60, 60, 60, 0.8)' : 'rgba(255, 255, 255, 0.8)'}
             strokeWidth={1}
-            cornerRadius={screenshotRadius + 4}
+            {...shadowProps}
           />
         </Group>
       );

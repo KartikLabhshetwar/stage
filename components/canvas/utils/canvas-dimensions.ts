@@ -95,7 +95,7 @@ export function calculateCanvasDimensions(
   const isWindowsFrame = frame.type === 'windows-light' || frame.type === 'windows-dark';
   const isPhotograph = frame.type === 'photograph';
 
-  const frameOffset = showFrame && (frame.type === 'arc-light' || frame.type === 'arc-dark') ? 8 : 0;
+  const frameOffset = showFrame && (frame.type === 'arc-light' || frame.type === 'arc-dark') ? 12 : 0;
   const polaroidPadding = 20;
   const polaroidBottom = 80;
   const windowPadding = showFrame && isWindowFrame ? (frame.padding || 16) : (showFrame && isPhotograph ? polaroidPadding : 0);

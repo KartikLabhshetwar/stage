@@ -26,8 +26,6 @@ interface Frame3DOverlayProps {
 export function Frame3DOverlay({
   frame,
   showFrame,
-  framedW,
-  framedH,
   screenshotRadius,
 }: Frame3DOverlayProps) {
   if (!showFrame || frame.type === 'none') {
@@ -44,22 +42,14 @@ export function Frame3DOverlay({
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
-            borderRadius: `${screenshotRadius + 8}px`,
-            padding: '8px',
+            backgroundColor: isDark ? 'rgba(20, 20, 20, 0.85)' : 'rgba(255, 255, 255, 0.25)',
+            borderRadius: `${screenshotRadius + 12}px`,
             boxSizing: 'border-box',
+            border: `1px solid ${isDark ? 'rgba(60, 60, 60, 0.8)' : 'rgba(255, 255, 255, 0.8)'}`,
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
           }}
-        >
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              border: `1px solid ${isDark ? '#333333' : '#e5e5e5'}`,
-              borderRadius: `${screenshotRadius + 4}px`,
-              boxSizing: 'border-box',
-            }}
-          />
-        </div>
+        />
       );
 
     case 'macos-light':
