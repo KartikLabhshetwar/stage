@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useImageStore } from '@/lib/store'
+import { useImageStore, type ImageBorder } from '@/lib/store'
 import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 
@@ -104,7 +104,19 @@ export function BorderControls() {
   const { imageBorder, setImageBorder } = useImageStore()
 
   const handleSelect = (value: FrameType) => {
-    setImageBorder({ type: value, enabled: true })
+    const next: Partial<ImageBorder> = {
+      type: value,
+      enabled: value !== 'none',
+    }
+
+    const isArcType = value === 'arc-light' || value === 'arc-dark'
+    const wasArcType = imageBorder.type === 'arc-light' || imageBorder.type === 'arc-dark'
+
+    if (isArcType && !wasArcType) {
+      next.width = 8
+    }
+
+    setImageBorder(next)
   }
 
   const isSelected = (value: FrameType) => {

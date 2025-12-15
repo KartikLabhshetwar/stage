@@ -97,7 +97,7 @@ export function calculateCanvasDimensions(
 
   const frameOffset =
     showFrame && (frame.type === 'arc-light' || frame.type === 'arc-dark')
-      ? Math.max(0, frame.width || 12)
+      ? Math.max(0, frame.width || 8)
       : 0;
   const polaroidPadding = 8;
   const polaroidBottom = 60;

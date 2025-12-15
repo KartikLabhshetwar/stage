@@ -223,7 +223,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   frame: {
     enabled: false,
     type: 'none',
-    width: 10,
+    width: 8,
     color: '#000000',
     padding: 20,
     title: '',
@@ -496,7 +496,7 @@ export const useImageStore = create<ImageState>()(temporal((set, get) => ({
   imageScale: 100,
   imageBorder: {
     enabled: false,
-    width: 2,
+    width: 8,
     color: '#000000',
     type: 'none',
     padding: 20,

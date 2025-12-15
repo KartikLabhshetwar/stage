@@ -52,7 +52,7 @@ export function FrameRenderer({
             width={framedW}
             height={framedH}
             fill={isDark ? 'rgba(20, 20, 20, 0.85)' : 'rgba(255, 255, 255, 0.25)'}
-            cornerRadius={screenshotRadius + 12}
+            cornerRadius={screenshotRadius}
             {...shadowProps}
           />
         </Group>
