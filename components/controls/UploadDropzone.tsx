@@ -8,10 +8,12 @@ import { useEditorStore, useImageStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { WebsiteScreenshotInput } from './WebsiteScreenshotInput'
+import { WebcamCapture } from './WebcamCapture'
 
 export function UploadDropzone() {
   const [isDragActive, setIsDragActive] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [activeTab, setActiveTab] = React.useState('upload')
   const { setScreenshot } = useEditorStore()
   const { setImage } = useImageStore()
   const containerRef = React.useRef<HTMLDivElement>(null)
@@ -121,13 +123,16 @@ export function UploadDropzone() {
           </p>
         </div>
 
-        <Tabs defaultValue="upload" className="w-full">
-          <TabsList className="w-full grid grid-cols-2 rounded-none bg-transparent h-12 p-1.5 gap-1.5 border border-border">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="w-full grid grid-cols-3 rounded-none bg-transparent h-12 p-1.5 gap-1.5 border border-border">
             <TabsTrigger value="upload" className="data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:shadow-black/20 rounded-md border-0 data-[state=active]:border-2 data-[state=active]:border-border transition-all duration-200">
               Upload Image
             </TabsTrigger>
+            <TabsTrigger value="webcam" className="data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:shadow-black/20 rounded-md border-0 data-[state=active]:border-2 data-[state=active]:border-border transition-all duration-200">
+              Webcam
+            </TabsTrigger>
             <TabsTrigger value="screenshot" className="data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:shadow-black/20 rounded-md border-0 data-[state=active]:border-2 data-[state=active]:border-border transition-all duration-200">
-              Website Screenshot
+              Screenshot
             </TabsTrigger>
           </TabsList>
 
@@ -174,6 +179,10 @@ export function UploadDropzone() {
                 <p className="text-xs sm:text-sm text-destructive">{error}</p>
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="webcam" className="mt-6">
+            <WebcamCapture onClose={() => setActiveTab('upload')} />
           </TabsContent>
 
           <TabsContent value="screenshot" className="mt-6">

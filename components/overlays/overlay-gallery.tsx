@@ -89,7 +89,7 @@ export function OverlayGallery() {
         <input
           ref={setCustomOverlayRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/jpg,image/png,image/webp"
           onChange={handleCustomOverlayUpload}
           className="hidden"
         />

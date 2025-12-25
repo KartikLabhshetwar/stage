@@ -65,7 +65,9 @@ export function EditorRightPanel() {
   const { getRootProps: getBgRootProps, getInputProps: getBgInputProps, isDragActive: isBgDragActive } = useDropzone({
     onDrop: onBgDrop,
     accept: {
-      'image/*': ALLOWED_IMAGE_TYPES.map((type) => type.split('/')[1]),
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+      'image/webp': ['.webp'],
     },
     maxSize: MAX_IMAGE_SIZE,
     multiple: false,
