@@ -84,22 +84,26 @@ export function calculateCanvasDimensions(
   }
 
   const showFrame = frame.enabled && frame.type !== 'none';
-  
+
   if (showFrame) {
     imageScaledW *= 0.88;
     imageScaledH *= 0.88;
   }
+
+  const isWindowFrame = ['macos-light', 'macos-dark', 'windows-light', 'windows-dark'].includes(frame.type);
+  const isMacosFrame = frame.type === 'macos-light' || frame.type === 'macos-dark';
+  const isWindowsFrame = frame.type === 'windows-light' || frame.type === 'windows-dark';
+  const isPhotograph = frame.type === 'photograph';
+
   const frameOffset =
-    showFrame && frame.type === 'solid'
-      ? frame.width
-      : showFrame && frame.type === 'ruler'
-      ? frame.width + 2
+    showFrame && (frame.type === 'arc-light' || frame.type === 'arc-dark')
+      ? Math.max(0, frame.width || 8)
       : 0;
-  const windowPadding =
-    showFrame && frame.type === 'window' ? frame.padding || 20 : 0;
-  const windowHeader = showFrame && frame.type === 'window' ? 40 : 0;
-  const eclipseBorder =
-    showFrame && frame.type === 'eclipse' ? frame.width + 2 : 0;
+  const polaroidPadding = 8;
+  const polaroidBottom = 60;
+  const windowPadding = showFrame && isWindowFrame ? 0 : (showFrame && isPhotograph ? polaroidPadding : 0);
+  const windowHeader = showFrame && isMacosFrame ? 40 : (showFrame && isWindowsFrame ? 28 : (showFrame && isPhotograph ? polaroidBottom - polaroidPadding : 0));
+  const eclipseBorder = 0;
 
   const framedW =
     imageScaledW + frameOffset * 2 + windowPadding * 2 + eclipseBorder;

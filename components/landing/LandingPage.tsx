@@ -61,13 +61,13 @@ export function LandingPage({
         ctaLabel={ctaLabel}
         ctaHref={ctaHref}
       />
+      <MasonryGrid />
       {videoTestimonials && videoTestimonials.length > 0 && (
         <>
           <VideoTestimonials testimonials={videoTestimonials} title={videoTestimonialsTitle} />
           <div className="w-full border-t border-border" />
         </>
       )}
-      <MasonryGrid />
       <Features features={features} title={featuresTitle} />
       {/* <Pricing /> */}
       <Sponsors sponsors={sponsors} title={sponsorsTitle} />

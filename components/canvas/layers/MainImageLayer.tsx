@@ -105,20 +105,18 @@ export function MainImageLayer({
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
 
-          // Use the average of scaleX and scaleY to maintain aspect ratio
           const finalScale = (scaleX + scaleY) / 2;
 
-          // Calculate the new scale based on current screenshot.scale
-          const newScreenshotScale = screenshot.scale * finalScale;
+          const rawNewScale = imageScale * finalScale;
 
-          // Update screenshot scale
-          setScreenshot({ scale: newScreenshotScale });
+          // Round to nearest integer and clamp between 10 and 200
+          const newImageScale = Math.min(Math.max(Math.round(rawNewScale), 10), 200);
 
-          // Update imageScale in the store (imageScale is in percentage, screenshot.scale is decimal)
-          const newImageScale = imageScale * finalScale;
           setImageScale(newImageScale);
 
-          // Reset the node's scale to 1 so transformations don't compound
+          setScreenshot({ scale: newImageScale / 100 });
+
+          // Reset the node's scale to 1 so that the image won't jump on re-render.
           node.scaleX(1);
           node.scaleY(1);
         }}
@@ -148,10 +146,11 @@ export function MainImageLayer({
           height={imageScaledH}
           opacity={has3DTransform ? 0 : imageOpacity}
           cornerRadius={
-            showFrame && frame.type === 'window'
+            frame.type === 'macos-light' ||
+            frame.type === 'macos-dark' ||
+            frame.type === 'windows-light' ||
+            frame.type === 'windows-dark'
               ? [0, 0, screenshot.radius, screenshot.radius]
-              : showFrame && frame.type === 'ruler'
-              ? screenshot.radius * 0.8
               : screenshot.radius
           }
           imageSmoothingEnabled={false}

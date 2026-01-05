@@ -1,456 +1,181 @@
 'use client'
 
 import * as React from 'react'
-
-import { useImageStore } from '@/lib/store'
-
+import { useImageStore, type ImageBorder } from '@/lib/store'
+import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 
-import { Input } from '@/components/ui/input'
-
-import { useState, useEffect } from 'react'
-
-const isValidHex = (color: string) => /^#[0-9A-F]{6}$/i.test(color)
-
-function ColorInput({
-
-  value,
-
-  onChange,
-
-  className = '',
-
-}: {
-
-  value: string
-
-  onChange: (value: string) => void
-
-  className?: string
-
-}) {
-
-  const [localValue, setLocalValue] = useState(value)
-
-  useEffect(() => {
-
-    setLocalValue(value)
-
-  }, [value])
-
-  const handleBlur = () => {
-
-    if (isValidHex(localValue)) {
-
-      onChange(localValue)
-
-    } else {
-
-      setLocalValue(value)
-
-    }
-
-  }
-
-  return (
-
-    <Input
-
-      type="text"
-
-      value={localValue}
-
-      onChange={(e) => setLocalValue(e.target.value)}
-
-      onBlur={handleBlur}
-
-      className={className}
-
-    />
-
-  )
-
-}
-
 const frameOptions = [
-
   { value: 'none', label: 'None' },
-
-  { value: 'solid', label: 'Solid' },
-
-  { value: 'glassy', label: 'Glassy' },
-
-  { value: 'infinite-mirror', label: 'Mirror' },
-
-  { value: 'window-light', label: 'Window' },
-
-  { value: 'window-dark', label: 'Dark Window' },
-
-  { value: 'stack-light', label: 'Stack' },
-
-  { value: 'stack-dark', label: 'Dark Stack' },
-
-  { value: 'ruler', label: 'Ruler' },
-
-  { value: 'eclipse', label: 'Neo' },
-
-  { value: 'dotted', label: 'Dotted' },
-
-  { value: 'focus', label: 'Focus' },
-
+  { value: 'arc-light', label: 'Arc Light' },
+  { value: 'arc-dark', label: 'Arc Dark' },
+  { value: 'macos-light', label: 'macOS Light' },
+  { value: 'macos-dark', label: 'macOS Dark' },
+  { value: 'windows-light', label: 'Windows Light' },
+  { value: 'windows-dark', label: 'Windows Dark' },
+  { value: 'photograph', label: 'Photograph' },
 ] as const
 
 type FrameType = (typeof frameOptions)[number]['value']
 
 function FramePreview({
-
   type,
-
   selected,
-
   onSelect,
-
   children,
-
 }: {
-
   type: FrameType
-
   selected: boolean
-
   onSelect: () => void
-
   children: React.ReactNode
-
 }) {
-
   return (
-
     <div className="flex flex-col items-center gap-2">
-
       <button
-
+        type="button"
         onClick={onSelect}
-
         aria-selected={selected}
-
         className="flex h-14 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-border/50 bg-secondary transition-colors duration-200 aria-selected:border-primary hover:bg-secondary/80 hover:border-border"
-
         title={type}
-
       >
-
         <div className="relative h-8 w-10">{children}</div>
-
       </button>
-
       <div className="text-xs text-muted-foreground">{frameOptions.find((f) => f.value === type)?.label}</div>
-
     </div>
-
   )
-
 }
 
 const framePreviews: Record<FrameType, React.ReactNode> = {
-
   none: <div className="size-full rounded-md border-2 border-dashed border-muted-foreground/50" />,
-
-  solid: <div className="size-full rounded-md border-4 border-primary/80" />,
-
-  glassy: <div className="size-full rounded-md border-2 border-foreground/20 bg-background/10 backdrop-blur-sm" />,
-
-  'window-light': (
-
-    <div className="flex size-full flex-col rounded-md border-2 border-border bg-white">
-
-      <div className="flex h-2 items-center gap-0.5 rounded-t-sm bg-muted px-1">
-
+  'arc-light': (
+    <div className="size-full rounded-lg bg-white border border-neutral-200 p-0.5" />
+  ),
+  'arc-dark': (
+    <div className="size-full rounded-lg bg-neutral-900 border border-neutral-700 p-0.5" />
+  ),
+  'macos-light': (
+    <div className="flex size-full flex-col">
+      <div className="flex h-2.5 items-center gap-0.5 rounded-t-md bg-neutral-200 px-1">
         <div className="size-1 rounded-full bg-red-400" />
-
         <div className="size-1 rounded-full bg-yellow-400" />
-
         <div className="size-1 rounded-full bg-green-400" />
-
       </div>
-
     </div>
-
   ),
-
-  'window-dark': (
-
-    <div className="flex size-full flex-col rounded-md border-2 border-neutral-700 bg-black/80">
-
-      <div className="flex h-2 items-center gap-0.5 rounded-t-sm bg-neutral-800 px-1">
-
+  'macos-dark': (
+    <div className="flex size-full flex-col">
+      <div className="flex h-2.5 items-center gap-0.5 rounded-t-md bg-neutral-700 px-1">
         <div className="size-1 rounded-full bg-red-500" />
-
         <div className="size-1 rounded-full bg-yellow-500" />
-
         <div className="size-1 rounded-full bg-green-500" />
-
       </div>
-
     </div>
-
   ),
-
-  'infinite-mirror': (
-
-    <div className="size-full rounded-md border-2 border-primary/80 p-1">
-
-      <div className="size-full rounded-[3px] border-2 border-primary/60 p-0.5">
-
-        <div className="size-full rounded-[2px] border-2 border-primary/40" />
-
+  'windows-light': (
+    <div className="flex size-full flex-col">
+      <div className="flex h-2 items-center justify-end gap-1 bg-neutral-100 px-1 rounded-t-sm">
+        <div className="w-1 h-px bg-neutral-600" />
+        <div className="size-1 border border-neutral-600" />
+        <div className="size-1 relative">
+          <div className="absolute inset-0 rotate-45 bg-neutral-600" style={{ width: '1px', height: '6px', top: '-1px', left: '2px' }} />
+        </div>
       </div>
-
     </div>
-
   ),
-
-  ruler: (
-
-    <div className="relative size-full overflow-hidden rounded-sm bg-amber-400/80">
-
-      <div className="absolute left-0 top-0 h-full w-px bg-black/70" />
-
-      <div className="absolute left-0 top-0 h-px w-full bg-black/70" />
-
-      <div className="absolute left-2 top-0 h-1 w-px bg-black/70" />
-
-      <div className="absolute left-4 top-0 h-1.5 w-px bg-black/70" />
-
-      <div className="absolute left-6 top-0 h-1 w-px bg-black/70" />
-
-      <div className="absolute left-8 top-0 h-2 w-px bg-black/70" />
-
-      <div className="absolute top-2 left-0 w-1 h-px bg-black/70" />
-
-      <div className="absolute top-4 left-0 w-1.5 h-px bg-black/70" />
-
-      <div className="absolute top-6 left-0 w-1 h-px bg-black/70" />
-
+  'windows-dark': (
+    <div className="flex size-full flex-col">
+      <div className="flex h-2 items-center justify-end gap-1 bg-neutral-800 px-1 rounded-t-sm">
+        <div className="w-1 h-px bg-neutral-400" />
+        <div className="size-1 border border-neutral-400" />
+        <div className="size-1 relative">
+          <div className="absolute inset-0 rotate-45 bg-neutral-400" style={{ width: '1px', height: '6px', top: '-1px', left: '2px' }} />
+        </div>
+      </div>
     </div>
-
   ),
-
-  eclipse: <div className="size-full rounded-full bg-black" />,
-
-  'stack-light': (
-
-    <div className="relative size-full">
-
-      <div className="absolute left-0 top-0 h-5/6 w-5/6 rounded-md border-2 border-border bg-white" />
-
-      <div className="absolute bottom-0 right-0 h-5/6 w-5/6 rounded-md border-2 border-border/80 bg-white/80" />
-
+  photograph: (
+    <div className="size-full bg-white rounded-sm p-0.5 pb-2">
+      <div className="size-full bg-neutral-300 rounded-[1px]" />
     </div>
-
   ),
-
-  'stack-dark': (
-
-    <div className="relative size-full">
-
-      <div className="absolute left-0 top-0 h-5/6 w-5/6 rounded-md border-2 border-neutral-700 bg-black/80" />
-
-      <div className="absolute bottom-0 right-0 h-5/6 w-5/6 rounded-md border-2 border-neutral-600/80 bg-black/60" />
-
-    </div>
-
-  ),
-
-  dotted: <div className="size-full rounded-md border-2 border-dashed border-primary/80" />,
-
-  focus: (
-
-    <div className="relative size-full">
-
-      <div className="absolute -top-0.5 -left-0.5 h-3 w-3 rounded-tl-md border-t-2 border-l-2 border-primary/80" />
-
-      <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-tr-md border-t-2 border-r-2 border-primary/80" />
-
-      <div className="absolute -bottom-0.5 -left-0.5 h-3 w-3 rounded-bl-md border-b-2 border-l-2 border-primary/80" />
-
-      <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-br-md border-b-2 border-r-2 border-primary/80" />
-
-    </div>
-
-  ),
-
 }
 
 export function BorderControls() {
-
   const { imageBorder, setImageBorder } = useImageStore()
 
   const handleSelect = (value: FrameType) => {
-
-    if (value.startsWith('window-') || value.startsWith('stack-')) {
-
-      const [type, theme] = value.split('-')
-
-      setImageBorder({ type: type as 'window' | 'stack', theme: theme as 'light' | 'dark', enabled: true })
-
-    } else {
-
-      setImageBorder({ type: value as Exclude<FrameType, `${'window' | 'stack'}-${'light' | 'dark'}`>, enabled: true })
-
+    const next: Partial<ImageBorder> = {
+      type: value,
+      enabled: value !== 'none',
     }
 
+    const isArcType = value === 'arc-light' || value === 'arc-dark'
+    const wasArcType = imageBorder.type === 'arc-light' || imageBorder.type === 'arc-dark'
+
+    if (isArcType && !wasArcType) {
+      next.width = 8
+    }
+
+    setImageBorder(next)
   }
 
   const isSelected = (value: FrameType) => {
-
-    if (value.startsWith('window-') || value.startsWith('stack-')) {
-
-      const [type, theme] = value.split('-')
-
-      return imageBorder.type === type && imageBorder.theme === theme
-
-    }
-
     return imageBorder.type === value
-
   }
+
+  const showTitleInput = ['macos-light', 'macos-dark', 'windows-light', 'windows-dark', 'photograph'].includes(imageBorder.type)
+  const showThicknessControl = ['arc-light', 'arc-dark'].includes(imageBorder.type)
+  const isPhotograph = imageBorder.type === 'photograph'
 
   return (
     <div className="space-y-4">
       <div className="text-sm font-semibold text-foreground">Frame</div>
       <div className="space-y-4 pt-2">
-
         <div>
-
           <label className="mb-2 block text-xs text-muted-foreground">Style</label>
-
-          <div className="grid grid-cols-3 gap-x-2 gap-y-4">
-
+          <div className="grid grid-cols-4 gap-x-2 gap-y-4">
             {frameOptions.map(({ value }) => (
-
               <FramePreview
-
                 key={value}
-
                 type={value}
-
                 selected={isSelected(value)}
-
                 onSelect={() => handleSelect(value)}
-
               >
-
                 {framePreviews[value]}
-
               </FramePreview>
-
             ))}
-
           </div>
-
         </div>
 
-        {['solid', 'dotted', 'infinite-mirror', 'eclipse', 'focus', 'ruler'].includes(imageBorder.type) && (
-
-          <div>
-
-            <label className="text-xs text-muted-foreground mb-2 block">Color</label>
-
-            <div className="flex items-center gap-2">
-
-              <div
-
-                className="relative size-9 shrink-0 overflow-hidden rounded-lg"
-
-                style={{ backgroundColor: imageBorder.color }}
-
-              >
-
-                <input
-
-                  type="color"
-
-                  value={imageBorder.color}
-
-                  onChange={(e) => setImageBorder({ color: e.target.value, enabled: true })}
-
-                  className="absolute inset-0 size-full cursor-pointer opacity-0"
-
-                />
-
-              </div>
-
-              <ColorInput
-
-                value={imageBorder.color}
-
-                onChange={(color) => setImageBorder({ color, enabled: true })}
-
-              />
-
-            </div>
-
-          </div>
-
-        )}
-
-        {['solid', 'glassy', 'dotted', 'eclipse', 'ruler', 'focus'].includes(imageBorder.type) && (
-
-          <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+        {showThicknessControl && (
+          <div className="space-y-2">
+            <label className="text-xs text-muted-foreground mb-2 block">Frame Size</label>
             <Slider
               value={[imageBorder.width]}
-              onValueChange={([value]) => setImageBorder({ width: value })}
-              min={1}
-              max={50}
-              step={0.5}
-              label="Width"
+              onValueChange={(value) => setImageBorder({ width: value[0], enabled: true })}
+              min={4}
+              max={40}
+              step={1}
+              label="Frame Size"
               valueDisplay={`${imageBorder.width}px`}
             />
           </div>
-
         )}
 
-        {imageBorder.type === 'window' && (
-
-          <>
-
-            <div>
-
-              <label className="text-xs text-muted-foreground mb-2 block">Title</label>
-
-              <Input
-
-                type="text"
-
-                value={imageBorder.title || ''}
-
-                onChange={(e) => setImageBorder({ title: e.target.value, enabled: true })}
-
-              />
-
-            </div>
-
-            <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
-              <Slider
-                value={[imageBorder.padding || 20]}
-                onValueChange={([value]) => setImageBorder({ padding: value })}
-                min={0}
-                max={100}
-                step={1}
-                label="Padding"
-                valueDisplay={`${imageBorder.padding || 20}px`}
-              />
-            </div>
-
-          </>
-
+        {showTitleInput && (
+          <div>
+            <label className="text-xs text-muted-foreground mb-2 block">
+              {isPhotograph ? 'Caption' : 'Title'}
+            </label>
+            <Input
+              type="text"
+              value={imageBorder.title || ''}
+              onChange={(e) => setImageBorder({ title: e.target.value, enabled: true })}
+              placeholder={isPhotograph ? 'Write something...' : 'Window title'}
+            />
+          </div>
         )}
-
       </div>
-
     </div>
-
   )
-
 }

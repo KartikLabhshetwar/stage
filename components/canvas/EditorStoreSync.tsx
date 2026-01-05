@@ -94,7 +94,6 @@ export function EditorStoreSync() {
       editorStore.frame.type !== frame.type ||
       editorStore.frame.width !== frame.width ||
       editorStore.frame.color !== frame.color ||
-      editorStore.frame.theme !== frame.theme ||
       editorStore.frame.padding !== frame.padding ||
       editorStore.frame.title !== frame.title
     ) {
@@ -103,7 +102,6 @@ export function EditorStoreSync() {
         type: frame.type,
         width: frame.width,
         color: frame.color,
-        theme: frame.theme,
         padding: frame.padding,
         title: frame.title,
       })

@@ -198,7 +198,7 @@ export function PresetGallery({ onPresetSelect }: PresetGalleryProps) {
                             className="absolute inset-0 border-2"
                             style={{
                               borderColor: preset.imageBorder.color,
-                              borderRadius: `${preset.imageBorder.borderRadius}px`,
+                              borderRadius: `${preset.borderRadius}px`,
                             }}
                           />
                         )}

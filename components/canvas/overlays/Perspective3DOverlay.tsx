@@ -176,10 +176,8 @@ export function Perspective3DOverlay({
               objectFit: 'cover',
               opacity: imageOpacity,
               borderRadius:
-                showFrame && frame.type === 'window'
+                showFrame && (frame.type === 'macos-light' || frame.type === 'macos-dark' || frame.type === 'windows-light' || frame.type === 'windows-dark')
                   ? `0 0 ${screenshot.radius}px ${screenshot.radius}px`
-                  : showFrame && frame.type === 'ruler'
-                  ? `${screenshot.radius * 0.8}px`
                   : `${screenshot.radius}px`,
             }}
           />

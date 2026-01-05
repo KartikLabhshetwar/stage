@@ -66,6 +66,47 @@ export function BackgroundLayer({
           image={bgImage}
           width={canvasW}
           height={canvasH}
+          // Calculate cropping to simulate object-fit: cover
+          crop={(() => {
+            const imageWidth = bgImage.width;
+            const imageHeight = bgImage.height;
+
+            // Guard against invalid or zero dimensions to avoid division by zero
+            if (imageHeight <= 0 || canvasW <= 0 || canvasH <= 0) {
+              return {
+                x: 0,
+                y: 0,
+                width: imageWidth,
+                height: imageHeight,
+              };
+            }
+
+            const imageRatio = imageWidth / imageHeight;
+            const canvasRatio = canvasW / canvasH;
+
+            let cropWidth, cropHeight, cropX, cropY;
+
+            if (imageRatio > canvasRatio) {
+              // Image is wider than canvas - crop sides
+              cropHeight = imageHeight;
+              cropWidth = imageHeight * canvasRatio;
+              cropX = (imageWidth - cropWidth) / 2;
+              cropY = 0;
+            } else {
+              // Image is taller than canvas - crop top/bottom
+              cropWidth = imageWidth;
+              cropHeight = imageWidth / canvasRatio;
+              cropX = 0;
+              cropY = (imageHeight - cropHeight) / 2;
+            }
+
+            return {
+              x: cropX,
+              y: cropY,
+              width: cropWidth,
+              height: cropHeight,
+            };
+          })()}
           opacity={backgroundConfig.opacity ?? 1}
           cornerRadius={backgroundBorderRadius}
           filters={backgroundBlur > 0 ? [Konva.Filters.Blur] : []}
