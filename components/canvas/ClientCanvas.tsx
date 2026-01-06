@@ -1,30 +1,31 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { Stage, Layer } from "react-konva";
-import Konva from "konva";
-import { useEditorStore } from "@/lib/store";
-import { useImageStore } from "@/lib/store";
-import { generatePattern } from "@/lib/patterns";
-import { useResponsiveCanvasDimensions } from "@/hooks/useAspectRatioDimensions";
-import { getBackgroundCSS } from "@/lib/constants/backgrounds";
-import { generateNoiseTexture } from "@/lib/export/export-utils";
-import { MockupRenderer } from "@/components/mockups/MockupRenderer";
-import { calculateCanvasDimensions } from "./utils/canvas-dimensions";
-import { BackgroundLayer } from "./layers/BackgroundLayer";
-import { PatternLayer } from "./layers/PatternLayer";
-import { NoiseLayer } from "./layers/NoiseLayer";
-import { MainImageLayer } from "./layers/MainImageLayer";
-import { TextOverlayLayer } from "./layers/TextOverlayLayer";
-import { ImageOverlayLayer } from "./layers/ImageOverlayLayer";
-import { Perspective3DOverlay } from "./overlays/Perspective3DOverlay";
-import { useBackgroundImage, useOverlayImages } from "./hooks/useImageLoading";
+import { useEffect, useRef, useState } from 'react';
+import { Stage, Layer } from 'react-konva';
+import Konva from 'konva';
+import { useEditorStore } from '@/lib/store';
+import { useImageStore } from '@/lib/store';
+import { generatePattern } from '@/lib/patterns';
+import { useResponsiveCanvasDimensions } from '@/hooks/useAspectRatioDimensions';
+import { getBackgroundCSS } from '@/lib/constants/backgrounds';
+import { generateNoiseTexture } from '@/lib/export/export-utils';
+import { MockupRenderer } from '@/components/mockups/MockupRenderer';
+import { calculateCanvasDimensions } from './utils/canvas-dimensions';
+import { BackgroundLayer } from './layers/BackgroundLayer';
+import { PatternLayer } from './layers/PatternLayer';
+import { NoiseLayer } from './layers/NoiseLayer';
+import { MainImageLayer } from './layers/MainImageLayer';
+import { TextOverlayLayer } from './layers/TextOverlayLayer';
+import { ImageOverlayLayer } from './layers/ImageOverlayLayer';
+import { Perspective3DOverlay } from './overlays/Perspective3DOverlay';
+import { useBackgroundImage, useOverlayImages } from './hooks/useImageLoading';
 
 let globalKonvaStage: Konva.Stage | null = null;
 
 function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   const stageRef = useRef<Konva.Stage>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
   const {
     screenshot,
     setScreenshot,
@@ -125,49 +126,6 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   }, [selectedOverlayId]);
 
   useEffect(() => {
-    // deleting overlays when backspace or delete is pressed
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key == "Delete" || e.key == "Backspace") {
-        if (selectedOverlayId) {
-          e.preventDefault();
-          removeImageOverlay(selectedOverlayId);
-          setSelectedOverlayId(null);
-        }
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedOverlayId, removeImageOverlay]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Delete" || e.key === "Backspace") {
-        // Delete logic
-        const store = useImageStore.getState();
-        if (selectedOverlayId) {
-          e.preventDefault();
-          store.removeImageOverlay(selectedOverlayId);
-          setSelectedOverlayId(null);
-        }
-      }
-
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") {
-        // Undo logic
-        e.preventDefault();
-        const { undo, redo } = useImageStore.temporal.getState();
-        if (e.shiftKey) {
-          redo();
-        } else {
-          undo();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedOverlayId]);
-
-  useEffect(() => {
     const updateStage = () => {
       if (stageRef.current) {
         globalKonvaStage = stageRef.current;
@@ -202,8 +160,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     };
 
     updateViewportSize();
-    window.addEventListener("resize", updateViewportSize);
-    return () => window.removeEventListener("resize", updateViewportSize);
+    window.addEventListener('resize', updateViewportSize);
+    return () => window.removeEventListener('resize', updateViewportSize);
   }, []);
 
   useEffect(() => {
@@ -232,13 +190,13 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
   ]);
 
   useEffect(() => {
-    if (!noise.enabled || noise.type === "none") {
+    if (!noise.enabled || noise.type === 'none') {
       setNoiseImage(null);
       return;
     }
 
     const img = new window.Image();
-    img.crossOrigin = "anonymous";
+    img.crossOrigin = 'anonymous';
     img.onload = () => setNoiseImage(img);
     img.onerror = () => setNoiseImage(null);
     img.src = `/${noise.type}.jpg`;
@@ -269,7 +227,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     groupCenterY,
   } = dimensions;
 
-  const showFrame = frame.enabled && frame.type !== "none";
+  const showFrame = frame.enabled && frame.type !== 'none';
 
   const has3DTransform =
     perspective3D.rotateX !== 0 ||
@@ -288,20 +246,20 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
         width: `${containerWidth}px`,
         maxWidth: `${containerWidth}px`,
         aspectRatio: responsiveDimensions.aspectRatio,
-        maxHeight: "calc(100vh - 200px)",
-        backgroundColor: "transparent",
-        padding: "0px",
+        maxHeight: 'calc(100vh - 200px)',
+        backgroundColor: 'transparent',
+        padding: '0px',
       }}
     >
       <div
         style={{
-          position: "relative",
+          position: 'relative',
           width: `${canvasW}px`,
           height: `${canvasH}px`,
           minWidth: `${canvasW}px`,
           minHeight: `${canvasH}px`,
-          overflow: "hidden",
-          isolation: "isolate",
+          overflow: 'hidden',
+          isolation: 'isolate',
         }}
       >
         <Perspective3DOverlay
@@ -333,16 +291,16 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
           ref={stageRef}
           className="hires-stage"
           style={{
-            display: "block",
-            backgroundColor: "transparent",
-            overflow: "hidden",
-            position: "relative",
+            display: 'block',
+            backgroundColor: 'transparent',
+            overflow: 'hidden',
+            position: 'relative',
             borderRadius: `${backgroundBorderRadius}px`,
-            contain: "layout style paint",
+            contain: 'layout style paint',
           }}
           onMouseDown={(e) => {
             const clickedOnTransformer =
-              e.target.getParent()?.className === "Transformer";
+              e.target.getParent()?.className === 'Transformer';
             if (clickedOnTransformer) {
               return;
             }
@@ -353,7 +311,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                 (key) => e.target.attrs.id === key
               );
 
-            const clickedOnText = e.target.attrs.text !== undefined;
+            const clickedOnText =
+              e.target.attrs.text !== undefined;
 
             if (!clickedOnOverlay && !clickedOnText) {
               setSelectedOverlayId(null);
@@ -467,7 +426,7 @@ export default function ClientCanvas() {
     }
 
     const img = new window.Image();
-    img.crossOrigin = "anonymous";
+    img.crossOrigin = 'anonymous';
     img.onload = () => setImage(img);
     img.onerror = () => setScreenshot({ src: null });
     img.src = screenshot.src;
