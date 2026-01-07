@@ -11,7 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Settings } from "lucide-react";
-import { useAutosaveDraft } from '@/hooks/useAutosaveDraft';
+import { useAutosaveDraft } from "@/hooks/useAutosaveDraft";
 import { MobileBanner } from "./MobileBanner";
 
 function EditorMain() {
@@ -23,19 +23,19 @@ function EditorMain() {
   useAutosaveDraft();
 
   React.useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, []);
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
       <EditorStoreSync />
-      
+
       {/* Mobile Banner */}
       <MobileBanner />
-      
+
       {/* Mobile Header */}
       {isMobile && (
         <div className="h-14 bg-background border-b border-border flex items-center justify-between px-4 z-10">
@@ -62,36 +62,42 @@ function EditorMain() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Desktop */}
         {!isMobile && <EditorLeftPanel />}
-        
+
         {/* Left Panel - Mobile Sheet */}
         {isMobile && (
           <Sheet open={leftPanelOpen} onOpenChange={setLeftPanelOpen}>
-            <SheetContent side="left" className="w-[320px] p-0 sm:max-w-[320px]">
+            <SheetContent
+              side="left"
+              className="w-[320px] p-0 sm:max-w-[320px]"
+            >
               <EditorLeftPanel />
             </SheetContent>
           </Sheet>
         )}
-        
+
         {/* Center Canvas */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-background">
+        <div className="flex-1 flex flex-col overflow-hidden bg-background relative">
           <EditorContent>
             <EditorCanvas />
           </EditorContent>
         </div>
-        
+
         {/* Right Panel - Desktop */}
         {!isMobile && <EditorRightPanel />}
-        
+
         {/* Right Panel - Mobile Sheet */}
         {isMobile && (
           <Sheet open={rightPanelOpen} onOpenChange={setRightPanelOpen}>
-            <SheetContent side="right" className="w-[320px] p-0 sm:max-w-[320px]">
+            <SheetContent
+              side="right"
+              className="w-[320px] p-0 sm:max-w-[320px]"
+            >
               <EditorRightPanel />
             </SheetContent>
           </Sheet>
         )}
       </div>
-      
+
       {/* Bottom Bar */}
       <EditorBottomBar />
     </div>

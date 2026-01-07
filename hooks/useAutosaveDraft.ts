@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import {
   useEditorStore,
   useImageStore,
   OmitFunctions,
   EditorState,
   ImageState,
-} from '@/lib/store';
+} from "@/lib/store";
 import {
   saveDraft,
   getDraft,
   blobUrlToBase64,
   deleteDraft,
-} from '@/lib/draft-storage';
+} from "@/lib/draft-storage";
 
 const AUTOSAVE_DELAY = 1000;
 
@@ -108,7 +108,7 @@ export function useAutosaveDraft() {
         setLastSaved(new Date(draft.timestamp));
         hasLoadedRef.current = true;
       } catch (error) {
-        console.error('Failed to load draft:', error);
+        console.error("Failed to load draft:", error);
         hasLoadedRef.current = true;
       }
     };
@@ -161,31 +161,31 @@ export function useAutosaveDraft() {
 
           // Convert screenshot blob URL to base64
           let processedScreenshotSrc = screenshot.src;
-          if (screenshot.src && screenshot.src.startsWith('blob:')) {
+          if (screenshot.src && screenshot.src.startsWith("blob:")) {
             processedScreenshotSrc = await blobUrlToBase64(screenshot.src);
           }
 
           // Convert background config blob URL to base64
           const processedBackgroundConfig = { ...backgroundConfig };
           if (
-            backgroundConfig.type === 'image' &&
-            typeof backgroundConfig.value === 'string' &&
-            backgroundConfig.value.startsWith('blob:')
+            backgroundConfig.type === "image" &&
+            typeof backgroundConfig.value === "string" &&
+            backgroundConfig.value.startsWith("blob:")
           ) {
             processedBackgroundConfig.value = await blobUrlToBase64(
-              backgroundConfig.value,
+              backgroundConfig.value
             );
           }
 
           // Process image overlays
           const processedImageOverlays = await Promise.all(
             imageOverlays.map(async (overlay) => {
-              if (overlay.src.startsWith('blob:') && overlay.isCustom) {
+              if (overlay.src.startsWith("blob:") && overlay.isCustom) {
                 const base64Src = await blobUrlToBase64(overlay.src);
                 return { ...overlay, src: base64Src };
               }
               return overlay;
-            }),
+            })
           );
 
           const editorState: OmitFunctions<EditorState> = {
@@ -219,12 +219,22 @@ export function useAutosaveDraft() {
             imageBorder,
             imageShadow,
             perspective3D,
+            slides: [],
+            activeSlideId: null,
+            slideshow: {
+              enabled: false,
+              defaultDuration: 0,
+              animation: "none",
+            },
+            isPreviewing: false,
+            previewIndex: 0,
+            previewStartedAt: null,
           };
 
           await saveDraft(editorState, imageState);
           setLastSaved(new Date());
         } catch (error) {
-          console.error('Failed to auto-save draft:', error);
+          console.error("Failed to auto-save draft:", error);
         } finally {
           setIsSaving(false);
         }
@@ -272,19 +282,19 @@ export function useAutosaveDraft() {
       if (isSaving) {
         e.preventDefault();
         e.returnValue =
-          'You have unsaved changes. Are you sure you want to leave?';
+          "You have unsaved changes. Are you sure you want to leave?";
         return e.returnValue;
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [isSaving]);
 
   const clearDraft = async () => {
     try {
       await deleteDraft();
-
+      imageStore.resetSlideshow();
       // Clear all stores
       editorStore.setScreenshot({
         src: null,
@@ -302,7 +312,7 @@ export function useAutosaveDraft() {
 
       setLastSaved(null);
     } catch (error) {
-      console.error('Failed to clear draft:', error);
+      console.error("Failed to clear draft:", error);
       throw error;
     }
   };

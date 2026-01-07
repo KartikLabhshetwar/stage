@@ -37,22 +37,25 @@ async function openDB(): Promise<IDBDatabase> {
  * Save an image blob to IndexedDB
  * Returns a unique ID for the image
  */
-export async function saveImageBlob(blob: Blob, imageId: string): Promise<string> {
+export async function saveImageBlob(
+  blob: Blob,
+  imageId: string
+): Promise<string> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([STORE_NAME], "readwrite");
     const store = transaction.objectStore(STORE_NAME);
-    
+
     const entry: ImageStorageEntry = {
       id: imageId,
       blob: blob,
       type: blob.type,
       timestamp: Date.now(),
     };
-    
+
     const request = store.put(entry);
-    
+
     request.onsuccess = () => resolve(imageId);
     request.onerror = () => reject(request.error);
   });
@@ -63,17 +66,17 @@ export async function saveImageBlob(blob: Blob, imageId: string): Promise<string
  */
 export async function getImageBlob(imageId: string): Promise<Blob | null> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([STORE_NAME], "readonly");
     const store = transaction.objectStore(STORE_NAME);
     const request = store.get(imageId);
-    
+
     request.onsuccess = () => {
       const entry = request.result as ImageStorageEntry | undefined;
       resolve(entry?.blob || null);
     };
-    
+
     request.onerror = () => reject(request.error);
   });
 }
@@ -83,12 +86,12 @@ export async function getImageBlob(imageId: string): Promise<Blob | null> {
  */
 export async function deleteImageBlob(imageId: string): Promise<void> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([STORE_NAME], "readwrite");
     const store = transaction.objectStore(STORE_NAME);
     const request = store.delete(imageId);
-    
+
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
   });
@@ -106,7 +109,9 @@ export async function hasImageBlob(imageId: string): Promise<boolean> {
  * Generate a blob URL from a stored image ID
  * This recreates the blob URL from the stored blob
  */
-export async function getBlobUrlFromStored(imageId: string): Promise<string | null> {
+export async function getBlobUrlFromStored(
+  imageId: string
+): Promise<string | null> {
   const blob = await getImageBlob(imageId);
   if (!blob) return null;
   return URL.createObjectURL(blob);
@@ -117,18 +122,17 @@ export async function getBlobUrlFromStored(imageId: string): Promise<string | nu
  */
 export async function getAllImageIds(): Promise<string[]> {
   const db = await openDB();
-  
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([STORE_NAME], "readonly");
     const store = transaction.objectStore(STORE_NAME);
     const request = store.getAllKeys();
-    
+
     request.onsuccess = () => {
       const keys = request.result as string[];
       resolve(keys);
     };
-    
+
     request.onerror = () => reject(request.error);
   });
 }
-
